@@ -1,0 +1,16 @@
+{
+   "name": "adapter-ccxt",
+   "version": "1.0.0",
+   "description": "A TypeScript package for CCXT adapter",
+   "main": "index.ts",
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1"
+   },
+   "keywords": [
+      "typescript",
+      "ccxt",
+      "adapter"
+   ],
+   "author": "",
+   "license": ""
+}

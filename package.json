@@ -1,0 +1,13 @@
+{
+   "name": "mate",
+   "version": "1.0.0",
+   "author": "Mento Labs",
+   "description": "",
+   "main": "index.js",
+   "scripts": {
+      "preinstall": "npx only-allow pnpm",
+      "build": "pnpm run build"
+   },
+   "keywords": [],
+   "packageManager": "pnpm"
+}
