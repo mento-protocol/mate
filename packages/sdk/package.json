@@ -1,0 +1,14 @@
+{
+   "name": "@mate/sdk",
+   "version": "0.0.1",
+   "description": "SDK for creating extensions and adapters for MATE",
+   "main": "index.ts",
+   "scripts": {
+      "build": "tsc"
+   },
+   "author": "",
+   "license": "",
+   "devDependencies": {
+      "jest": "^29.6.4"
+   }
+}
