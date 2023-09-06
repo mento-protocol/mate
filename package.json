@@ -1,13 +1,21 @@
 {
    "name": "mate",
-   "version": "1.0.0",
-   "author": "Mento Labs",
+   "version": "0.0.1",
+   "author": "Mento Labs <eng@mentolabs.xyz>",
    "description": "",
-   "main": "index.js",
    "scripts": {
       "preinstall": "npx only-allow pnpm",
-      "build": "pnpm run build"
+      "build": "turbo run build"
    },
-   "keywords": [],
-   "packageManager": "pnpm"
+   "engines": {
+      "node": ">=18.16.0",
+      "pnpm": ">=8.5.0"
+   },
+   "main": "dist/index.js",
+   "types": "dist/index.d.ts",
+   "packageManager": "pnpm@8.5.0",
+   "devDependencies": {
+      "@tsconfig/strictest": "^2.0.2",
+      "typescript": "^5.2.2"
+   }
 }

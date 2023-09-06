@@ -6,6 +6,7 @@ node_modules
 # misc
 .DS_Store
 *.pem
+dist
 
 # local env files
 .env
@@ -14,5 +15,9 @@ node_modules
 .env.test.local
 .env.production.local
 
-# turbo
+# cache
 .turbo
+
+# Typescript
+*.tsbuildinfo
+*.d.ts
