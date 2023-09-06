@@ -1,6 +1,6 @@
 import { Step } from "../types/Step";
 
-export interface Adapter<TResult, TInitConfig, TStepConfig> {
+export interface IAdapter<TResult, TInitConfig, TStepConfig> {
    init(config: TInitConfig): Promise<Boolean>;
    supportsStep(step: Step<TStepConfig>): Boolean;
    isValid(step: Step<TStepConfig>): Boolean;
