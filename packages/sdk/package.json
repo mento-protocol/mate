@@ -2,12 +2,13 @@
    "name": "@mate/sdk",
    "version": "0.0.1",
    "description": "SDK for creating extensions and adapters for MATE",
-   "main": "index.ts",
-   "scripts": {
-      "build": "tsc"
-   },
-   "author": "",
+   "author": "Mento Labs <eng@mentolabs.xyz>",
    "license": "",
+   "main": "dist/index.js",
+   "types": "dist/index.d.ts",
+   "scripts": {
+      "build": "tsc -p tsconfig.build.json"
+   },
    "devDependencies": {
       "jest": "^29.6.4"
    }
