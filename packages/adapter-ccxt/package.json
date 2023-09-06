@@ -1,16 +1,15 @@
 {
-   "name": "adapter-ccxt",
-   "version": "1.0.0",
+   "name": "@mate/adapter-ccxt",
+   "version": "0.0.1",
    "description": "A TypeScript package for CCXT adapter",
-   "main": "index.ts",
+   "author": "Mento Labs <eng@mentolabs.xyz>",
+   "license": "",
+   "main": "dist/index.js",
+   "types": "dist/index.d.ts",
    "scripts": {
-      "test": "echo \"Error: no test specified\" && exit 1"
+      "build": "tsc -p tsconfig.build.json"
    },
-   "keywords": [
-      "typescript",
-      "ccxt",
-      "adapter"
-   ],
-   "author": "",
-   "license": ""
+   "dependencies": {
+      "@mate/sdk": "0.0.1"
+   }
 }
