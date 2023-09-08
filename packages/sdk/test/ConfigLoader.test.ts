@@ -1,3 +1,4 @@
+import "reflect-metadata";
 import { ConfigLoader } from "./../src/ConfigLoader";
 import * as fs from "fs";
 

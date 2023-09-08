@@ -1,8 +1,10 @@
 import * as yaml from "js-yaml";
 import * as fs from "fs";
+import { singleton } from "tsyringe";
 
 import { IConfigLoader } from "./interfaces";
 
+@singleton()
 export class ConfigLoader implements IConfigLoader {
    private configData: any;
    private readonly CONFIG_PATH: string;

@@ -21,6 +21,8 @@
       "typescript": "^5.2.2"
    },
    "dependencies": {
-      "js-yaml": "^4.1.0"
+      "js-yaml": "^4.1.0",
+      "reflect-metadata": "^0.1.13",
+      "tsyringe": "^4.8.0"
    }
 }
