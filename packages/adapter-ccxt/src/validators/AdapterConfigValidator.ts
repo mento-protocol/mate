@@ -2,11 +2,17 @@ import { injectable } from "tsyringe";
 import { CCXTAdapterConfig } from "../CCXTAdapterConfig";
 import { IValidator } from "./IValidator";
 import { isLeft, isRight } from "fp-ts/lib/Either";
-import { AdapterType, ApiCredentials, ValidationError } from "../types";
+import {
+   AdapterType,
+   ApiCredentials,
+   SupportedExchanges,
+   ValidationError,
+} from "../types";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import {
    DUPLICATE_EXCHANGE_ID_ERROR,
    INVALID_ADAPTER_CONFIGURATION,
+   UNSUPPORTED_EXCHANGE_ERROR,
 } from "../constants";
 
 @injectable()
@@ -23,15 +29,17 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
             api_key: string;
             api_secret: string;
          }>) {
-            // TODO: @bayo - Think about blocking/filtereing exchanges at this level with an array for supported exchanges
-            // Check if exchange ID is in the list of supported exchanges
+            const exchangeId = exchange.id.trim().toLowerCase();
 
-            const exchangeApiCredentials: ApiCredentials = {
-               apiKey: exchange.api_key,
-               apiSecret: exchange.api_secret,
-            };
+            if (!(exchangeId in SupportedExchanges)) {
+               throw new ValidationError(
+                  `${INVALID_ADAPTER_CONFIGURATION}: ${UNSUPPORTED_EXCHANGE_ERROR(
+                     exchangeId
+                  )}`
+               );
+            }
 
-            if (exchangeCredentials.has(exchange.id)) {
+            if (exchangeCredentials.has(exchangeId)) {
                throw new ValidationError(
                   `${INVALID_ADAPTER_CONFIGURATION}: ${DUPLICATE_EXCHANGE_ID_ERROR(
                      exchange.id
@@ -39,7 +47,12 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
                );
             }
 
-            exchangeCredentials.set(exchange.id, exchangeApiCredentials);
+            const exchangeApiCredentials: ApiCredentials = {
+               apiKey: exchange.api_key.trim(),
+               apiSecret: exchange.api_secret.trim(),
+            };
+
+            exchangeCredentials.set(exchangeId, exchangeApiCredentials);
          }
 
          return new CCXTAdapterConfig(exchangeCredentials);
