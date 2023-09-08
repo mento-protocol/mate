@@ -1,0 +1,8 @@
+adapters:
+   - id: ccxt
+     adapter: "@mate/adapter-ccxt"
+     config:
+        exchanges:
+           - id: binance
+             api_key: "TestKey"
+             api_secret: "TestSecret"

@@ -5,6 +5,10 @@
       "incremental": true,
       "declaration": true,
       "noEmit": true,
+      "target": "ES2021",
+      "moduleResolution": "node",
+      "module": "commonjs",
+      "types": ["node"],
 
       /* Strict Type-Checking Options */
       "noImplicitAny": true,
@@ -14,7 +18,7 @@
       "strictPropertyInitialization": false,
       "noImplicitThis": true,
       "alwaysStrict": true,
-      "resolveJsonModule": true,
+      "resolveJsonModule": false,
 
       /* Experimental Options */
       "experimentalDecorators": true
