@@ -31,7 +31,11 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
          }>) {
             const exchangeId = exchange.id.trim().toLowerCase();
 
-            if (!(exchangeId in SupportedExchanges)) {
+            if (
+               !Object.values(SupportedExchanges).includes(
+                  exchangeId as SupportedExchanges
+               )
+            ) {
                throw new ValidationError(
                   `${INVALID_ADAPTER_CONFIGURATION}: ${UNSUPPORTED_EXCHANGE_ERROR(
                      exchangeId
