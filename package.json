@@ -5,7 +5,8 @@
    "description": "",
    "scripts": {
       "preinstall": "npx only-allow pnpm",
-      "build": "turbo run build"
+      "build": "turbo run build",
+      "test": "turbo run test"
    },
    "engines": {
       "node": ">=18.16.0",
