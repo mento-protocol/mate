@@ -1,3 +1,5 @@
+import { AdapterConfig } from "../types/AdapterConfig";
+
 /**
  * `IConfigLoader` provides an interface for loading configuration details
  * from a given source, ensuring consistency and flexibility in how configurations

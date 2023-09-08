@@ -3,6 +3,7 @@ import * as fs from "fs";
 import { singleton } from "tsyringe";
 
 import { IConfigLoader } from "./interfaces";
+import { AdapterConfig } from "./types";
 
 @singleton()
 export class ConfigLoader implements IConfigLoader {

@@ -7,14 +7,18 @@ import { Step } from "../types/Step";
  * @template TInitConfig The type of the configuration required during initialization.
  * @template TStepConfig The type of the configuration specific to a step.
  */
-export interface IAdapter<TResult, TInitConfig, TStepConfig> {
+export interface IAdapter<TResult, TStepConfig> {
+   /**
+    * The id of the adapter.
+    */
+   readonly adapterId: string;
+
    /**
     * Initializes the adapter with the given configuration.
     *
-    * @param config - Configuration to initialize the adapter.
     * @returns A promise that resolves to a boolean indicating success of initialization.
     */
-   init(config: TInitConfig): Promise<Boolean>;
+   init(): Promise<Boolean>;
 
    /**
     * Checks if the adapter supports the provided step based on its configuration.
