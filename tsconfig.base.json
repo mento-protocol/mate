@@ -21,6 +21,7 @@
       "resolveJsonModule": false,
 
       /* Experimental Options */
-      "experimentalDecorators": true
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true
    }
 }

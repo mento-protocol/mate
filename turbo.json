@@ -5,7 +5,10 @@
          "dependsOn": ["^build"],
          "outputs": ["dist/**", "tsconfig.tsbuildinfo"]
       },
-      "lint": {}
+      "test": {
+         "dependsOn": ["build"],
+         "outputs": ["coverage/**"]
+      }
    },
    "globalDependencies": [
       "tsconfig.base.json",
