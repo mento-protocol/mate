@@ -11,6 +11,7 @@ const config: Config.InitialOptions = {
    moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
    collectCoverage: true,
    coverageDirectory: "<rootDir>/coverage/",
+   coveragePathIgnorePatterns: ["index.ts"],
 };
 
 export default config;
