@@ -10,7 +10,12 @@ const config: Config.InitialOptions = {
    testRegex: "test/.*\\.test\\.ts$",
    moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
    collectCoverage: true,
+   collectCoverageFrom: ["src/**/*.ts"],
    coverageDirectory: "<rootDir>/coverage/",
+   coveragePathIgnorePatterns: ["index.ts, src/constants, src/types"],
+   moduleNameMapper: {
+      "^@validation/(.*)$": "<rootDir>/src/validation/$1",
+   },
 };
 
 export default config;

@@ -1,27 +1,25 @@
 import { injectable } from "tsyringe";
-import { CCXTAdapterConfig } from "../CCXTAdapterConfig";
 import { IValidator } from "./IValidator";
 import { isLeft, isRight } from "fp-ts/lib/Either";
-import {
-   AdapterType,
-   ApiCredentials,
-   SupportedExchanges,
-   ValidationError,
-} from "../types";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import {
    DUPLICATE_EXCHANGE_ID_ERROR,
    INVALID_ADAPTER_CONFIGURATION,
    UNSUPPORTED_EXCHANGE_ERROR,
 } from "../constants";
+import { CCXTAdapterConfig } from "../CCXTAdapterConfig";
+import { AdapterConfigCodec, ApiCredentials, ExchangeId } from "../types";
+import { ValidationError } from "./ValidationError";
 
 @injectable()
 export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
    public validate(data: any): CCXTAdapterConfig {
-      const validationResult = AdapterType.decode(data);
+      // Validate the data using the codec to ensure it matches the expected shape
+      const validationResult = AdapterConfigCodec.decode(data);
 
+      // If the validation was successful, proceed to validate the exchange credentials then return the config object
       if (isRight(validationResult)) {
-         let exchangeCredentials: Map<string, ApiCredentials> = new Map();
+         let exchangeCredentials: Map<ExchangeId, ApiCredentials> = new Map();
 
          for (const exchange of validationResult.right.config
             .exchanges as Array<{
@@ -31,11 +29,8 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
          }>) {
             const exchangeId = exchange.id.trim().toLowerCase();
 
-            if (
-               !Object.values(SupportedExchanges).includes(
-                  exchangeId as SupportedExchanges
-               )
-            ) {
+            // Make sure the exchange is supported
+            if (!Object.values(ExchangeId).includes(exchangeId as ExchangeId)) {
                throw new ValidationError(
                   `${INVALID_ADAPTER_CONFIGURATION}: ${UNSUPPORTED_EXCHANGE_ERROR(
                      exchangeId
@@ -43,7 +38,8 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
                );
             }
 
-            if (exchangeCredentials.has(exchangeId)) {
+            // Make sure the exchange ID is unique, e.g. no duplicate exchange IDs in the config
+            if (exchangeCredentials.has(exchangeId as ExchangeId)) {
                throw new ValidationError(
                   `${INVALID_ADAPTER_CONFIGURATION}: ${DUPLICATE_EXCHANGE_ID_ERROR(
                      exchange.id
@@ -56,7 +52,10 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
                apiSecret: exchange.api_secret.trim(),
             };
 
-            exchangeCredentials.set(exchangeId, exchangeApiCredentials);
+            exchangeCredentials.set(
+               exchangeId as ExchangeId,
+               exchangeApiCredentials
+            );
          }
 
          return new CCXTAdapterConfig(exchangeCredentials);

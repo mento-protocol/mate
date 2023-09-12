@@ -1,9 +1,8 @@
 import "reflect-metadata";
-
+import { IValidator, AdapterConfigValidator } from "./../../src/validation/";
 import { CCXTAdapterConfig } from "../../src/CCXTAdapterConfig";
-import { IValidator } from "../../src/validators/IValidator";
-import { AdapterConfigValidator } from "./../../src/validators/AdapterConfigValidator";
 import { INVALID_ADAPTER_CONFIGURATION } from "../../src/constants";
+import { ExchangeId } from "../../src/types";
 
 describe("AdapterConfigValidator", () => {
    let validator: IValidator<CCXTAdapterConfig>;
@@ -32,7 +31,7 @@ describe("AdapterConfigValidator", () => {
       expect(adapterConfig).toBeDefined();
 
       const credentials = (adapterConfig as CCXTAdapterConfig).getCredentials(
-         "binance"
+         ExchangeId.BINANCE
       );
 
       expect(credentials).toBeDefined();

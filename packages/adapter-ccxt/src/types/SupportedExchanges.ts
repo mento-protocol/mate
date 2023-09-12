@@ -1,3 +1,3 @@
-export enum SupportedExchanges {
+export enum ExchangeId {
    BINANCE = "binance",
 }
