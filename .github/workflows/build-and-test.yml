@@ -15,11 +15,11 @@ jobs:
            with:
               node-version: "18.16.0"
 
-         - name: Install pnpm
-           run: npm install -g pnpm
-
-         - name: Install turbo
-           run: pnpm install -g turbo
+         - name: Install pnpm and turbo
+           run: |
+              echo "PNPM_HOME=$HOME/.pnpm" >> $GITHUB_ENV
+              npm install -g pnpm
+              pnpm install -g turbo
 
          - name: Install dependencies
            run: pnpm install
