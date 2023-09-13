@@ -1,0 +1,25 @@
+name: Build and Test
+
+on: [push]
+
+jobs:
+   build-and-test:
+      runs-on: ubuntu-latest
+
+      steps:
+         - name: Checkout code
+           uses: actions/checkout@v2
+
+         - name: Setup Node.js environment
+           uses: actions/setup-node@v2
+           with:
+              node-version: "18.16.0"
+
+         - name: Install dependencies
+           run: pnpm install
+
+         - name: Build the project
+           run: pnpm run build
+
+         - name: Run tests
+           run: pnpm run test
