@@ -47,7 +47,7 @@ describe("AdapterConfigValidator", () => {
          config: {
             exchanges: [
                {
-                  id: "binance",
+                  igd: "binance",
                   api_secret: "TestSecret",
                },
             ],
@@ -56,6 +56,53 @@ describe("AdapterConfigValidator", () => {
 
       expect(() => validator.validate(invalidData)).toThrowError(
          INVALID_ADAPTER_CONFIGURATION
+      );
+   });
+
+   it("should throw an error if the exchange ID is not supported", () => {
+      const invalidData = {
+         id: "some-id",
+         adapter: "@test-org/adapter-plug",
+
+         config: {
+            exchanges: [
+               {
+                  id: "ftx",
+                  api_key: "TestKey",
+                  api_secret: "TestSecret",
+               },
+            ],
+         },
+      };
+
+      expect(() => validator.validate(invalidData)).toThrowError(
+         `${INVALID_ADAPTER_CONFIGURATION}: Unsupported exchange: ftx`
+      );
+   });
+
+   it("should throw an error if the exchange ID is duplicated", () => {
+      const invalidData = {
+         id: "some-id",
+         adapter: "@test-org/adapter-plug",
+
+         config: {
+            exchanges: [
+               {
+                  id: "binance",
+                  api_key: "TestKey",
+                  api_secret: "TestSecret",
+               },
+               {
+                  id: "binance",
+                  api_key: "TestKey",
+                  api_secret: "TestSecret",
+               },
+            ],
+         },
+      };
+
+      expect(() => validator.validate(invalidData)).toThrowError(
+         `${INVALID_ADAPTER_CONFIGURATION}: Duplicate exchange ID: binance`
       );
    });
 });
