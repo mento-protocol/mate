@@ -55,6 +55,8 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStepConfig> {
          throw new Error(`${ADAPTER_FAILED_INITIALIZE}: ${err.message}`);
       }
 
+      // TODO: Will be removed once step confiv validation is implemented.
+      //       This is just here to stop the compiler from complaining.
       const stepConfigValidationResult =
          this.stepConfigValidator.validate(config);
       console.log(stepConfigValidationResult);

@@ -1,10 +1,4 @@
 {
    "extends": "../../tsconfig.base.json",
-   "compilerOptions": {
-      "types": ["jest", "node"],
-      "typeRoots": ["node_modules/@types", "../../node_modules/@types"]
-   },
-   "include": ["src/**/*", "src/.ts"]
-
-   //TODO: Add alises
+   "include": ["src/**/*.ts"]
 }

@@ -8,7 +8,7 @@
       "target": "ES2021",
       "moduleResolution": "node",
       "module": "commonjs",
-      "types": ["node"],
+      "types": ["node", "jest"],
 
       /* Strict Type-Checking Options */
       "noImplicitAny": true,
