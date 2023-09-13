@@ -18,6 +18,7 @@ jobs:
          - name: Install pnpm and turbo
            run: |
               echo "PNPM_HOME=$HOME/.pnpm" >> $GITHUB_ENV
+              echo "PATH=$PATH:$HOME/.pnpm" >> $GITHUB_ENV
               npm install -g pnpm
               pnpm install -g turbo
 
