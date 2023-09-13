@@ -34,6 +34,9 @@ importers:
       io-ts:
         specifier: ^2.2.20
         version: 2.2.20(fp-ts@2.16.1)
+      reflect-metadata:
+        specifier: ^0.1.13
+        version: 0.1.13
       tsyringe:
         specifier: ^4.8.0
         version: 4.8.0
