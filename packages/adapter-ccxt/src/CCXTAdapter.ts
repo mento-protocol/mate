@@ -1,5 +1,5 @@
 import { autoInjectable } from "tsyringe";
-import { IAdapter, IConfigLoader, Step, AdapterConfig } from "@mate/sdk";
+import { IAdapter, IConfigProvider, Step, AdapterConfig } from "@mate/sdk";
 import { ExecutionResult } from "./ExecutionResult";
 import { CCXTStepConfig } from "./CCXTStepConfig";
 import {
@@ -21,14 +21,14 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStepConfig> {
    constructor(
       private adapterConfigValidator: IValidator<CCXTAdapterConfig>,
       private stepConfigValidator: IValidator<CCXTStepConfig>,
-      private configLoader: IConfigLoader,
+      private configProvider: IConfigProvider,
       private exchangeFactory: IExchangeFactory
    ) {
       this.exchangeServices = new Map<ExchangeId, IExchangeApiService>();
    }
 
    public async init(): Promise<Boolean> {
-      const config: AdapterConfig | null = this.configLoader.getAdapterConfig(
+      const config: AdapterConfig | null = this.configProvider.getAdapterConfig(
          this.adapterId
       );
 
