@@ -32,8 +32,3 @@ export const AdapterConfigCodec = t.type({
    adapter: t.string, // Adapter reference, e.g., "@mate/adapter-ccxt"
    config: CCXTAdapterConfigCodec, // Configuration specific to this adapter
 });
-
-// Types derived from the codecs.
-
-// Type for the CCXT adapter configuration.
-// export type CCXTAdapterConfig = t.TypeOf<typeof CCXTAdapterConfigCodec>;
