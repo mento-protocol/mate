@@ -32,3 +32,13 @@ export const AdapterConfigCodec = t.type({
    adapter: t.string, // Adapter reference, e.g., "@mate/adapter-ccxt"
    config: CCXTAdapterConfigCodec, // Configuration specific to this adapter
 });
+
+/**
+ * Codec for the Exchange.WithdrawCrypto configuration.
+ */
+export const ExchangeWithdrawCryptoConfigCodec = t.type({
+   exchange_id: t.string, // Identifier for the exchange
+   asset: t.string, // Asset to withdraw e.g. "BTC"
+   chain_id: t.number, // Chain identifier for destination chain
+   destination_address: t.string, // Destination address
+});
