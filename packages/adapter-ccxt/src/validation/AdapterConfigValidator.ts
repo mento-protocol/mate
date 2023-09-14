@@ -14,51 +14,10 @@ import { ValidationError } from "./ValidationError";
 @injectable()
 export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
    public validate(data: any): CCXTAdapterConfig {
-      // Validate the data using the codec to ensure it matches the expected shape
       const validationResult = AdapterConfigCodec.decode(data);
 
-      // If the validation was successful, proceed to validate the exchange credentials then return the config object
       if (isRight(validationResult)) {
-         let exchangeCredentials: Map<ExchangeId, ApiCredentials> = new Map();
-
-         for (const exchange of validationResult.right.config
-            .exchanges as Array<{
-            id: string;
-            api_key: string;
-            api_secret: string;
-         }>) {
-            const exchangeId = exchange.id.trim().toLowerCase();
-
-            // Make sure the exchange is supported
-            if (!Object.values(ExchangeId).includes(exchangeId as ExchangeId)) {
-               throw new ValidationError(
-                  `${INVALID_ADAPTER_CONFIGURATION}: ${UNSUPPORTED_EXCHANGE_ERROR(
-                     exchangeId
-                  )}`
-               );
-            }
-
-            // Make sure the exchange ID is unique, e.g. no duplicate exchange IDs in the config
-            if (exchangeCredentials.has(exchangeId as ExchangeId)) {
-               throw new ValidationError(
-                  `${INVALID_ADAPTER_CONFIGURATION}: ${DUPLICATE_EXCHANGE_ID_ERROR(
-                     exchange.id
-                  )}`
-               );
-            }
-
-            const exchangeApiCredentials: ApiCredentials = {
-               apiKey: exchange.api_key.trim(),
-               apiSecret: exchange.api_secret.trim(),
-            };
-
-            exchangeCredentials.set(
-               exchangeId as ExchangeId,
-               exchangeApiCredentials
-            );
-         }
-
-         return new CCXTAdapterConfig(exchangeCredentials);
+         return this.processValidResult(validationResult.right);
       } else if (isLeft(validationResult)) {
          throw new ValidationError(
             INVALID_ADAPTER_CONFIGURATION,
@@ -67,5 +26,62 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
       } else {
          throw new Error(INVALID_ADAPTER_CONFIGURATION);
       }
+   }
+
+   private processValidResult(validResult: any): CCXTAdapterConfig {
+      const exchangeCredentials = this.extractExchangeCredentials(
+         validResult.config.exchanges
+      );
+      return new CCXTAdapterConfig(exchangeCredentials);
+   }
+
+   private extractExchangeCredentials(
+      exchanges: Array<{ id: string; api_key: string; api_secret: string }>
+   ): Map<ExchangeId, ApiCredentials> {
+      const exchangeCredentials: Map<ExchangeId, ApiCredentials> = new Map();
+
+      for (const exchange of exchanges) {
+         this.validateExchangeId(exchange.id, exchangeCredentials);
+
+         const exchangeApiCredentials = this.extractApiCredentials(exchange);
+         exchangeCredentials.set(
+            exchange.id.trim().toLowerCase() as ExchangeId,
+            exchangeApiCredentials
+         );
+      }
+      return exchangeCredentials;
+   }
+
+   private validateExchangeId(
+      id: string,
+      exchangeCredentials: Map<ExchangeId, ApiCredentials>
+   ): void {
+      const exchangeId = id.trim().toLowerCase();
+
+      if (!Object.values(ExchangeId).includes(exchangeId as ExchangeId)) {
+         throw new ValidationError(
+            `${INVALID_ADAPTER_CONFIGURATION}: ${UNSUPPORTED_EXCHANGE_ERROR(
+               exchangeId
+            )}`
+         );
+      }
+
+      if (exchangeCredentials.has(exchangeId as ExchangeId)) {
+         throw new ValidationError(
+            `${INVALID_ADAPTER_CONFIGURATION}: ${DUPLICATE_EXCHANGE_ID_ERROR(
+               id
+            )}`
+         );
+      }
+   }
+
+   private extractApiCredentials(exchange: {
+      api_key: string;
+      api_secret: string;
+   }): ApiCredentials {
+      return {
+         apiKey: exchange.api_key.trim(),
+         apiSecret: exchange.api_secret.trim(),
+      };
    }
 }
