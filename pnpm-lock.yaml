@@ -102,9 +102,6 @@ importers:
       '@types/node':
         specifier: ^20.5.9
         version: 20.5.9
-      dedent:
-        specifier: ^1.5.1
-        version: 1.5.1
       jest:
         specifier: ^29.6.4
         version: 29.6.4(@types/node@20.5.9)(ts-node@10.9.1)
