@@ -1,2 +1,2 @@
 export * from "./IAdapter";
-export * from "./IConfigLoader";
+export * from "./IConfigProvider";
