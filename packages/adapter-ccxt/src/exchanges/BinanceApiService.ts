@@ -19,6 +19,19 @@ export class BinanceApiService implements IExchangeApiService {
       });
    }
 
+   public async isAssetSupported(asset: string): Promise<boolean> {
+      try {
+         const normalizedAsset = asset.trim().toUpperCase();
+         const markets = await this.exchange.fetchMarkets();
+         return markets.some(
+            (market) => market.base.toUpperCase() === normalizedAsset
+         );
+      } catch (error) {
+         console.error(`Error fetching markets for Binance: ${error}`);
+         return false;
+      }
+   }
+
    public async getCurrencyBalance(currency: string): Promise<number> {
       try {
          const balances: Balances = await this.exchange.fetchBalance();
