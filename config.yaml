@@ -24,8 +24,8 @@ flows:
           config:
              exchange: binance
              asset: BUSD
-             chain: BSC
-             address: ...
+             chain_id: 4220
+             destination_address: ...
         - type: Bridge.Swap
           adapter: squid
           config:
