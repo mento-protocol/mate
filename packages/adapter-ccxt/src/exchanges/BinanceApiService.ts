@@ -4,8 +4,8 @@ import { Balances, Exchange, binance } from "ccxt";
 import { IExchangeApiService } from ".";
 import { ApiCredentials } from "../types";
 import {
-   API_CURRENCY_BALANCE_FETCH_ERROR,
-   API_CURRENCY_BALANCE_NOT_FOUND,
+   ERR_API_BALANCE_FETCH_FAILURE,
+   ERR_BALANCE_NOT_FOUND,
 } from "../constants";
 
 @injectable()
@@ -39,16 +39,14 @@ export class BinanceApiService implements IExchangeApiService {
 
          if (!currencyBalance) {
             throw new Error(
-               `${API_CURRENCY_BALANCE_FETCH_ERROR(
+               `${ERR_API_BALANCE_FETCH_FAILURE(
                   currency
-               )}: ${API_CURRENCY_BALANCE_NOT_FOUND}`
+               )}: ${ERR_BALANCE_NOT_FOUND}`
             );
          }
          return Number(currencyBalance.total) || 0;
       } catch (error) {
-         throw new Error(
-            `${API_CURRENCY_BALANCE_FETCH_ERROR(currency)}:${error}`
-         );
+         throw new Error(`${ERR_API_BALANCE_FETCH_FAILURE(currency)}:${error}`);
       }
    }
 }

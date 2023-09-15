@@ -2,14 +2,14 @@ import { injectable } from "tsyringe";
 import { IValidator } from "./IValidator";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
-import {
-   DUPLICATE_EXCHANGE_ID_ERROR,
-   INVALID_ADAPTER_CONFIGURATION,
-   UNSUPPORTED_EXCHANGE_ERROR,
-} from "../constants";
 import { CCXTAdapterConfig } from "../CCXTAdapterConfig";
 import { AdapterConfigCodec, ApiCredentials, ExchangeId } from "../types";
 import { ValidationError } from "./ValidationError";
+import {
+   ERR_DUPLICATE_EXCHANGE_ID,
+   ERR_INVALID_ADAPTER_CONFIG,
+   ERR_UNSUPPORTED_EXCHANGE,
+} from "../constants";
 
 @injectable()
 export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
@@ -20,11 +20,11 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
          return this.processValidResult(validationResult.right);
       } else if (isLeft(validationResult)) {
          throw new ValidationError(
-            INVALID_ADAPTER_CONFIGURATION,
+            ERR_INVALID_ADAPTER_CONFIG,
             PathReporter.report(validationResult)
          );
       } else {
-         throw new Error(INVALID_ADAPTER_CONFIGURATION);
+         throw new Error(ERR_INVALID_ADAPTER_CONFIG);
       }
    }
 
@@ -60,7 +60,7 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
 
       if (!Object.values(ExchangeId).includes(exchangeId as ExchangeId)) {
          throw new ValidationError(
-            `${INVALID_ADAPTER_CONFIGURATION}: ${UNSUPPORTED_EXCHANGE_ERROR(
+            `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_UNSUPPORTED_EXCHANGE(
                exchangeId
             )}`
          );
@@ -68,9 +68,7 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
 
       if (exchangeCredentials.has(exchangeId as ExchangeId)) {
          throw new ValidationError(
-            `${INVALID_ADAPTER_CONFIGURATION}: ${DUPLICATE_EXCHANGE_ID_ERROR(
-               id
-            )}`
+            `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_DUPLICATE_EXCHANGE_ID(id)}`
          );
       }
    }

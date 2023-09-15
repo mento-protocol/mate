@@ -4,13 +4,13 @@ import { isLeft, isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import { ValidationError } from "./ValidationError";
 import { CCXTStep, CCXTStepConfig, ExchangeId, StepType } from "../types";
-import {
-   ASSET_NOT_SUPPORTED_BY_EXCHANGE,
-   INVALID_STEP_CONFIGURATION,
-   UNSUPPORTED_EXCHANGE_ERROR,
-   UNSUPPORTED_STEP_TYPE,
-} from "../constants";
 import { IExchangeServiceRepo } from "../exchanges";
+import {
+   ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
+   ERR_INVALID_STEP_CONFIG,
+   ERR_UNSUPPORTED_EXCHANGE,
+   ERR_UNSUPPORTED_STEP,
+} from "../constants";
 
 @injectable()
 export class CCXTStepValidator implements IValidator<CCXTStep> {
@@ -23,11 +23,11 @@ export class CCXTStepValidator implements IValidator<CCXTStep> {
          return this.processValidResult(validationResult.right);
       } else if (isLeft(validationResult)) {
          throw new ValidationError(
-            INVALID_STEP_CONFIGURATION,
+            ERR_INVALID_STEP_CONFIG,
             PathReporter.report(validationResult)
          );
       } else {
-         throw new Error(INVALID_STEP_CONFIGURATION);
+         throw new Error(ERR_INVALID_STEP_CONFIG);
       }
    }
 
@@ -43,7 +43,7 @@ export class CCXTStepValidator implements IValidator<CCXTStep> {
             //TODO: Accurate? Message could be exchange service was not found. It's not possible to get unsupported exchange here.
             if (!exchangeService) {
                throw new Error(
-                  `${INVALID_STEP_CONFIGURATION}. ${UNSUPPORTED_EXCHANGE_ERROR(
+                  `${ERR_INVALID_STEP_CONFIG}. ${ERR_UNSUPPORTED_EXCHANGE(
                      validResult.config.exchange
                   )}`
                );
@@ -51,7 +51,7 @@ export class CCXTStepValidator implements IValidator<CCXTStep> {
 
             if (!exchangeService.isAssetSupported(validResult.config.asset)) {
                throw new Error(
-                  `${INVALID_STEP_CONFIGURATION}. ${ASSET_NOT_SUPPORTED_BY_EXCHANGE(
+                  `${ERR_INVALID_STEP_CONFIG}. ${ERR_ASSET_UNSUPPORTED_ON_EXCHANGE(
                      validResult.config.exchange,
                      validResult.config.asset
                   )}`
@@ -61,7 +61,7 @@ export class CCXTStepValidator implements IValidator<CCXTStep> {
             break;
          default:
             throw new Error(
-               `${INVALID_STEP_CONFIGURATION}. ${UNSUPPORTED_STEP_TYPE(
+               `${ERR_INVALID_STEP_CONFIG}. ${ERR_UNSUPPORTED_STEP(
                   validResultStepType
                )}`
             );

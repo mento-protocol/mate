@@ -1,7 +1,11 @@
 import "reflect-metadata";
 import { IValidator, AdapterConfigValidator } from "./../../src/validation/";
 import { CCXTAdapterConfig } from "../../src/CCXTAdapterConfig";
-import { INVALID_ADAPTER_CONFIGURATION } from "../../src/constants";
+import {
+   ERR_DUPLICATE_EXCHANGE_ID,
+   ERR_INVALID_ADAPTER_CONFIG,
+   ERR_UNSUPPORTED_EXCHANGE,
+} from "../../src/constants";
 import { ExchangeId } from "../../src/types";
 
 describe("AdapterConfigValidator", () => {
@@ -55,7 +59,7 @@ describe("AdapterConfigValidator", () => {
       };
 
       expect(() => validator.validate(invalidData)).toThrowError(
-         INVALID_ADAPTER_CONFIGURATION
+         ERR_INVALID_ADAPTER_CONFIG
       );
    });
 
@@ -76,7 +80,7 @@ describe("AdapterConfigValidator", () => {
       };
 
       expect(() => validator.validate(invalidData)).toThrowError(
-         `${INVALID_ADAPTER_CONFIGURATION}: Unsupported exchange: ftx`
+         `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_UNSUPPORTED_EXCHANGE("ftx")}`
       );
    });
 
@@ -102,7 +106,9 @@ describe("AdapterConfigValidator", () => {
       };
 
       expect(() => validator.validate(invalidData)).toThrowError(
-         `${INVALID_ADAPTER_CONFIGURATION}: Duplicate exchange ID: binance`
+         `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_DUPLICATE_EXCHANGE_ID(
+            "binance"
+         )}`
       );
    });
 });
