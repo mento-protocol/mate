@@ -10,7 +10,7 @@ import { TypeOf } from "io-ts";
  * such as their unique identifier, API key, and API secret.
  */
 export const ExchangeConfigCodec = t.type({
-   id: t.string, // Identifier for the exchange
+   id: t.string, // Identifier for the exchange //TODO: Use ExchangeId with t.keyof instead
    api_key: t.string, // API key for authenticating with the exchange
    api_secret: t.string, // API secret key for authenticating with the exchange
 });
