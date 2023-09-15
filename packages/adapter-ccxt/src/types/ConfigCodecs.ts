@@ -1,4 +1,6 @@
 import * as t from "io-ts";
+import { ChainId, ExchangeId, StepType } from ".";
+import { TypeOf } from "io-ts";
 
 // Codecs used for the validation of data in the config source.
 
@@ -37,8 +39,42 @@ export const AdapterConfigCodec = t.type({
  * Codec for the Exchange.WithdrawCrypto configuration.
  */
 export const ExchangeWithdrawCryptoConfigCodec = t.type({
-   exchange_id: t.string, // Identifier for the exchange
+   exchange: t.keyof(ExchangeId), // Identifier for the exchange
    asset: t.string, // Asset to withdraw e.g. "BTC"
-   chain_id: t.number, // Chain identifier for destination chain
+   chain_id: t.keyof(ChainId), // Chain identifier for destination chain
    destination_address: t.string, // Destination address
 });
+
+/**
+ * Codec for the Exchange.WithdrawCrypto step.
+ */
+export const ExchangeWithdrawCrypto = t.type({
+   type: t.literal(StepType.ExchangeWithdrawCrypto),
+   adapter: t.literal("ccxt"),
+   config: ExchangeWithdrawCryptoConfigCodec,
+});
+
+/**
+ * Codec for the Exchange.Swap configuration.
+ */
+export const ExchangeSwapConfigCodec = t.type({
+   exchange: t.string,
+   from: t.string,
+   to: t.string,
+   maxSlippageBPS: t.number,
+   amount: t.number,
+});
+
+/**
+ * Codec for the Exchange.Swap step.
+ */
+export const ExchangeSwap = t.type({
+   type: t.literal(StepType.ExchangeSwap),
+   adapter: t.literal("ccxt"),
+   config: ExchangeSwapConfigCodec,
+});
+
+export const CCXTStepConfig = t.union([ExchangeWithdrawCrypto, ExchangeSwap]);
+
+// Types derived from the codecs
+export type CCXTStep = TypeOf<typeof CCXTStepConfig>;
