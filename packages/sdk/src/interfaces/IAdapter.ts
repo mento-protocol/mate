@@ -1,5 +1,4 @@
-import { Step } from "../types/Step";
-
+import { Step, ValidationResult } from "../types";
 /**
  * Represents a generic interface for adapters.
  *
@@ -21,12 +20,12 @@ export interface IAdapter<TResult, TStepConfig> {
    init(): Promise<Boolean>;
 
    /**
-    * Validates if the provided step is valid and can be executed by the adapter.
+    * Checks if the provided step is valid and can be executed by the adapter.
     *
     * @param step - The step to validate.
-    * @returns A boolean indicating if the step is valid.
+    * @returns A validation result indicating if the step is valid or not.
     */
-   isValid(step: Step<TStepConfig>): Boolean;
+   isValid(step: Step<TStepConfig>): ValidationResult;
 
    /**
     * Executes the provided step and returns the result.
