@@ -8,12 +8,11 @@ import {
 } from "./constants";
 import { IValidator } from "./validation";
 import { CCXTAdapterConfig } from "./CCXTAdapterConfig";
-import { ApiCredentials, ExchangeId } from "./types";
-import { IExchangeApiService, IExchangeFactory } from "./exchanges";
+import { ApiCredentials, CCXTStep, ExchangeId } from "./types";
+import { IExchangeFactory, IExchangeServiceRepo } from "./exchanges";
 
 @autoInjectable()
-export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStepConfig> {
-   private exchangeServices: Map<ExchangeId, IExchangeApiService>;
+export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
    private adapterConfig: CCXTAdapterConfig;
 
    public adapterId: string = "ccxt";
@@ -22,10 +21,9 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStepConfig> {
       private adapterConfigValidator: IValidator<CCXTAdapterConfig>,
       private stepConfigValidator: IValidator<CCXTStepConfig>,
       private configProvider: IConfigProvider,
-      private exchangeFactory: IExchangeFactory
-   ) {
-      this.exchangeServices = new Map<ExchangeId, IExchangeApiService>();
-   }
+      private exchangeFactory: IExchangeFactory,
+      private exchangeServiceRepo: IExchangeServiceRepo
+   ) {}
 
    public async init(): Promise<Boolean> {
       const config: AdapterConfig | null = this.configProvider.getAdapterConfig(
@@ -49,7 +47,12 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStepConfig> {
                exchangeId,
                exchangeConfig
             );
-            this.exchangeServices.set(exchangeId, exchangeService);
+
+            // Add the exchange service to the repo to allow for retrieval later in other steps.
+            this.exchangeServiceRepo.setExchangeService(
+               exchangeId,
+               exchangeService
+            );
          }
       } catch (err: any) {
          throw new Error(`${ADAPTER_FAILED_INITIALIZE}: ${err.message}`);
@@ -64,15 +67,15 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStepConfig> {
       return Promise.resolve(true);
    }
 
-   public supportsStep(step: Step<CCXTStepConfig>): Boolean {
+   public supportsStep(step: Step<CCXTStep>): Boolean {
       console.log(step);
       throw new Error("Method not implemented.");
    }
-   public isValid(step: Step<CCXTStepConfig>): Boolean {
+   public isValid(step: Step<CCXTStep>): Boolean {
       console.log(step);
       throw new Error("Method not implemented.");
    }
-   public execute(step: Step<CCXTStepConfig>): Promise<ExecutionResult> {
+   public execute(step: Step<CCXTStep>): Promise<ExecutionResult> {
       console.log(step);
       throw new Error("Method not implemented.");
    }
