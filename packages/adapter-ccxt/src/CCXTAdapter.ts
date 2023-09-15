@@ -1,5 +1,11 @@
 import { autoInjectable } from "tsyringe";
-import { IAdapter, IConfigProvider, Step, AdapterConfig } from "@mate/sdk";
+import {
+   IAdapter,
+   IConfigProvider,
+   Step,
+   AdapterConfig,
+   ValidationResult,
+} from "@mate/sdk";
 import { ExecutionResult } from "./ExecutionResult";
 import { CCXTStepConfig } from "./CCXTStepConfig";
 import { IValidator } from "./validation";
@@ -58,23 +64,32 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
          throw new Error(`${ERR_ADAPTER_INIT_FAILURE}: ${err.message}`);
       }
 
-      // TODO: Will be removed once step confiv validation is implemented.
-      //       This is just here to stop the compiler from complaining.
-      const stepConfigValidationResult =
-         this.stepConfigValidator.validate(config);
-      console.log(stepConfigValidationResult);
-
       return Promise.resolve(true);
    }
 
-   public supportsStep(step: Step<CCXTStep>): Boolean {
-      console.log(step);
-      throw new Error("Method not implemented.");
+   //TODO: CCXTStep type is not correct.
+
+   public isValid(step: Step<CCXTStep>): ValidationResult {
+      let result: ValidationResult = {
+         isValid: false,
+         errors: [],
+      };
+
+      try {
+         this.stepConfigValidator.validate(step);
+      } catch (err) {
+         result.errors?.push((err as Error).message);
+         result.isValid;
+
+         return result;
+      }
+
+      // If the validator does not throw an error then the step is valid.
+      result.isValid = true;
+
+      return result;
    }
-   public isValid(step: Step<CCXTStep>): Boolean {
-      console.log(step);
-      throw new Error("Method not implemented.");
-   }
+
    public execute(step: Step<CCXTStep>): Promise<ExecutionResult> {
       console.log(step);
       throw new Error("Method not implemented.");
