@@ -17,3 +17,5 @@ export const ERR_UNSUPPORTED_STEP = (type: string) =>
    `Step type not supported: ${type}`;
 export const ERR_UNSUPPORTED_CHAIN = (id: string) =>
    `Chain ID not supported: ${id}`;
+export const ERR_EXCHANGE_SERVICE_NOT_FOUND = (exchange: string) =>
+   `Service for exchange "${exchange}" not found. It might not have been initialized or properly registered in repo.`;

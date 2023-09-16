@@ -42,7 +42,9 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
       }
 
       try {
-         this.adapterConfig = this.adapterConfigValidator.validate(config);
+         this.adapterConfig = await this.adapterConfigValidator.validate(
+            config
+         );
 
          // for each exchange in the config, initialize the exchange then.
          for (const [exchangeId, exchangeConfig] of Object.entries(

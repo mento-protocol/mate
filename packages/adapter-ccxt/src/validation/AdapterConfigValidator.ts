@@ -13,7 +13,7 @@ import {
 
 @injectable()
 export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
-   public validate(data: any): CCXTAdapterConfig {
+   public async validate(data: any): Promise<CCXTAdapterConfig> {
       const validationResult = AdapterConfigCodec.decode(data);
 
       if (isRight(validationResult)) {

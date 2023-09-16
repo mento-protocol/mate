@@ -13,6 +13,7 @@ import {
 import { IExchangeServiceRepo } from "../exchanges";
 import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
+   ERR_EXCHANGE_SERVICE_NOT_FOUND,
    ERR_INVALID_STEP_CONFIG,
    ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_EXCHANGE,
@@ -26,11 +27,11 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
 
    constructor(private exchangeServiceRepo: IExchangeServiceRepo) {}
 
-   public validate(data: any): CCXTStep {
+   public async validate(data: any): Promise<CCXTStep> {
       const validationResult = CCXTStepConfig.decode(data);
 
       if (isRight(validationResult)) {
-         return this.processValidResult(validationResult.right);
+         return await this.processValidResult(validationResult.right);
       }
 
       if (isLeft(validationResult)) {
@@ -43,20 +44,25 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
       throw new Error(this.prependGeneralError(ERR_INVALID_STEP_CONFIG));
    }
 
-   private processValidResult(validResult: CCXTStep): CCXTStep {
+   private async processValidResult(validResult: CCXTStep): Promise<CCXTStep> {
       switch (validResult.type) {
          case StepType.ExchangeWithdrawCrypto:
+            // Validate exchange
             this.validateEnumValue(
                validResult.config.exchange,
                this.exchangeIdSet,
                ERR_UNSUPPORTED_EXCHANGE
             );
+
+            // Validate chain
             this.validateEnumValue(
                validResult.config.chain_id,
                this.chainIdSet,
                ERR_UNSUPPORTED_CHAIN
             );
-            this.validateExchangeAsset(
+
+            // Validate asset
+            await this.validateExchangeAsset(
                validResult.config.asset,
                validResult.config.exchange as ExchangeId
             );
@@ -80,17 +86,22 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
       }
    }
 
-   private validateExchangeAsset(asset: string, exchange: ExchangeId): void {
+   private async validateExchangeAsset(
+      asset: string,
+      exchange: ExchangeId
+   ): Promise<void> {
       const exchangeService =
          this.exchangeServiceRepo.getExchangeService(exchange);
 
       if (!exchangeService) {
          throw new ValidationError(
-            this.prependGeneralError(ERR_UNSUPPORTED_EXCHANGE(exchange))
+            this.prependGeneralError(ERR_EXCHANGE_SERVICE_NOT_FOUND(exchange))
          );
       }
 
-      if (!exchangeService.isAssetSupported(asset)) {
+      const isSupported = await exchangeService.isAssetSupported(asset);
+
+      if (!isSupported) {
          throw new ValidationError(
             this.prependGeneralError(
                ERR_ASSET_UNSUPPORTED_ON_EXCHANGE(asset, exchange)
@@ -100,6 +111,6 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
    }
 
    private prependGeneralError(specificError: string): string {
-      return `${ERR_INVALID_STEP_CONFIG}. ${specificError}`;
+      return `${ERR_INVALID_STEP_CONFIG}: ${specificError}`;
    }
 }
