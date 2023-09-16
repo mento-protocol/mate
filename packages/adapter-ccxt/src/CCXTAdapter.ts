@@ -7,7 +7,6 @@ import {
    ValidationResult,
 } from "@mate/sdk";
 import { ExecutionResult } from "./ExecutionResult";
-import { CCXTStepConfig } from "./CCXTStepConfig";
 import { IValidator } from "./validation";
 import { CCXTAdapterConfig } from "./CCXTAdapterConfig";
 import { ApiCredentials, CCXTStep, ExchangeId } from "./types";
@@ -25,7 +24,7 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
 
    constructor(
       private adapterConfigValidator: IValidator<CCXTAdapterConfig>,
-      private stepConfigValidator: IValidator<CCXTStepConfig>,
+      private stepConfigValidator: IValidator<CCXTStep>,
       private configProvider: IConfigProvider,
       private exchangeFactory: IExchangeFactory,
       private exchangeServiceRepo: IExchangeServiceRepo
@@ -68,6 +67,7 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
    }
 
    //TODO: CCXTStep type is not correct.
+   //TODO: Refactor, do not need to prefix everyting with CCXT.
 
    public isValid(step: Step<CCXTStep>): ValidationResult {
       let result: ValidationResult = {
