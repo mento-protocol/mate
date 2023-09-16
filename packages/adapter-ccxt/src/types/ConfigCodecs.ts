@@ -1,8 +1,8 @@
 import * as t from "io-ts";
-import { ChainId, ExchangeId, StepType } from ".";
+import { StepType } from ".";
 import { TypeOf } from "io-ts";
 
-// Codecs used for the validation of data in the config source.
+// Codecs used for the structural validation of data in the config source.
 
 /**
  * Codec for individual exchange configurations.
@@ -10,7 +10,7 @@ import { TypeOf } from "io-ts";
  * such as their unique identifier, API key, and API secret.
  */
 export const ExchangeConfigCodec = t.type({
-   id: t.string, // Identifier for the exchange //TODO: Use ExchangeId with t.keyof instead
+   id: t.string, // Identifier for the exchange
    api_key: t.string, // API key for authenticating with the exchange
    api_secret: t.string, // API secret key for authenticating with the exchange
 });
@@ -39,9 +39,9 @@ export const AdapterConfigCodec = t.type({
  * Codec for the Exchange.WithdrawCrypto configuration.
  */
 export const ExchangeWithdrawCryptoConfigCodec = t.type({
-   exchange: t.keyof(ExchangeId), // Identifier for the exchange
+   exchange: t.string, // Identifier for the exchange
    asset: t.string, // Asset to withdraw e.g. "BTC"
-   chain_id: t.keyof(ChainId), // Chain identifier for destination chain
+   chain_id: t.string, // Chain identifier for destination chain
    destination_address: t.string, // Destination address
 });
 
@@ -77,4 +77,6 @@ export const ExchangeSwap = t.type({
 export const CCXTStepConfig = t.union([ExchangeWithdrawCrypto, ExchangeSwap]);
 
 // Types derived from the codecs
+
+//TODO: Consider renaming this.
 export type CCXTStep = TypeOf<typeof CCXTStepConfig>;
