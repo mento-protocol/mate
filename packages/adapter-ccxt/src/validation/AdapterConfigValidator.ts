@@ -19,6 +19,7 @@ export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
       if (isRight(validationResult)) {
          return this.processValidResult(validationResult.right);
       } else if (isLeft(validationResult)) {
+         //TODO: Think about extracting specific error messages from the PathReporter
          throw new ValidationError(
             ERR_INVALID_ADAPTER_CONFIG,
             PathReporter.report(validationResult)

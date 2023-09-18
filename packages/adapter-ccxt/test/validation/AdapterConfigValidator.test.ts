@@ -15,7 +15,7 @@ describe("AdapterConfigValidator", () => {
       validator = new AdapterConfigValidator();
    });
 
-   it("should validate correct CCXTAdapterConfig data", () => {
+   it("should validate correct CCXTAdapterConfig data", async () => {
       const validData = {
          id: "some-id",
          adapter: "@test-org/adapter-plug",
@@ -31,7 +31,7 @@ describe("AdapterConfigValidator", () => {
          },
       };
 
-      const adapterConfig = validator.validate(validData);
+      const adapterConfig = await validator.validate(validData);
       expect(adapterConfig).toBeDefined();
 
       const credentials = (adapterConfig as CCXTAdapterConfig).getCredentials(
@@ -43,7 +43,7 @@ describe("AdapterConfigValidator", () => {
       expect(credentials?.apiSecret).toEqual("TestSecret");
    });
 
-   it("should invalidate incorrect CCXTAdapterConfig data", () => {
+   it("should invalidate incorrect CCXTAdapterConfig data", async () => {
       const invalidData = {
          id: "some-id",
          adapter: "@test-org/adapter-plug",
@@ -58,12 +58,12 @@ describe("AdapterConfigValidator", () => {
          },
       };
 
-      expect(() => validator.validate(invalidData)).toThrowError(
+      await expect(() => validator.validate(invalidData)).rejects.toThrowError(
          ERR_INVALID_ADAPTER_CONFIG
       );
    });
 
-   it("should throw an error if the exchange ID is not supported", () => {
+   it("should throw an error if the exchange ID is not supported", async () => {
       const invalidData = {
          id: "some-id",
          adapter: "@test-org/adapter-plug",
@@ -79,12 +79,12 @@ describe("AdapterConfigValidator", () => {
          },
       };
 
-      expect(() => validator.validate(invalidData)).toThrowError(
+      await expect(() => validator.validate(invalidData)).rejects.toThrowError(
          `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_UNSUPPORTED_EXCHANGE("ftx")}`
       );
    });
 
-   it("should throw an error if the exchange ID is duplicated", () => {
+   it("should throw an error if the exchange ID is duplicated", async () => {
       const invalidData = {
          id: "some-id",
          adapter: "@test-org/adapter-plug",
@@ -105,7 +105,7 @@ describe("AdapterConfigValidator", () => {
          },
       };
 
-      expect(() => validator.validate(invalidData)).toThrowError(
+      await expect(() => validator.validate(invalidData)).rejects.toThrowError(
          `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_DUPLICATE_EXCHANGE_ID(
             "binance"
          )}`
