@@ -35,6 +35,7 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
       }
 
       if (isLeft(validationResult)) {
+         //TODO: Think about extracting specific error messages from the PathReporter
          throw new ValidationError(
             ERR_INVALID_STEP_CONFIG,
             PathReporter.report(validationResult)
@@ -68,6 +69,7 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
             );
             break;
          default:
+            // This should only happen if a new step type is added without updating this code.
             throw new ValidationError(
                this.prependGeneralError(ERR_UNSUPPORTED_STEP(validResult.type))
             );

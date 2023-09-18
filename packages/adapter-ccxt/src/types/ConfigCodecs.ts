@@ -43,6 +43,7 @@ export const ExchangeWithdrawCryptoConfigCodec = t.type({
    asset: t.string, // Asset to withdraw e.g. "BTC"
    chain_id: t.string, // Chain identifier for destination chain
    destination_address: t.string, // Destination address
+   amount: t.number, // Amount to withdraw
 });
 
 /**
