@@ -25,7 +25,7 @@ export interface IAdapter<TResult, TStepConfig> {
     * @param step - The step to validate.
     * @returns A validation result indicating if the step is valid or not.
     */
-   isValid(step: Step<TStepConfig>): ValidationResult;
+   isValid(step: Step<TStepConfig>): Promise<ValidationResult>;
 
    /**
     * Executes the provided step and returns the result.
