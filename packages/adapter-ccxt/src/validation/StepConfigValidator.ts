@@ -46,6 +46,7 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
    }
 
    private async processValidResult(validResult: CCXTStep): Promise<CCXTStep> {
+      //TODO: Refactor to use strategies for validation so we can add new step types without modifying this.
       switch (validResult.type) {
          case StepType.ExchangeWithdrawCrypto:
             // Validate exchange
