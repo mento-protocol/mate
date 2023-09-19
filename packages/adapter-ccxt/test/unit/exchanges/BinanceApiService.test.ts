@@ -26,6 +26,16 @@ describe("BinanceApiService", () => {
          verify(mockBinance.fetchMarkets()).once();
       });
 
+      it("should return false if the asset is supported", async () => {
+         when(mockBinance.fetchMarkets()).thenResolve([
+            { base: "BTC" },
+            { base: "ETH" },
+         ]);
+         const result = await testee.isAssetSupported("CELO");
+         expect(result).toBe(false);
+         verify(mockBinance.fetchMarkets()).once();
+      });
+
       it("should throw an error when fetchMarkets fails", async () => {
          when(mockBinance.fetchMarkets()).thenThrow(new Error("Network issue"));
 
