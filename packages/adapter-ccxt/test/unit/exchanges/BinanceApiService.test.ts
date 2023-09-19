@@ -1,8 +1,12 @@
 import "reflect-metadata";
-import { binance } from "ccxt";
+import { Balances, binance } from "ccxt";
 import { mock, instance, when, verify } from "ts-mockito";
 import { BinanceApiService } from "../../../src/exchanges";
-import { ERR_API_FETCH_MARKETS_FAILURE } from "../../../src/constants";
+import {
+   ERR_API_BALANCE_FETCH_FAILURE,
+   ERR_API_FETCH_MARKETS_FAILURE,
+   ERR_BALANCE_NOT_FOUND,
+} from "../../../src/constants";
 
 describe("BinanceApiService", () => {
    let mockBinance: binance;
@@ -42,6 +46,78 @@ describe("BinanceApiService", () => {
          await expect(testee.isAssetSupported("BTC")).rejects.toThrowError(
             `${ERR_API_FETCH_MARKETS_FAILURE("binance")}:Error: Network issue`
          );
+      });
+   });
+
+   describe("getCurrencyBalance", () => {
+      it("should return the balance for a given currency", async () => {
+         const mockBalances = {
+            info: {},
+            BTC: {
+               free: "0.3",
+               used: "0.2",
+               total: "0.5",
+            },
+            ETH: {
+               free: "1",
+               used: "1",
+               total: "2",
+            },
+         } as unknown as Balances;
+
+         when(mockBinance.fetchBalance()).thenResolve(mockBalances);
+
+         const result = await testee.getCurrencyBalance("BTC");
+         expect(result).toBe(0.5);
+         verify(mockBinance.fetchBalance()).once();
+      });
+
+      it("should return 0 if the total balance for a given currency is not a valid number", async () => {
+         const mockBalances = {
+            info: {},
+            BTC: {
+               free: "0.3",
+               used: "0.2",
+               total: "NaN",
+            },
+            ETH: {
+               free: "1",
+               used: "1",
+               total: "2",
+            },
+         } as unknown as Balances;
+         when(mockBinance.fetchBalance()).thenResolve(mockBalances);
+
+         const result = await testee.getCurrencyBalance("BTC");
+         expect(result).toBe(0);
+         verify(mockBinance.fetchBalance()).once();
+      });
+
+      it("should throw an error if the currency balance isn't found", async () => {
+         const mockBalances = {
+            info: {},
+            ETH: {
+               free: "1",
+               used: "1",
+               total: "2",
+            },
+         } as unknown as Balances;
+
+         when(mockBinance.fetchBalance()).thenResolve(mockBalances);
+
+         await expect(testee.getCurrencyBalance("BTC")).rejects.toThrowError(
+            `${ERR_BALANCE_NOT_FOUND}`
+         );
+         verify(mockBinance.fetchBalance()).once();
+      });
+
+      it("should throw an error if fetching the balance fails", async () => {
+         when(mockBinance.fetchBalance()).thenThrow(new Error("API issue"));
+
+         await expect(testee.getCurrencyBalance("BTC")).rejects.toThrowError(
+            `${ERR_API_BALANCE_FETCH_FAILURE("BTC")}`
+         );
+         verify(mockBinance.fetchBalance()).once();
       });
    });
 });
