@@ -1,15 +1,18 @@
 import "reflect-metadata";
 import { mock, instance, when, anyString, verify } from "ts-mockito";
-import { ChainId, ExchangeId, StepType } from "../../src/types";
-import { StepConfigValidator } from "../../src/validation";
+import { ChainId, ExchangeId, StepType } from "../../../src/types";
+import { StepConfigValidator } from "../../../src/validation";
 import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
    ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_EXCHANGE,
    ERR_UNSUPPORTED_STEP,
-} from "../../src/constants";
-import { IExchangeApiService, IExchangeServiceRepo } from "../../src/exchanges";
+} from "../../../src/constants";
+import {
+   IExchangeApiService,
+   IExchangeServiceRepo,
+} from "../../../src/exchanges";
 
 describe("StepConfigValidator", () => {
    let mockExchangeService: IExchangeApiService;

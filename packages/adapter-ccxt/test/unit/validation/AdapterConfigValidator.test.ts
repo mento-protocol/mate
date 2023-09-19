@@ -1,12 +1,12 @@
 import "reflect-metadata";
-import { IValidator, AdapterConfigValidator } from "./../../src/validation/";
-import { CCXTAdapterConfig } from "../../src/CCXTAdapterConfig";
+import { IValidator, AdapterConfigValidator } from "../../../src/validation";
+import { CCXTAdapterConfig } from "../../../src/CCXTAdapterConfig";
 import {
    ERR_DUPLICATE_EXCHANGE_ID,
    ERR_INVALID_ADAPTER_CONFIG,
    ERR_UNSUPPORTED_EXCHANGE,
-} from "../../src/constants";
-import { ExchangeId } from "../../src/types";
+} from "../../../src/constants";
+import { ExchangeId } from "../../../src/types";
 
 describe("AdapterConfigValidator", () => {
    let validator: IValidator<CCXTAdapterConfig>;
