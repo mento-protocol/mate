@@ -9,10 +9,10 @@ import {
 import { ExchangeId } from "../../../src/types";
 
 describe("AdapterConfigValidator", () => {
-   let validator: IValidator<CCXTAdapterConfig>;
+   let testee: IValidator<CCXTAdapterConfig>;
 
    beforeEach(() => {
-      validator = new AdapterConfigValidator();
+      testee = new AdapterConfigValidator();
    });
 
    it("should validate correct CCXTAdapterConfig data", async () => {
@@ -31,7 +31,7 @@ describe("AdapterConfigValidator", () => {
          },
       };
 
-      const adapterConfig = await validator.validate(validData);
+      const adapterConfig = await testee.validate(validData);
       expect(adapterConfig).toBeDefined();
 
       const credentials = (adapterConfig as CCXTAdapterConfig).getCredentials(
@@ -58,7 +58,7 @@ describe("AdapterConfigValidator", () => {
          },
       };
 
-      await expect(() => validator.validate(invalidData)).rejects.toThrowError(
+      await expect(() => testee.validate(invalidData)).rejects.toThrowError(
          ERR_INVALID_ADAPTER_CONFIG
       );
    });
@@ -79,7 +79,7 @@ describe("AdapterConfigValidator", () => {
          },
       };
 
-      await expect(() => validator.validate(invalidData)).rejects.toThrowError(
+      await expect(() => testee.validate(invalidData)).rejects.toThrowError(
          `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_UNSUPPORTED_EXCHANGE("ftx")}`
       );
    });
@@ -105,7 +105,7 @@ describe("AdapterConfigValidator", () => {
          },
       };
 
-      await expect(() => validator.validate(invalidData)).rejects.toThrowError(
+      await expect(() => testee.validate(invalidData)).rejects.toThrowError(
          `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_DUPLICATE_EXCHANGE_ID(
             "binance"
          )}`

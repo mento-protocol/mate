@@ -1,23 +1,15 @@
 import { injectable } from "tsyringe";
-import { Balances, Exchange, binance } from "ccxt";
-
+import { Balances, binance } from "ccxt";
 import { IExchangeApiService } from ".";
-import { ApiCredentials } from "../types";
 import {
    ERR_API_BALANCE_FETCH_FAILURE,
+   ERR_API_FETCH_MARKETS_FAILURE,
    ERR_BALANCE_NOT_FOUND,
 } from "../constants";
 
 @injectable()
 export class BinanceApiService implements IExchangeApiService {
-   private exchange: Exchange;
-
-   constructor(apiCredentials: ApiCredentials) {
-      this.exchange = new binance({
-         apiKey: apiCredentials.apiKey,
-         secret: apiCredentials.apiSecret,
-      });
-   }
+   constructor(private exchange: binance) {}
 
    public async isAssetSupported(asset: string): Promise<boolean> {
       try {
@@ -27,8 +19,9 @@ export class BinanceApiService implements IExchangeApiService {
             (market) => market.base.toUpperCase() === normalizedAsset
          );
       } catch (error) {
-         console.error(`Error fetching markets for Binance: ${error}`);
-         return false;
+         throw new Error(
+            `${ERR_API_FETCH_MARKETS_FAILURE(this.exchange.id)}:${error}`
+         );
       }
    }
 
