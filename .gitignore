@@ -10,8 +10,8 @@ dist
 coverage
 
 # local env files
-config.local.yaml
 config.yaml
+.env
 
 # cache
 .turbo
