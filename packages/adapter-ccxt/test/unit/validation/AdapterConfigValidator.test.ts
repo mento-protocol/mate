@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { IValidator, AdapterConfigValidator } from "../../../src/validation";
+import { AdapterConfigValidator } from "../../../src/validation";
 import { CCXTAdapterConfig } from "../../../src/CCXTAdapterConfig";
 import {
    ERR_DUPLICATE_EXCHANGE_ID,
@@ -7,6 +7,7 @@ import {
    ERR_UNSUPPORTED_EXCHANGE,
 } from "../../../src/constants";
 import { ExchangeId } from "../../../src/types";
+import { IValidator } from "@mate/sdk/src/interfaces";
 
 describe("AdapterConfigValidator", () => {
    let testee: IValidator<CCXTAdapterConfig>;
