@@ -7,8 +7,7 @@
    "main": "dist/index.js",
    "types": "dist/index.d.ts",
    "scripts": {
-      "build": "tsc -p tsconfig.build.json",
-      "test": "jest --verbose"
+      "build": "tsc -p tsconfig.build.json"
    },
    "devDependencies": {
       "@jest/types": "^29.6.3",
