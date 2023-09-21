@@ -1,7 +1,12 @@
 import { autoInjectable } from "tsyringe";
-import { IAdapter, IConfigProvider, Step, ValidationResult } from "@mate/sdk";
+import {
+   IAdapter,
+   IConfigProvider,
+   IValidator,
+   Step,
+   ValidationResult,
+} from "@mate/sdk";
 import { ExecutionResult } from "./ExecutionResult";
-import { IValidator } from "./validation";
 import { CCXTAdapterConfig } from "./CCXTAdapterConfig";
 import { ApiCredentials, CCXTStep, ExchangeId } from "./types";
 import { IExchangeFactory, IExchangeServiceRepo } from "./exchanges";
