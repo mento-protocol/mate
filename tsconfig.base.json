@@ -19,6 +19,7 @@
       "noImplicitThis": true,
       "alwaysStrict": true,
       "resolveJsonModule": false,
+      "noPropertyAccessFromIndexSignature": false,
 
       /* Experimental Options */
       "experimentalDecorators": true,
