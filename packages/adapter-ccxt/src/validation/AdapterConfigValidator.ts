@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { IValidator } from "./IValidator";
+import { IValidator } from "@mate/sdk/src/interfaces/IValidator";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import { CCXTAdapterConfig } from "../CCXTAdapterConfig";
