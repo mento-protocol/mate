@@ -30,7 +30,7 @@ describe("BinanceApiService", () => {
          verify(mockBinance.fetchMarkets()).once();
       });
 
-      it("should return false if the asset is supported", async () => {
+      it("should return false if the asset not supported", async () => {
          when(mockBinance.fetchMarkets()).thenResolve([
             { base: "BTC" },
             { base: "ETH" },
