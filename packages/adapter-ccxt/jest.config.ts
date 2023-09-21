@@ -16,6 +16,7 @@ const config: Config.InitialOptions = {
    moduleNameMapper: {
       "^@validation/(.*)$": "<rootDir>/src/validation/$1",
    },
+   testTimeout: 20000,
 };
 
 export default config;
