@@ -1,0 +1,27 @@
+{
+   "extends": "@tsconfig/strictest/tsconfig.json",
+   "compilerOptions": {
+      /* Basic Options */
+      "incremental": true,
+      "declaration": true,
+      "noEmit": true,
+      "target": "ES2021",
+      "moduleResolution": "node",
+      "module": "commonjs",
+      "types": ["node", "jest"],
+
+      /* Strict Type-Checking Options */
+      "noImplicitAny": true,
+      "strictNullChecks": true,
+      "strictFunctionTypes": true,
+      "strictBindCallApply": true,
+      "strictPropertyInitialization": false,
+      "noImplicitThis": true,
+      "alwaysStrict": true,
+      "resolveJsonModule": false,
+
+      /* Experimental Options */
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true
+   }
+}
