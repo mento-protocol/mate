@@ -11,8 +11,8 @@ import { TypeOf } from "io-ts";
  */
 export const ExchangeConfigCodec = t.type({
    id: t.string, // Identifier for the exchange
-   api_key: t.string, // API key for authenticating with the exchange
-   api_secret: t.string, // API secret key for authenticating with the exchange
+   apiKey: t.string, // API key for authenticating with the exchange
+   apiSecret: t.string, // API secret key for authenticating with the exchange
 });
 
 /**
@@ -41,8 +41,8 @@ export const AdapterConfigCodec = t.type({
 export const ExchangeWithdrawCryptoConfigCodec = t.type({
    exchange: t.string, // Identifier for the exchange
    asset: t.string, // Asset to withdraw e.g. "BTC"
-   chain_id: t.string, // Chain identifier for destination chain
-   destination_address: t.string, // Destination address
+   chainId: t.string, // Chain identifier for destination chain
+   destinationAddress: t.string, // Destination address
    amount: t.number, // Amount to withdraw
 });
 

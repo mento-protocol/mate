@@ -58,7 +58,7 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
 
             // Validate chain
             this.validateEnumValue(
-               validResult.config.chain_id,
+               validResult.config.chainId,
                this.chainIdSet,
                ERR_UNSUPPORTED_CHAIN
             );
