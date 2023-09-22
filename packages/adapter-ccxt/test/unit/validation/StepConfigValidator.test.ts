@@ -49,8 +49,8 @@ describe("StepConfigValidator", () => {
             config: {
                exchange: "ftx",
                asset: "BTC",
-               chain_id: ChainId.CELO,
-               destination_address: "some address",
+               chainId: ChainId.CELO,
+               destinationAddress: "some address",
                amount: 5000,
             },
          };
@@ -67,8 +67,8 @@ describe("StepConfigValidator", () => {
             config: {
                exchange: ExchangeId.BINANCE,
                asset: "BTC",
-               chain_id: "1",
-               destination_address: "some address",
+               chainId: "1",
+               destinationAddress: "some address",
                amount: 5000,
             },
          };
@@ -103,8 +103,8 @@ describe("StepConfigValidator", () => {
             config: {
                exchange: ExchangeId.BINANCE,
                asset: "BTC",
-               chain_id: ChainId.CELO,
-               destination_address: "some address",
+               chainId: ChainId.CELO,
+               destinationAddress: "some address",
                amount: 5000,
             },
          };
@@ -125,8 +125,8 @@ describe("StepConfigValidator", () => {
             config: {
                exchange: ExchangeId.BINANCE,
                asset: "BTC",
-               chain_id: ChainId.CELO,
-               destination_address: "some address",
+               chainId: ChainId.CELO,
+               destinationAddress: "some address",
                amount: 5000,
             },
          };
@@ -147,8 +147,8 @@ describe("StepConfigValidator", () => {
             config: {
                exchange: ExchangeId.BINANCE,
                asset: "BTC",
-               chain_id: ChainId.CELO,
-               destination_address: "some address",
+               chainId: ChainId.CELO,
+               destinationAddress: "some address",
                amount: 5000,
             },
          };
