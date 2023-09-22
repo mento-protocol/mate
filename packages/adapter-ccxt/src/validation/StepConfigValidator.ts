@@ -1,12 +1,12 @@
 import { injectable } from "tsyringe";
 import {
    IValidator,
+   ValidationError,
    ERR_INVALID_STEP_CONFIG,
    ERR_UNSUPPORTED_STEP,
 } from "@mate/sdk";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
-import { ValidationError } from "./ValidationError";
 import {
    CCXTStep,
    CCXTStepConfig,
