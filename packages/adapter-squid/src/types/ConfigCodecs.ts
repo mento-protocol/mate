@@ -9,10 +9,10 @@ export const BridgeSwapConfigCodec = t.type({
    from_chain: t.string,
    from_token: t.string,
    from_address: t.string,
+   from_amount: t.number,
    to_chain: t.string,
    to_token: t.string,
    to_address: t.string,
-   amount: t.number,
    max_slippage: t.number,
 });
 
