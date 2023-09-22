@@ -1,5 +1,7 @@
 import { autoInjectable } from "tsyringe";
 import {
+   ERR_ADAPTER_CONFIG_MISSING,
+   ERR_ADAPTER_INIT_FAILURE,
    IAdapter,
    IConfigProvider,
    IValidator,
@@ -10,10 +12,6 @@ import { ExecutionResult } from "./ExecutionResult";
 import { CCXTAdapterConfig } from "./CCXTAdapterConfig";
 import { ApiCredentials, CCXTStep, ExchangeId } from "./types";
 import { IExchangeFactory, IExchangeServiceRepo } from "./exchanges";
-import {
-   ERR_ADAPTER_CONFIG_MISSING,
-   ERR_ADAPTER_INIT_FAILURE,
-} from "./constants";
 
 @autoInjectable()
 export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {

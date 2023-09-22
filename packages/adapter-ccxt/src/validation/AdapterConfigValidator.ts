@@ -1,5 +1,5 @@
 import { injectable } from "tsyringe";
-import { IValidator } from "@mate/sdk/src/interfaces/IValidator";
+import { ERR_INVALID_ADAPTER_CONFIG, IValidator } from "@mate/sdk";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import { CCXTAdapterConfig } from "../CCXTAdapterConfig";
@@ -7,7 +7,6 @@ import { AdapterConfigCodec, ApiCredentials, ExchangeId } from "../types";
 import { ValidationError } from "./ValidationError";
 import {
    ERR_DUPLICATE_EXCHANGE_ID,
-   ERR_INVALID_ADAPTER_CONFIG,
    ERR_UNSUPPORTED_EXCHANGE,
 } from "../constants";
 

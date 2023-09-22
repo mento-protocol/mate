@@ -7,12 +7,12 @@ import {
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
    ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_EXCHANGE,
-   ERR_UNSUPPORTED_STEP,
 } from "../../../src/constants";
 import {
    IExchangeApiService,
    IExchangeServiceRepo,
 } from "../../../src/exchanges";
+import { ERR_UNSUPPORTED_STEP } from "@mate/sdk";
 
 describe("StepConfigValidator", () => {
    let mockExchangeService: IExchangeApiService;

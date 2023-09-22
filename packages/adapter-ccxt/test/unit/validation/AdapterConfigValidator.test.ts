@@ -3,11 +3,10 @@ import { AdapterConfigValidator } from "../../../src/validation";
 import { CCXTAdapterConfig } from "../../../src/CCXTAdapterConfig";
 import {
    ERR_DUPLICATE_EXCHANGE_ID,
-   ERR_INVALID_ADAPTER_CONFIG,
    ERR_UNSUPPORTED_EXCHANGE,
 } from "../../../src/constants";
 import { ExchangeId } from "../../../src/types";
-import { IValidator } from "@mate/sdk/src/interfaces";
+import { ERR_INVALID_ADAPTER_CONFIG, IValidator } from "@mate/sdk";
 
 describe("AdapterConfigValidator", () => {
    let testee: IValidator<CCXTAdapterConfig>;

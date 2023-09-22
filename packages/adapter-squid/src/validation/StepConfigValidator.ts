@@ -1,5 +1,6 @@
+import { isLeft } from "fp-ts/lib/Either";
 import { IValidator } from "@mate/sdk";
-import { SquidStep } from "../types";
+import { BridgeSwapStepCodec, SquidStep } from "../types";
 
 export class StepConfigValidator implements IValidator<SquidStep> {
    // TODO: Validation to do
@@ -10,6 +11,11 @@ export class StepConfigValidator implements IValidator<SquidStep> {
    // - Verify from address has enough balance of from token > from amount
 
    public async validate(data: any): Promise<SquidStep> {
+      const validationResult = BridgeSwapStepCodec.decode(data);
+
+      if (isLeft(validationResult)) {
+      }
+
       throw new Error("Method not implemented.");
    }
 }
