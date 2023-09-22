@@ -81,3 +81,4 @@ export const CCXTStepConfig = t.union([ExchangeWithdrawCrypto, ExchangeSwap]);
 
 //TODO: Consider renaming this.
 export type CCXTStep = TypeOf<typeof CCXTStepConfig>;
+export type CCXTAdapterConfig = TypeOf<typeof CCXTAdapterConfigCodec>;

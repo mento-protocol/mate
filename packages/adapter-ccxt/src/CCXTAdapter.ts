@@ -2,8 +2,12 @@ import { autoInjectable } from "tsyringe";
 import { IAdapter, IConfigProvider, Step, ValidationResult } from "@mate/sdk";
 import { ExecutionResult } from "./ExecutionResult";
 import { IValidator } from "./validation";
-import { CCXTAdapterConfig } from "./CCXTAdapterConfig";
-import { ApiCredentials, CCXTStep, ExchangeId } from "./types";
+import {
+   ApiCredentials,
+   CCXTAdapterConfig,
+   CCXTStep,
+   ExchangeId,
+} from "./types";
 import { IExchangeFactory, IExchangeServiceRepo } from "./exchanges";
 import {
    ERR_ADAPTER_CONFIG_MISSING,
@@ -71,15 +75,16 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
    }
 
    private async initializeExchanges(): Promise<void> {
-      for (const [exchangeId, exchangeConfig] of Object.entries(
-         this.adapterConfig.exchanges
-      ) as Array<[ExchangeId, ApiCredentials]>) {
+      for (const { id: exchangeId, apiKey, apiSecret } of this.adapterConfig
+         .exchanges) {
+         const exchangeConfig: ApiCredentials = { apiKey, apiSecret };
          const exchangeService = this.exchangeFactory.createExchangeService(
-            exchangeId,
+            exchangeId as ExchangeId,
             exchangeConfig
          );
+
          this.exchangeServiceRepo.setExchangeService(
-            exchangeId,
+            exchangeId as ExchangeId,
             exchangeService
          );
       }
