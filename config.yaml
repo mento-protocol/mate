@@ -6,6 +6,11 @@ adapters:
            - id: binance
              api_key: "TestKey"
              api_secret: "TestSecret"
+   - id: squid
+     adapter: "@mate/adapter-squid"
+     config:
+        baseUrl: "https://testnet.api.squidrouter.com"
+        integratorId: "mate-sdk"
 flows:
    - name: USD to cUSD
      id: USD-to-cUSD
