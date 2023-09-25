@@ -4,6 +4,7 @@ import {
    ValidationError,
    ERR_INVALID_STEP_CONFIG,
    ERR_UNSUPPORTED_STEP,
+   ERR_UNSUPPORTED_CHAIN,
 } from "@mate/sdk";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
@@ -18,7 +19,6 @@ import { IExchangeServiceRepo } from "../exchanges";
 import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
-   ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_EXCHANGE,
 } from "../constants";
 
