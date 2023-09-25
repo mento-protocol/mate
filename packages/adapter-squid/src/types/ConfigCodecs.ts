@@ -6,14 +6,14 @@ import { StepType } from ".";
  * Codec for the Bridge.Swap step configuration.
  */
 export const BridgeSwapConfigCodec = t.type({
-   from_chain: t.string,
-   from_token: t.string,
-   from_address: t.string,
-   from_amount: t.number,
-   to_chain: t.string,
-   to_token: t.string,
-   to_address: t.string,
-   max_slippage: t.number,
+   fromChain: t.number,
+   fromToken: t.string,
+   fromAddress: t.string,
+   fromAmount: t.number,
+   toChain: t.number,
+   toToken: t.string,
+   toAddress: t.string,
+   maxSlippage: t.number,
 });
 
 /**

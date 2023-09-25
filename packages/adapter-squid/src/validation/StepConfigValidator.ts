@@ -4,22 +4,14 @@ import { PathReporter } from "io-ts/lib/PathReporter";
 import {
    ERR_INVALID_STEP_CONFIG,
    ERR_UNSUPPORTED_CHAIN,
-   ERR_UNSUPPORTED_STEP,
    IValidator,
    ValidationError,
 } from "@mate/sdk";
-import { BridgeSwapStepCodec, SquidStep, StepType } from "../types";
+import { BridgeSwapStepCodec, SquidStep } from "../types";
 import { ISquidProvider } from "../providers";
 
 export class StepConfigValidator implements IValidator<SquidStep> {
-   constructor(private SquidProvider: ISquidProvider) {}
-
-   // TODO: Validation to do
-   // - Verify from and to chains are supported -> squid.chains should contain normalised chain id
-   // - Verify from and to tokens are supported -> squid.tokens should contain token address
-   // - Verify from chain supports from token
-   // - Verify to chain supports to token
-   // - Verify from address has enough balance of from token > from amount
+   constructor(private squidProvider: ISquidProvider) {}
 
    public async validate(data: any): Promise<SquidStep> {
       const validationResult = BridgeSwapStepCodec.decode(data);
@@ -39,20 +31,10 @@ export class StepConfigValidator implements IValidator<SquidStep> {
    }
 
    public async processValidResult(validResult: SquidStep): Promise<SquidStep> {
-      const squid = this.SquidProvider.getSquid();
+      const squid = this.squidProvider.getSquid();
 
       this.validateChains(validResult, squid);
       this.validateTokens(validResult, squid);
-
-      switch (validResult.type) {
-         case StepType.BridgeSwap:
-            break;
-
-         default:
-            throw new ValidationError(
-               this.prependGeneralError(ERR_UNSUPPORTED_STEP(validResult.type))
-            );
-      }
 
       return validResult;
    }
@@ -64,13 +46,13 @@ export class StepConfigValidator implements IValidator<SquidStep> {
       if (
          !tokens.find(
             (token) =>
-               token.address === stepConfig.config.from_token &&
-               token.chainId === stepConfig.config.from_chain
+               token.address === stepConfig.config.fromToken &&
+               token.chainId === stepConfig.config.fromChain
          )
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_CHAIN(stepConfig.config.from_token)
+               ERR_UNSUPPORTED_CHAIN(stepConfig.config.fromToken)
             )
          );
       }
@@ -79,13 +61,13 @@ export class StepConfigValidator implements IValidator<SquidStep> {
       if (
          !tokens.find(
             (token) =>
-               token.address === stepConfig.config.to_token &&
-               token.chainId === stepConfig.config.to_chain
+               token.address === stepConfig.config.toToken &&
+               token.chainId === stepConfig.config.toChain
          )
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_CHAIN(stepConfig.config.to_token)
+               ERR_UNSUPPORTED_CHAIN(stepConfig.config.toToken)
             )
          );
       }
@@ -96,22 +78,22 @@ export class StepConfigValidator implements IValidator<SquidStep> {
 
       // Validate from chain
       if (
-         !chains.find((chain) => chain.chainId === stepConfig.config.from_chain)
+         !chains.find((chain) => chain.chainId === stepConfig.config.fromChain)
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_CHAIN(stepConfig.config.from_chain)
+               ERR_UNSUPPORTED_CHAIN(stepConfig.config.fromChain.toString())
             )
          );
       }
 
       // Validate to chain
       if (
-         !chains.find((chain) => chain.chainId === stepConfig.config.to_chain)
+         !chains.find((chain) => chain.chainId === stepConfig.config.toChain)
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_CHAIN(stepConfig.config.to_chain)
+               ERR_UNSUPPORTED_CHAIN(stepConfig.config.toChain.toString())
             )
          );
       }
