@@ -1,3 +1,5 @@
 export * from "./ApiCredentials";
-export * from "./SupportedExchanges";
+export * from "./ExchangeId";
+export * from "./ChainId";
+export * from "./StepType";
 export * from "./ConfigCodecs";

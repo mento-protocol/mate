@@ -9,8 +9,8 @@ export interface IConfigProvider {
    /**
     * Retrieves the configuration for a specific adapter using its ID.
     *
-    * @param {string} adapterId - The unique identifier for the adapter whose config is to be retrieved.
-    * @returns {AdapterConfig|null} The configuration details for the specified adapter or `null` if not found.
+    * @param adapterId - The unique identifier for the adapter whose config is to be retrieved.
+    * @returns The configuration details for the specified adapter or `null` if not found.
     */
    getAdapterConfig(adapterId: string): AdapterConfig | null;
 }

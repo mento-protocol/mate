@@ -2,70 +2,59 @@ import { injectable } from "tsyringe";
 import { IValidator } from "./IValidator";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
-import {
-   DUPLICATE_EXCHANGE_ID_ERROR,
-   INVALID_ADAPTER_CONFIGURATION,
-   UNSUPPORTED_EXCHANGE_ERROR,
-} from "../constants";
-import { CCXTAdapterConfig } from "../CCXTAdapterConfig";
-import { AdapterConfigCodec, ApiCredentials, ExchangeId } from "../types";
+import { AdapterConfigCodec, CCXTAdapterConfig, ExchangeId } from "../types";
 import { ValidationError } from "./ValidationError";
+import {
+   ERR_DUPLICATE_EXCHANGE_ID,
+   ERR_INVALID_ADAPTER_CONFIG,
+   ERR_UNSUPPORTED_EXCHANGE,
+} from "../constants";
 
 @injectable()
 export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
-   public validate(data: any): CCXTAdapterConfig {
-      // Validate the data using the codec to ensure it matches the expected shape
+   public async validate(data: any): Promise<CCXTAdapterConfig> {
       const validationResult = AdapterConfigCodec.decode(data);
 
-      // If the validation was successful, proceed to validate the exchange credentials then return the config object
       if (isRight(validationResult)) {
-         let exchangeCredentials: Map<ExchangeId, ApiCredentials> = new Map();
-
-         for (const exchange of validationResult.right.config
-            .exchanges as Array<{
-            id: string;
-            api_key: string;
-            api_secret: string;
-         }>) {
-            const exchangeId = exchange.id.trim().toLowerCase();
-
-            // Make sure the exchange is supported
-            if (!Object.values(ExchangeId).includes(exchangeId as ExchangeId)) {
-               throw new ValidationError(
-                  `${INVALID_ADAPTER_CONFIGURATION}: ${UNSUPPORTED_EXCHANGE_ERROR(
-                     exchangeId
-                  )}`
-               );
-            }
-
-            // Make sure the exchange ID is unique, e.g. no duplicate exchange IDs in the config
-            if (exchangeCredentials.has(exchangeId as ExchangeId)) {
-               throw new ValidationError(
-                  `${INVALID_ADAPTER_CONFIGURATION}: ${DUPLICATE_EXCHANGE_ID_ERROR(
-                     exchange.id
-                  )}`
-               );
-            }
-
-            const exchangeApiCredentials: ApiCredentials = {
-               apiKey: exchange.api_key.trim(),
-               apiSecret: exchange.api_secret.trim(),
-            };
-
-            exchangeCredentials.set(
-               exchangeId as ExchangeId,
-               exchangeApiCredentials
-            );
-         }
-
-         return new CCXTAdapterConfig(exchangeCredentials);
+         this.validateExchangeIds(validationResult.right.config);
+         return validationResult.right.config;
       } else if (isLeft(validationResult)) {
+         //TODO: Think about extracting specific error messages from the PathReporter
          throw new ValidationError(
-            INVALID_ADAPTER_CONFIGURATION,
+            ERR_INVALID_ADAPTER_CONFIG,
             PathReporter.report(validationResult)
          );
       } else {
-         throw new Error(INVALID_ADAPTER_CONFIGURATION);
+         throw new Error(ERR_INVALID_ADAPTER_CONFIG);
       }
+   }
+
+   private validateExchangeIds(config: CCXTAdapterConfig) {
+      const existingIds = new Set<string>();
+
+      config.exchanges.forEach((exchange) => {
+         const exchangeId = exchange.id.trim().toLowerCase();
+         exchange.id = exchangeId; // Update the exchange ID with the normalized value
+
+         // Check if the exchange ID is supported
+         if (!Object.values(ExchangeId).includes(exchangeId as ExchangeId)) {
+            throw new ValidationError(
+               `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_UNSUPPORTED_EXCHANGE(
+                  exchangeId
+               )}`
+            );
+         }
+
+         // Check for duplicate exchange IDs
+         if (existingIds.has(exchangeId)) {
+            throw new ValidationError(
+               `${ERR_INVALID_ADAPTER_CONFIG}: ${ERR_DUPLICATE_EXCHANGE_ID(
+                  exchangeId
+               )}`
+            );
+         } else {
+            existingIds.add(exchangeId);
+         }
+      });
    }
 }

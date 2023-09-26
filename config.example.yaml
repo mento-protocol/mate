@@ -4,8 +4,8 @@ adapters:
      config:
         exchanges:
            - id: binance
-             api_key: "TestKey"
-             api_secret: "TestSecret"
+             apiKey: "TestKey"
+             apiSecret: "TestSecret"
 flows:
    - name: USD to cUSD
      id: USD-to-cUSD
@@ -24,8 +24,8 @@ flows:
           config:
              exchange: binance
              asset: BUSD
-             chain: BSC
-             address: ...
+             chainId: 4220
+             destinationAddress: ...
         - type: Bridge.Swap
           adapter: squid
           config:

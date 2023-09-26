@@ -10,11 +10,8 @@ dist
 coverage
 
 # local env files
+config.yaml
 .env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
 
 # cache
 .turbo

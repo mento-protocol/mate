@@ -16,9 +16,9 @@ export interface IValidator<T> {
     * successful. If the validation fails, it should throw an error or return a value
     * that signifies a validation failure.
     *
-    * @param {any} data The data to be validated.
-    * @returns {T} The validated object of type T.
-    * @throws {ValidationError} If the validation fails.
+    * @param data - The data to be validated.
+    * @returns The validated object of type T.
+    * @throws Will throw a validation error if the validation fails.
     */
-   validate(data: any): T;
+   validate(data: any): Promise<T>;
 }

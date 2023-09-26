@@ -1,6 +1,8 @@
 import * as t from "io-ts";
+import { StepType } from ".";
+import { TypeOf } from "io-ts";
 
-// Codecs used for the validation of data in the config source.
+// Codecs used for the structural validation of data in the config source.
 
 /**
  * Codec for individual exchange configurations.
@@ -9,8 +11,8 @@ import * as t from "io-ts";
  */
 export const ExchangeConfigCodec = t.type({
    id: t.string, // Identifier for the exchange
-   api_key: t.string, // API key for authenticating with the exchange
-   api_secret: t.string, // API secret key for authenticating with the exchange
+   apiKey: t.string, // API key for authenticating with the exchange
+   apiSecret: t.string, // API secret key for authenticating with the exchange
 });
 
 /**
@@ -32,3 +34,51 @@ export const AdapterConfigCodec = t.type({
    adapter: t.string, // Adapter reference, e.g., "@mate/adapter-ccxt"
    config: CCXTAdapterConfigCodec, // Configuration specific to this adapter
 });
+
+/**
+ * Codec for the Exchange.WithdrawCrypto configuration.
+ */
+export const ExchangeWithdrawCryptoConfigCodec = t.type({
+   exchange: t.string, // Identifier for the exchange
+   asset: t.string, // Asset to withdraw e.g. "BTC"
+   chainId: t.string, // Chain identifier for destination chain
+   destinationAddress: t.string, // Destination address
+   amount: t.number, // Amount to withdraw
+});
+
+/**
+ * Codec for the Exchange.WithdrawCrypto step.
+ */
+export const ExchangeWithdrawCrypto = t.type({
+   type: t.literal(StepType.ExchangeWithdrawCrypto),
+   adapter: t.literal("ccxt"),
+   config: ExchangeWithdrawCryptoConfigCodec,
+});
+
+/**
+ * Codec for the Exchange.Swap configuration.
+ */
+export const ExchangeSwapConfigCodec = t.type({
+   exchange: t.string,
+   from: t.string,
+   to: t.string,
+   maxSlippageBPS: t.number,
+   amount: t.number,
+});
+
+/**
+ * Codec for the Exchange.Swap step.
+ */
+export const ExchangeSwap = t.type({
+   type: t.literal(StepType.ExchangeSwap),
+   adapter: t.literal("ccxt"),
+   config: ExchangeSwapConfigCodec,
+});
+
+export const CCXTStepConfig = t.union([ExchangeWithdrawCrypto, ExchangeSwap]);
+
+// Types derived from the codecs
+
+//TODO: Consider renaming this.
+export type CCXTStep = TypeOf<typeof CCXTStepConfig>;
+export type CCXTAdapterConfig = TypeOf<typeof CCXTAdapterConfigCodec>;
