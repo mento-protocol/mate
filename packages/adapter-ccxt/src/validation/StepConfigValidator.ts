@@ -37,14 +37,15 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
       }
 
       if (isLeft(validationResult)) {
-         //TODO: Think about extracting specific error messages from the PathReporter
          throw new ValidationError(
             ERR_INVALID_STEP_CONFIG,
             PathReporter.report(validationResult)
          );
       }
 
-      throw new Error(this.prependGeneralError(ERR_INVALID_STEP_CONFIG));
+      // This will never happen, as the above if covers all
+      // possible cases but the compiler doesn't know that.
+      return validationResult as never;
    }
 
    private async processValidResult(validResult: CCXTStep): Promise<CCXTStep> {

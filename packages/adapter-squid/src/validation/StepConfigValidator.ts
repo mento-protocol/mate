@@ -28,7 +28,9 @@ export class StepConfigValidator implements IValidator<SquidStep> {
          );
       }
 
-      throw new Error("Method not implemented.");
+      // This will never happen, as the above if covers all
+      // possible cases but the compiler doesn't know that.
+      return validationResult as never;
    }
 
    public async processValidResult(validResult: SquidStep): Promise<SquidStep> {
