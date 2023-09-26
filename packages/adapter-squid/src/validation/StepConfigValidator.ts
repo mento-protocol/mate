@@ -4,6 +4,7 @@ import { PathReporter } from "io-ts/lib/PathReporter";
 import {
    ERR_INVALID_STEP_CONFIG,
    ERR_UNSUPPORTED_CHAIN,
+   ERR_UNSUPPORTED_TOKEN,
    IValidator,
    ValidationError,
 } from "@mate/sdk";
@@ -42,7 +43,7 @@ export class StepConfigValidator implements IValidator<SquidStep> {
    private validateTokens(stepConfig: SquidStep, squid: Squid): void {
       const tokens = squid.tokens as TokenData[];
 
-      // Verify fromToken is supported
+      // Verify fromToken is supported on fromChain
       if (
          !tokens.find(
             (token) =>
@@ -52,12 +53,12 @@ export class StepConfigValidator implements IValidator<SquidStep> {
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_CHAIN(stepConfig.config.fromToken)
+               ERR_UNSUPPORTED_TOKEN(stepConfig.config.fromToken)
             )
          );
       }
 
-      // Verify toToken is supported
+      // Verify toToken is supported on toChain
       if (
          !tokens.find(
             (token) =>
@@ -67,7 +68,7 @@ export class StepConfigValidator implements IValidator<SquidStep> {
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_CHAIN(stepConfig.config.toToken)
+               ERR_UNSUPPORTED_TOKEN(stepConfig.config.toToken)
             )
          );
       }
