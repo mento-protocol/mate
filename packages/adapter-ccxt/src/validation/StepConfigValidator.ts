@@ -20,8 +20,9 @@ import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
    ERR_UNSUPPORTED_EXCHANGE,
-   ERR_INVALID_ADDRESS
+   ERR_INVALID_ADDRESS,
 } from "../constants";
+import { isAddress } from "viem";
 
 @injectable()
 export class StepConfigValidator implements IValidator<CCXTStep> {
