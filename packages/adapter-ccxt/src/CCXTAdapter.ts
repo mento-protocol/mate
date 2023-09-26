@@ -9,8 +9,12 @@ import {
    ValidationResult,
 } from "@mate/sdk";
 import { ExecutionResult } from "./ExecutionResult";
-import { CCXTAdapterConfig } from "./CCXTAdapterConfig";
-import { ApiCredentials, CCXTStep, ExchangeId } from "./types";
+import {
+   ApiCredentials,
+   CCXTAdapterConfig,
+   CCXTStep,
+   ExchangeId,
+} from "./types";
 import { IExchangeFactory, IExchangeServiceRepo } from "./exchanges";
 
 @autoInjectable()
