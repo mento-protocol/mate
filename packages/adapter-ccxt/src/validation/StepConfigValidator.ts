@@ -14,11 +14,13 @@ import { IExchangeServiceRepo } from "../exchanges";
 import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
+   ERR_INVALID_ADDRESS,
    ERR_INVALID_STEP_CONFIG,
    ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_EXCHANGE,
    ERR_UNSUPPORTED_STEP,
 } from "../constants";
+import { isAddress } from "viem";
 
 @injectable()
 export class StepConfigValidator implements IValidator<CCXTStep> {
@@ -68,6 +70,10 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
                validResult.config.asset,
                validResult.config.exchange as ExchangeId
             );
+
+            //Validate address
+            this.validateAddress(validResult.config.destinationAddress);
+
             break;
          default:
             // This should only happen if a new step type is added without updating this code.
@@ -77,6 +83,16 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
       }
 
       return validResult;
+   }
+
+   private validateAddress(address: string): void {
+      if (!isAddress(address)) {
+         throw new ValidationError(
+            this.prependGeneralError(
+               ERR_INVALID_ADDRESS(address, "destinationAddress")
+            )
+         );
+      }
    }
 
    private validateEnumValue(
