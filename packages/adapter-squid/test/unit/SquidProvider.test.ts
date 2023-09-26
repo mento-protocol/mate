@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { Squid } from "@0xsquid/sdk";
 import { mock, instance, when } from "ts-mockito";
-import { SquidProvider } from "../../src/providers";
+import { SquidProvider } from "../../src/services";
 
 describe("SquidProvider", () => {
    let squidMock: Squid;

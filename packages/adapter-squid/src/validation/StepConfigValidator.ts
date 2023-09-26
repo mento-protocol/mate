@@ -9,7 +9,7 @@ import {
    ValidationError,
 } from "@mate/sdk";
 import { BridgeSwapStepCodec, SquidStep } from "../types";
-import { ISquidProvider } from "../providers";
+import { ISquidProvider } from "../services";
 
 export class StepConfigValidator implements IValidator<SquidStep> {
    constructor(private squidProvider: ISquidProvider) {}

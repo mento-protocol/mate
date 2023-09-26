@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ISquidProvider } from "../../src/providers";
+import { ISquidProvider } from "../../src/services";
 import { StepConfigValidator } from "../../src/validation";
 import { mock, instance, when, verify } from "ts-mockito";
 import { Squid, TokenData, ChainData } from "@0xsquid/sdk";

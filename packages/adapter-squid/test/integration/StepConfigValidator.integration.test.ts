@@ -1,5 +1,5 @@
 import "reflect-metadata";
-import { ISquidProvider, SquidProvider } from "../../src/providers";
+import { ISquidProvider, SquidProvider } from "../../src/services";
 import { StepConfigValidator } from "../../src/validation";
 import { ERR_UNSUPPORTED_CHAIN, ERR_UNSUPPORTED_TOKEN } from "@mate/sdk";
 import { StepType } from "../../src/types";
