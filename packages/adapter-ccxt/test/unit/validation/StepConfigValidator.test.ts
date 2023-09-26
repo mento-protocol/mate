@@ -5,6 +5,7 @@ import { StepConfigValidator } from "../../../src/validation";
 import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
+   ERR_INVALID_ADDRESS,
    ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_EXCHANGE,
    ERR_UNSUPPORTED_STEP,
@@ -140,6 +141,24 @@ describe("StepConfigValidator", () => {
          );
       });
 
+      it("should throw ValidationError when an invalid destination address is used", async () => {
+         const invalidConfig = {
+            type: StepType.ExchangeWithdrawCrypto,
+            adapter: "ccxt",
+            config: {
+               exchange: ExchangeId.BINANCE,
+               asset: "BTC",
+               chainId: ChainId.CELO,
+               destinationAddress: "Some Address",
+               amount: 5000,
+            },
+         };
+
+         await expect(() => testee.validate(invalidConfig)).rejects.toThrow(
+            `${ERR_INVALID_ADDRESS("Some Address", "destinationAddress")}`
+         );
+      });
+
       it("should validate successfully for correct config", async () => {
          const validConfig = {
             type: StepType.ExchangeWithdrawCrypto,
@@ -148,7 +167,7 @@ describe("StepConfigValidator", () => {
                exchange: ExchangeId.BINANCE,
                asset: "BTC",
                chainId: ChainId.CELO,
-               destinationAddress: "some address",
+               destinationAddress: "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5",
                amount: 5000,
             },
          };
