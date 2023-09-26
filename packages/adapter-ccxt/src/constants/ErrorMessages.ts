@@ -13,3 +13,5 @@ export const ERR_EXCHANGE_SERVICE_NOT_FOUND = (exchange: string) =>
    `Service for exchange "${exchange}" not found. It might not have been initialized or properly registered in repo.`;
 export const ERR_API_FETCH_MARKETS_FAILURE = (exchange: string) =>
    `Failed to fetch markets for exchange ${exchange}`;
+export const ERR_INVALID_ADDRESS = (address: string, prop: string) =>
+   `Invalid address was provided for property "${prop}": ${address}`;

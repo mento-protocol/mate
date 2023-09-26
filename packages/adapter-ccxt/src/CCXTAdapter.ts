@@ -74,15 +74,16 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
    }
 
    private async initializeExchanges(): Promise<void> {
-      for (const [exchangeId, exchangeConfig] of Object.entries(
-         this.adapterConfig.exchanges
-      ) as Array<[ExchangeId, ApiCredentials]>) {
+      for (const { id: exchangeId, apiKey, apiSecret } of this.adapterConfig
+         .exchanges) {
+         const exchangeConfig: ApiCredentials = { apiKey, apiSecret };
          const exchangeService = this.exchangeFactory.createExchangeService(
-            exchangeId,
+            exchangeId as ExchangeId,
             exchangeConfig
          );
+
          this.exchangeServiceRepo.setExchangeService(
-            exchangeId,
+            exchangeId as ExchangeId,
             exchangeService
          );
       }

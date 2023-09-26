@@ -20,6 +20,7 @@ import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
    ERR_UNSUPPORTED_EXCHANGE,
+   ERR_INVALID_ADDRESS
 } from "../constants";
 
 @injectable()
@@ -61,7 +62,7 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
 
             // Validate chain
             this.validateEnumValue(
-               validResult.config.chain_id,
+               validResult.config.chainId,
                this.chainIdSet,
                ERR_UNSUPPORTED_CHAIN
             );
@@ -71,6 +72,10 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
                validResult.config.asset,
                validResult.config.exchange as ExchangeId
             );
+
+            //Validate address
+            this.validateAddress(validResult.config.destinationAddress);
+
             break;
          default:
             // This should only happen if a new step type is added without updating this code.
@@ -80,6 +85,16 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
       }
 
       return validResult;
+   }
+
+   private validateAddress(address: string): void {
+      if (!isAddress(address)) {
+         throw new ValidationError(
+            this.prependGeneralError(
+               ERR_INVALID_ADDRESS(address, "destinationAddress")
+            )
+         );
+      }
    }
 
    private validateEnumValue(

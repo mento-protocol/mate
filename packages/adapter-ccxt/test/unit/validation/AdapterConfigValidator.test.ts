@@ -1,11 +1,10 @@
 import "reflect-metadata";
 import { AdapterConfigValidator } from "../../../src/validation";
-import { CCXTAdapterConfig } from "../../../src/CCXTAdapterConfig";
 import {
-   ERR_DUPLICATE_EXCHANGE_ID,
+   ERR_DUPLICATE_EXCHANGE_ID, 
    ERR_UNSUPPORTED_EXCHANGE,
-} from "../../../src/constants";
-import { ExchangeId } from "../../../src/types";
+} from "../../../src/constants"; 
+import { CCXTAdapterConfig } from "../../../src/types";
 import { ERR_INVALID_ADAPTER_CONFIG, IValidator } from "@mate/sdk";
 
 describe("AdapterConfigValidator", () => {
@@ -24,8 +23,8 @@ describe("AdapterConfigValidator", () => {
             exchanges: [
                {
                   id: "binance",
-                  api_key: "TestKey",
-                  api_secret: "TestSecret",
+                  apiKey: "TestKey",
+                  apiSecret: "TestSecret",
                },
             ],
          },
@@ -34,13 +33,11 @@ describe("AdapterConfigValidator", () => {
       const adapterConfig = await testee.validate(validData);
       expect(adapterConfig).toBeDefined();
 
-      const credentials = (adapterConfig as CCXTAdapterConfig).getCredentials(
-         ExchangeId.BINANCE
-      );
+      const exchangeConfig = adapterConfig.exchanges[0];
 
-      expect(credentials).toBeDefined();
-      expect(credentials?.apiKey).toEqual("TestKey");
-      expect(credentials?.apiSecret).toEqual("TestSecret");
+      expect(exchangeConfig).toBeDefined();
+      expect(exchangeConfig?.apiKey).toEqual("TestKey");
+      expect(exchangeConfig?.apiSecret).toEqual("TestSecret");
    });
 
    it("should invalidate incorrect CCXTAdapterConfig data", async () => {
@@ -52,7 +49,7 @@ describe("AdapterConfigValidator", () => {
             exchanges: [
                {
                   igd: "binance",
-                  api_secret: "TestSecret",
+                  apiSecret: "TestSecret",
                },
             ],
          },
@@ -72,8 +69,8 @@ describe("AdapterConfigValidator", () => {
             exchanges: [
                {
                   id: "ftx",
-                  api_key: "TestKey",
-                  api_secret: "TestSecret",
+                  apiKey: "TestKey",
+                  apiSecret: "TestSecret",
                },
             ],
          },
@@ -93,13 +90,13 @@ describe("AdapterConfigValidator", () => {
             exchanges: [
                {
                   id: "binance",
-                  api_key: "TestKey",
-                  api_secret: "TestSecret",
+                  apiKey: "TestKey",
+                  apiSecret: "TestSecret",
                },
                {
                   id: "binance",
-                  api_key: "TestKey",
-                  api_secret: "TestSecret",
+                  apiKey: "TestKey",
+                  apiSecret: "TestSecret",
                },
             ],
          },
