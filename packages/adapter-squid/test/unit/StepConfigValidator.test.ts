@@ -1,15 +1,14 @@
 import "reflect-metadata";
-import { ISquidProvider } from "../src/providers";
-import { StepConfigValidator } from "../src/validation";
-import "reflect-metadata";
-import { mock, instance, when } from "ts-mockito";
+import { ISquidProvider } from "../../src/providers";
+import { StepConfigValidator } from "../../src/validation";
+import { mock, instance, when, verify } from "ts-mockito";
 import { Squid, TokenData, ChainData } from "@0xsquid/sdk";
 import {
    ERR_INVALID_STEP_CONFIG,
    ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_TOKEN,
 } from "@mate/sdk";
-import { StepType } from "../src/types";
+import { StepType } from "../../src/types";
 
 describe("StepConfigValidator", () => {
    let mockSquidProvider: ISquidProvider;
@@ -60,6 +59,9 @@ describe("StepConfigValidator", () => {
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
             ERR_INVALID_STEP_CONFIG
          );
+
+         verify(mockSquid.chains).never();
+         verify(mockSquid.tokens).never();
       });
 
       it("should throw ValidationError for unsupported fromToken", async () => {
@@ -81,6 +83,8 @@ describe("StepConfigValidator", () => {
          await expect(() => testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_TOKEN(invalidConfig.config.fromToken)}`
          );
+         verify(mockSquid.chains).once();
+         verify(mockSquid.tokens).once();
       });
 
       it("should throw ValidationError for unsupported toToken", async () => {
@@ -102,6 +106,8 @@ describe("StepConfigValidator", () => {
          await expect(() => testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_TOKEN(invalidConfig.config.toToken)}`
          );
+         verify(mockSquid.chains).once();
+         verify(mockSquid.tokens).once();
       });
 
       it("should throw ValidationError for unsupported fromChain", async () => {
@@ -125,6 +131,8 @@ describe("StepConfigValidator", () => {
                invalidConfig.config.fromChain.toString()
             )}`
          );
+         verify(mockSquid.chains).once();
+         verify(mockSquid.tokens).never();
       });
 
       it("should throw ValidationError for unsupported toChain", async () => {
@@ -146,6 +154,8 @@ describe("StepConfigValidator", () => {
          await expect(() => testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_CHAIN(invalidConfig.config.toChain.toString())}`
          );
+         verify(mockSquid.chains).once();
+         verify(mockSquid.tokens).never();
       });
 
       it("should validate successfully for correct config", async () => {
