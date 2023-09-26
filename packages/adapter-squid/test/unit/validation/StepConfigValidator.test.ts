@@ -1,6 +1,6 @@
 import "reflect-metadata";
-import { ISquidProvider } from "../../src/services";
-import { StepConfigValidator } from "../../src/validation";
+import { ISquidProvider } from "../../../src/services";
+import { StepConfigValidator } from "../../../src/validation";
 import { mock, instance, when, verify } from "ts-mockito";
 import { Squid, TokenData, ChainData } from "@0xsquid/sdk";
 import {
@@ -8,7 +8,7 @@ import {
    ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_TOKEN,
 } from "@mate/sdk";
-import { StepType } from "../../src/types";
+import { StepType } from "../../../src/types";
 
 describe("StepConfigValidator", () => {
    let mockSquidProvider: ISquidProvider;
