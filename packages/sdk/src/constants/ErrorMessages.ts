@@ -7,7 +7,7 @@ export const ERR_UNSUPPORTED_STEP = (type: string) =>
    `Step type not supported: ${type}`;
 export const ERR_UNSUPPORTED_CHAIN = (id: string) =>
    `Chain ID not supported: ${id}`;
-export const ERR_UNSUPPORTED_TOKEN = (token: string) =>
-   `Token not supported: ${token}`;
+export const ERR_UNSUPPORTED_TOKEN = (token: string, chain: number) =>
+   `Token ${token} not supported on chain ${chain}`;
 export const ERR_INVALID_ADDRESS = (address: string, prop: string) =>
    `Invalid address was provided for property "${prop}": ${address}`;

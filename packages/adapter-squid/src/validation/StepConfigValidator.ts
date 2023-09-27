@@ -42,20 +42,18 @@ export class StepConfigValidator implements IValidator<SquidStep> {
 
       this.validateChains(validResult, squid);
       this.validateTokens(validResult, squid);
-      this.validateAddress(validResult.config.fromAddress);
-      this.validateAddress(validResult.config.fromToken);
-      this.validateAddress(validResult.config.toAddress);
-      this.validateAddress(validResult.config.toToken);
+      this.validateAddress(validResult.config.fromAddress, "fromAddress");
+      this.validateAddress(validResult.config.fromToken, "fromToken");
+      this.validateAddress(validResult.config.toAddress, "toAddress");
+      this.validateAddress(validResult.config.toToken, "toToken");
 
       return validResult;
    }
 
-   private validateAddress(address: string): void {
+   private validateAddress(address: string, propName: string): void {
       if (!isAddress(address)) {
          throw new ValidationError(
-            this.prependGeneralError(
-               ERR_INVALID_ADDRESS(address, "destinationAddress")
-            )
+            this.prependGeneralError(ERR_INVALID_ADDRESS(address, propName))
          );
       }
    }
@@ -73,7 +71,10 @@ export class StepConfigValidator implements IValidator<SquidStep> {
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_TOKEN(stepConfig.config.fromToken)
+               ERR_UNSUPPORTED_TOKEN(
+                  stepConfig.config.fromToken,
+                  stepConfig.config.fromChain
+               )
             )
          );
       }
@@ -88,7 +89,10 @@ export class StepConfigValidator implements IValidator<SquidStep> {
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_TOKEN(stepConfig.config.toToken)
+               ERR_UNSUPPORTED_TOKEN(
+                  stepConfig.config.toToken,
+                  stepConfig.config.toChain
+               )
             )
          );
       }
