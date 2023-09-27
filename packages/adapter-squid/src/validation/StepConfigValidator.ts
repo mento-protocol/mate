@@ -3,6 +3,7 @@ import { ChainData, Squid, TokenData } from "@0xsquid/sdk";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import {
+   ERR_INVALID_ADDRESS,
    ERR_INVALID_STEP_CONFIG,
    ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_TOKEN,
@@ -11,6 +12,7 @@ import {
 } from "@mate/sdk";
 import { BridgeSwapStepCodec, SquidStep } from "../types";
 import { ISquidProvider, SquidProvider } from "../services";
+import { isAddress } from "viem";
 
 @injectable()
 export class StepConfigValidator implements IValidator<SquidStep> {
@@ -40,8 +42,22 @@ export class StepConfigValidator implements IValidator<SquidStep> {
 
       this.validateChains(validResult, squid);
       this.validateTokens(validResult, squid);
+      this.validateAddress(validResult.config.fromAddress);
+      this.validateAddress(validResult.config.fromToken);
+      this.validateAddress(validResult.config.toAddress);
+      this.validateAddress(validResult.config.toToken);
 
       return validResult;
+   }
+
+   private validateAddress(address: string): void {
+      if (!isAddress(address)) {
+         throw new ValidationError(
+            this.prependGeneralError(
+               ERR_INVALID_ADDRESS(address, "destinationAddress")
+            )
+         );
+      }
    }
 
    private validateTokens(stepConfig: SquidStep, squid: Squid): void {

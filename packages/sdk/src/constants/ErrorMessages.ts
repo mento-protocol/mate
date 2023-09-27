@@ -9,3 +9,5 @@ export const ERR_UNSUPPORTED_CHAIN = (id: string) =>
    `Chain ID not supported: ${id}`;
 export const ERR_UNSUPPORTED_TOKEN = (token: string) =>
    `Token not supported: ${token}`;
+export const ERR_INVALID_ADDRESS = (address: string, prop: string) =>
+   `Invalid address was provided for property "${prop}": ${address}`;
