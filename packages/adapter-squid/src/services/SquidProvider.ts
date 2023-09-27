@@ -1,8 +1,8 @@
 import { Squid } from "@0xsquid/sdk";
-import { singleton } from "tsyringe";
+import { injectable } from "tsyringe";
 import { ISquidProvider } from ".";
 
-@singleton()
+@injectable()
 export class SquidProvider implements ISquidProvider {
    private squid: Squid;
 
