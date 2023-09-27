@@ -1,9 +1,11 @@
 import * as chains from "viem/chains";
 import { PublicClient, createPublicClient, http } from "viem";
+import { singleton } from "tsyringe";
 
 import { IEvmChainService } from ".";
 import { erc20Abi } from "../constants";
 
+@singleton()
 export class EvmChainService implements IEvmChainService {
    private publicClients: Map<number, PublicClient>;
    private initialised: boolean = false;

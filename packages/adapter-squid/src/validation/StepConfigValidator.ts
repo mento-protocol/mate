@@ -1,3 +1,4 @@
+import { injectable } from "tsyringe";
 import { ChainData, Squid, TokenData } from "@0xsquid/sdk";
 import { isLeft, isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
@@ -11,6 +12,7 @@ import {
 import { BridgeSwapStepCodec, SquidStep } from "../types";
 import { ISquidProvider } from "../services";
 
+@injectable()
 export class StepConfigValidator implements IValidator<SquidStep> {
    constructor(private squidProvider: ISquidProvider) {}
 
