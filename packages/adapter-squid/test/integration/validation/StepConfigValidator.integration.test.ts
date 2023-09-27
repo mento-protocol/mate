@@ -19,7 +19,7 @@ describe("StepConfigValidator", () => {
    const goerliDai = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
 
    const testInvalidAddress = "0xTestAddress";
-   const testValidAddress = "0x000000000000000000000000000000001111";
+   const testValidAddress = "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5";
 
    beforeAll(async () => {
       squidProvider = new SquidProvider();
@@ -41,11 +41,11 @@ describe("StepConfigValidator", () => {
             config: {
                fromChain: goerliChainId,
                fromToken: goerliDai,
-               fromAddress: testInvalidAddress,
+               fromAddress: testValidAddress,
                fromAmount: 10_000,
                toChain: alfajoresChainId,
                toToken: alfajoresAxelarUSDC,
-               toAddress: testInvalidAddress,
+               toAddress: testValidAddress,
                maxSlippage: 0.01,
             },
          };
