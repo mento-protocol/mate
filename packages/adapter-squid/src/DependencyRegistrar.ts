@@ -1,14 +1,8 @@
 import { container } from "tsyringe";
-import {
-   EvmChainService,
-   IEvmChainService,
-   ISquidProvider,
-   SquidProvider,
-} from "./services";
 import { IValidator } from "@mate/sdk";
 import { SquidStep } from "./types";
 import { StepConfigValidator } from "./validation";
-import { STEP_CONFIG_VALIDATOR } from "./constants";
+import { ISquidProvider, SquidProvider } from "./services";
 
 export class DependencyRegistrar {
    private static instance: DependencyRegistrar | null = null;
@@ -24,8 +18,7 @@ export class DependencyRegistrar {
 
    public configure(): void {
       container.registerSingleton<ISquidProvider>(SquidProvider);
-      container.registerSingleton<IEvmChainService>(EvmChainService);
-      container.register<IValidator<SquidStep>>(STEP_CONFIG_VALIDATOR, {
+      container.register<IValidator<SquidStep>>(StepConfigValidator, {
          useClass: StepConfigValidator,
       });
    }
