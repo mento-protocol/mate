@@ -40,12 +40,14 @@ export class StepConfigValidator implements IValidator<SquidStep> {
    public async processValidResult(validResult: SquidStep): Promise<SquidStep> {
       const squid = this.squidProvider.getSquid();
 
-      this.validateChains(validResult, squid);
-      this.validateTokens(validResult, squid);
       this.validateAddress(validResult.config.fromAddress, "fromAddress");
       this.validateAddress(validResult.config.fromToken, "fromToken");
       this.validateAddress(validResult.config.toAddress, "toAddress");
       this.validateAddress(validResult.config.toToken, "toToken");
+
+      this.validateChains(validResult, squid);
+
+      this.validateTokens(validResult, squid);
 
       return validResult;
    }

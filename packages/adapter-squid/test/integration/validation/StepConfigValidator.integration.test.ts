@@ -18,8 +18,10 @@ describe("StepConfigValidator", () => {
    const alfajoresAxelarUSDC = "0x254d06f33bDc5b8ee05b2ea472107E300226659A";
    const goerliDai = "0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60";
 
-   const testInvalidAddress = "0xTestAddress";
-   const testValidAddress = "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5";
+   const validTestAddress = "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5";
+   const invalidTestAddress = "0xTestAddress";
+
+   const unsupportedTestToken = "0x0000000000000000000000000000000000000000";
 
    beforeAll(async () => {
       squidProvider = new SquidProvider();
@@ -41,11 +43,11 @@ describe("StepConfigValidator", () => {
             config: {
                fromChain: goerliChainId,
                fromToken: goerliDai,
-               fromAddress: testValidAddress,
+               fromAddress: validTestAddress,
                fromAmount: 10_000,
                toChain: alfajoresChainId,
                toToken: alfajoresAxelarUSDC,
-               toAddress: testValidAddress,
+               toAddress: validTestAddress,
                maxSlippage: 0.01,
             },
          };
@@ -58,17 +60,17 @@ describe("StepConfigValidator", () => {
             adapter: "squid",
             config: {
                fromChain: goerliChainId,
-               fromToken: goerliDai + "xE",
-               fromAddress: testInvalidAddress,
+               fromToken: unsupportedTestToken,
+               fromAddress: validTestAddress,
                fromAmount: 10_000,
                toChain: alfajoresChainId,
                toToken: alfajoresAxelarUSDC,
-               toAddress: testInvalidAddress,
+               toAddress: validTestAddress,
                maxSlippage: 0.01,
             },
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
-            `${ERR_UNSUPPORTED_TOKEN(goerliDai + "xE", goerliChainId)}`
+            `${ERR_UNSUPPORTED_TOKEN(unsupportedTestToken, goerliChainId)}`
          );
       });
 
@@ -79,19 +81,16 @@ describe("StepConfigValidator", () => {
             config: {
                fromChain: goerliChainId,
                fromToken: goerliDai,
-               fromAddress: testInvalidAddress,
+               fromAddress: validTestAddress,
                fromAmount: 10_000,
                toChain: alfajoresChainId,
-               toToken: alfajoresAxelarUSDC + "XX",
-               toAddress: testInvalidAddress,
+               toToken: unsupportedTestToken,
+               toAddress: validTestAddress,
                maxSlippage: 0.01,
             },
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
-            `${ERR_UNSUPPORTED_TOKEN(
-               alfajoresAxelarUSDC + "XX",
-               alfajoresChainId
-            )}`
+            `${ERR_UNSUPPORTED_TOKEN(unsupportedTestToken, alfajoresChainId)}`
          );
       });
 
@@ -102,11 +101,11 @@ describe("StepConfigValidator", () => {
             config: {
                fromChain: 123456,
                fromToken: goerliDai,
-               fromAddress: testInvalidAddress,
+               fromAddress: validTestAddress,
                fromAmount: 10_000,
                toChain: alfajoresChainId,
                toToken: alfajoresAxelarUSDC,
-               toAddress: testInvalidAddress,
+               toAddress: validTestAddress,
                maxSlippage: 0.01,
             },
          };
@@ -122,11 +121,11 @@ describe("StepConfigValidator", () => {
             config: {
                fromChain: goerliChainId,
                fromToken: goerliDai,
-               fromAddress: testInvalidAddress,
+               fromAddress: validTestAddress,
                fromAmount: 10_000,
                toChain: 123456,
                toToken: alfajoresAxelarUSDC,
-               toAddress: testInvalidAddress,
+               toAddress: validTestAddress,
                maxSlippage: 0.01,
             },
          };
@@ -142,16 +141,16 @@ describe("StepConfigValidator", () => {
             config: {
                fromChain: goerliChainId,
                fromToken: goerliDai,
-               fromAddress: testInvalidAddress,
+               fromAddress: invalidTestAddress,
                fromAmount: 10_000,
                toChain: alfajoresChainId,
                toToken: alfajoresAxelarUSDC,
-               toAddress: testValidAddress,
+               toAddress: validTestAddress,
                maxSlippage: 0.01,
             },
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
-            `${ERR_INVALID_ADDRESS(testInvalidAddress, "fromAddress")}`
+            `${ERR_INVALID_ADDRESS(invalidTestAddress, "fromAddress")}`
          );
       });
    });
