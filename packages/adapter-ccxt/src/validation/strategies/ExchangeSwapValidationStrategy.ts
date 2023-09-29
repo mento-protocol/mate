@@ -9,7 +9,9 @@ import { ValidationError } from "../ValidationError";
 import { IExchangeServiceRepo } from "../../exchanges";
 import { TypeOf } from "io-ts";
 import { IStepValidationStrategy } from "./IStepValidationStrategy";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class ExchangeSwapValidationStrategy implements IStepValidationStrategy {
    constructor(private exchangeServiceRepo: IExchangeServiceRepo) {}
 
