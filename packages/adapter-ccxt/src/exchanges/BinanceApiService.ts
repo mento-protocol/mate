@@ -46,7 +46,10 @@ export class BinanceApiService implements IExchangeApiService {
    public async isMarketSupported(symbol: string): Promise<boolean> {
       try {
          const markets = await this.exchange.fetchMarkets();
-         return markets.find((market) => market.symbol === symbol);
+         const matchingMarket = markets.find(
+            (market) => market.symbol === symbol
+         );
+         return matchingMarket !== undefined;
       } catch (error) {
          throw new Error(
             `${ERR_API_FETCH_MARKETS_FAILURE(this.exchange.id)}:${error}`
