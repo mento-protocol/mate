@@ -14,4 +14,11 @@ export interface IExchangeApiService {
     * @returns A Promise that resolves to true if the asset is supported, false otherwise.
     */
    isAssetSupported(asset: string): Promise<boolean>;
+
+   /**
+    * Determines if the specified market is supported by the exchange.
+    * @param symbol - The symbol of the market (e.g., "BTC/USD", "ETH/BTC", "ETH/USD").
+    * @returns A Promise that resolves to true if the market is supported, false otherwise.
+    */
+   isMarketSupported(symbol: string): Promise<boolean>;
 }

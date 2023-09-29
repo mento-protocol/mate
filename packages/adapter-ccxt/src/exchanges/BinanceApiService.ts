@@ -42,4 +42,15 @@ export class BinanceApiService implements IExchangeApiService {
          throw new Error(`${ERR_API_BALANCE_FETCH_FAILURE(currency)}:${error}`);
       }
    }
+
+   public async isMarketSupported(symbol: string): Promise<boolean> {
+      try {
+         const markets = await this.exchange.fetchMarkets();
+         return markets.find((market) => market.symbol === symbol);
+      } catch (error) {
+         throw new Error(
+            `${ERR_API_FETCH_MARKETS_FAILURE(this.exchange.id)}:${error}`
+         );
+      }
+   }
 }
