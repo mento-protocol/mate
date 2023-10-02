@@ -14,10 +14,10 @@ import {
 } from "../../constants";
 import { isAddress } from "viem";
 import { ValidationError } from "../ValidationError";
-import { IExchangeServiceRepo } from "../../exchanges";
+import { ExchangeServiceRepo, IExchangeServiceRepo } from "../../exchanges";
 import { TypeOf } from "io-ts";
 import { IStepValidationStrategy } from "./IStepValidationStrategy";
-import { injectable } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 
 @injectable()
 export class WithdrawCryptoValidationStrategy
@@ -26,7 +26,10 @@ export class WithdrawCryptoValidationStrategy
    private chainIdSet = new Set(Object.values(ChainId));
    private exchangeIdSet = new Set(Object.values(ExchangeId));
 
-   constructor(private exchangeServiceRepo: IExchangeServiceRepo) {}
+   constructor(
+      @inject(ExchangeServiceRepo)
+      private exchangeServiceRepo: IExchangeServiceRepo
+   ) {}
 
    public async validate(validResult: CCXTStep): Promise<CCXTStep> {
       const config = validResult.config as TypeOf<

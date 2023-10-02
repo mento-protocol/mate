@@ -1,4 +1,3 @@
-import { injectable } from "tsyringe";
 import { Balances, binance } from "ccxt";
 import { IExchangeApiService } from ".";
 import {
@@ -7,7 +6,6 @@ import {
    ERR_BALANCE_NOT_FOUND,
 } from "../constants";
 
-@injectable()
 export class BinanceApiService implements IExchangeApiService {
    constructor(private exchange: binance) {}
 

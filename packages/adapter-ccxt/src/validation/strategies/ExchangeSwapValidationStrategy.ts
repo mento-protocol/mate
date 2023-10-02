@@ -6,14 +6,17 @@ import {
    ERR_UNSUPPORTED_EXCHANGE,
 } from "../../constants";
 import { ValidationError } from "../ValidationError";
-import { IExchangeServiceRepo } from "../../exchanges";
+import { ExchangeServiceRepo, IExchangeServiceRepo } from "../../exchanges";
 import { TypeOf } from "io-ts";
 import { IStepValidationStrategy } from "./IStepValidationStrategy";
-import { injectable } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 
 @injectable()
 export class ExchangeSwapValidationStrategy implements IStepValidationStrategy {
-   constructor(private exchangeServiceRepo: IExchangeServiceRepo) {}
+   constructor(
+      @inject(ExchangeServiceRepo)
+      private exchangeServiceRepo: IExchangeServiceRepo
+   ) {}
 
    public async validate(validResult: CCXTStep): Promise<CCXTStep> {
       const config = validResult.config as TypeOf<
