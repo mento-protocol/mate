@@ -1,5 +1,6 @@
 import * as t from "io-ts";
-import { Side, StepType } from ".";
+import { StepType } from ".";
+import { Side } from "./Side";
 import { TypeOf } from "io-ts";
 
 // Codecs used for the structural validation of data in the config source.
