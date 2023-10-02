@@ -19,9 +19,6 @@ const config: Config.InitialOptions = {
    ],
    coverageDirectory: "<rootDir>/coverage/",
    coveragePathIgnorePatterns: ["index.ts, src/constants, src/types"],
-   moduleNameMapper: {
-      "^@validation/(.*)$": "<rootDir>/src/validation/$1",
-   },
    testTimeout: 20000,
 };
 
