@@ -120,4 +120,40 @@ describe("BinanceApiService", () => {
          verify(mockBinance.fetchBalance()).once();
       });
    });
+
+   describe("isMarketSupported", () => {
+      it("should return true if the market symbol is supported", async () => {
+         when(mockBinance.fetchMarkets()).thenResolve([
+            { symbol: "BTC/USDT" },
+            { symbol: "ETH/USDT" },
+         ]);
+         const result = await testee.isMarketSupported("BTC/USDT");
+         expect(result).toBe(true);
+         verify(mockBinance.fetchMarkets()).once();
+      });
+
+      it("should return false if the market symbol is not supported", async () => {
+         when(mockBinance.fetchMarkets()).thenResolve([
+            { symbol: "BTC/USDT" },
+            { symbol: "ETH/USDT" },
+         ]);
+         const result = await testee.isMarketSupported("CELO/USDT");
+         expect(result).toBe(false);
+         verify(mockBinance.fetchMarkets()).once();
+      });
+
+      it("should throw an error when fetchMarkets fails", async () => {
+         when(mockBinance.fetchMarkets()).thenThrow(
+            new Error("Network issue for markets")
+         );
+
+         await expect(
+            testee.isMarketSupported("BTC/USDT")
+         ).rejects.toThrowError(
+            `${ERR_API_FETCH_MARKETS_FAILURE(
+               "binance"
+            )}:Error: Network issue for markets`
+         );
+      });
+   });
 });

@@ -36,4 +36,16 @@ describe("BinanceApiService Integration", () => {
          expect(result).toBeGreaterThan(0);
       });
    });
+
+   describe("isMarketSupported", () => {
+      it("should return true if the market is supported", async () => {
+         const result = await testee.isMarketSupported("BTC/USDT");
+         expect(result).toBeTruthy();
+      });
+
+      it("should return false if the market is not supported", async () => {
+         const result = await testee.isMarketSupported("BTC/MOJIMBO454");
+         expect(result).toBeFalsy();
+      });
+   });
 });
