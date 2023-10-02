@@ -33,6 +33,9 @@ export class WithdrawCryptoValidationStrategy
          typeof ExchangeWithdrawCryptoConfigCodec
       >;
 
+      //Validate address
+      this.validateAddress(config.destinationAddress);
+
       // Validate exchange
       this.validateEnumValue(
          config.exchange,
@@ -52,9 +55,6 @@ export class WithdrawCryptoValidationStrategy
          config.asset,
          config.exchange as ExchangeId
       );
-
-      //Validate address
-      this.validateAddress(config.destinationAddress);
 
       return validResult;
    }
