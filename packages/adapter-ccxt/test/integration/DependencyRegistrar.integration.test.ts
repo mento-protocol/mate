@@ -11,9 +11,11 @@ import { StepConfigValidator } from "../../src/validation";
 import {
    ExchangeFactory,
    ExchangeServiceRepo,
+   IExchangeApiService,
    IExchangeFactory,
    IExchangeServiceRepo,
 } from "../../src/exchanges";
+import { VALIDATION_STRATEGIES_TOKEN } from "../../src/constants";
 
 describe("DependencyRegistrar", () => {
    let testee: DependencyRegistrar;
@@ -26,7 +28,7 @@ describe("DependencyRegistrar", () => {
    it("should correctly register the named validation strategies map", async () => {
       const strategies = container.resolve<
          Map<StepType, IStepValidationStrategy>
-      >("ValidationStrategies");
+      >(VALIDATION_STRATEGIES_TOKEN);
 
       expect(strategies.size).toBe(2);
 
@@ -61,7 +63,12 @@ describe("DependencyRegistrar", () => {
       expect(repoInstance).toBeInstanceOf(ExchangeServiceRepo);
 
       // Add an exchange service to the repo
-      const exchangeService = {} as any;
+      const exchangeService: IExchangeApiService = {
+         getCurrencyBalance: () => Promise.resolve(0),
+         isAssetSupported: () => Promise.resolve(true),
+         isMarketSupported: () => Promise.resolve(true),
+      };
+
       repoInstance.setExchangeService(ExchangeId.BINANCE, exchangeService);
 
       // Resolve the repo again and verify it's the same instance

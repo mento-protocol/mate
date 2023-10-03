@@ -4,13 +4,14 @@ import { isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import { ValidationError } from "./ValidationError";
 import { CCXTStep, CCXTStepConfig, StepType } from "../types";
+import { VALIDATION_STRATEGIES_TOKEN } from "../constants";
 import { ERR_INVALID_STEP_CONFIG, ERR_UNSUPPORTED_STEP } from "@mate/sdk";
 import { IStepValidationStrategy } from "./strategies";
 
 @injectable()
 export class StepConfigValidator implements IValidator<CCXTStep> {
    constructor(
-      @inject("ValidationStrategies")
+      @inject(VALIDATION_STRATEGIES_TOKEN)
       private strategies: Map<StepType, IStepValidationStrategy>
    ) {}
 

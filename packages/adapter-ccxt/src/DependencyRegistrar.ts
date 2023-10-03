@@ -11,7 +11,12 @@ import {
    ExchangeSwapValidationStrategy,
    WithdrawCryptoValidationStrategy,
 } from "./validation/strategies";
+import { VALIDATION_STRATEGIES_TOKEN } from "./constants";
 
+/**
+ * Handles the dependency registration for the adapter.
+ * This class ensures all dependencies are correctly set up and registered.
+ */
 export class DependencyRegistrar {
    private static instance: DependencyRegistrar | null = null;
 
@@ -25,17 +30,19 @@ export class DependencyRegistrar {
    }
 
    public configure(): void {
-      this.registerExchangeServices();
-      this.registerValidation();
+      this.registerExchangeServiceDependencies();
+      this.registerValidationDependencies();
    }
 
-   private registerValidation(): void {
+   /**
+    * Registers validation-related dependencies.
+    */
+   private registerValidationDependencies(): void {
       container.register<IValidator<CCXTStep>>(StepConfigValidator, {
          useClass: StepConfigValidator,
       });
 
-      // Register the valiation strategies
-      container.register("ValidationStrategies", {
+      container.register(VALIDATION_STRATEGIES_TOKEN, {
          useFactory: (c) => {
             const map = new Map();
             map.set(
@@ -51,14 +58,14 @@ export class DependencyRegistrar {
       });
    }
 
-   private registerExchangeServices(): void {
+   /**
+    * Registers exchange service-related dependencies.
+    */
+   private registerExchangeServiceDependencies(): void {
       container.registerSingleton<IExchangeServiceRepo>(ExchangeServiceRepo);
 
       container.register<IExchangeFactory>(ExchangeFactory, {
          useClass: ExchangeFactory,
       });
-
-      // Note: Individual exchange services are managed by the ExchangeServiceRepo repo,
-      // so we don't need to register them here
    }
 }
