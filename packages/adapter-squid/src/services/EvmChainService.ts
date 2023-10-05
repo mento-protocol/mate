@@ -1,5 +1,5 @@
 import * as chains from "viem/chains";
-import { PublicClient, createPublicClient, http } from "viem";
+import { PublicClient, createPublicClient, http, Address } from "viem";
 import { singleton } from "tsyringe";
 
 import { IEvmChainService } from ".";
@@ -33,16 +33,16 @@ export class EvmChainService implements IEvmChainService {
 
    public async getBalance(
       chainId: number,
-      address: string,
-      tokenAddress: string
+      address: Address,
+      tokenAddress: Address
    ): Promise<bigint> {
       const client = this.getPublicClient(chainId);
 
       const balance = await client.readContract({
-         address: tokenAddress as `0x${string}`,
+         address: tokenAddress,
          abi: erc20Abi,
          functionName: "balanceOf",
-         args: [address as `0x${string}`],
+         args: [address],
       });
 
       return balance;

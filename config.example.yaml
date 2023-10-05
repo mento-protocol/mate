@@ -35,4 +35,4 @@ flows:
              toChain: 42220
              toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
              toAddress: 0xMyAddress1
-             maxSlippageBPS: 0.01
+             maxSlippage: 0.01

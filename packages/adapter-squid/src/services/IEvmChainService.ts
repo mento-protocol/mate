@@ -1,3 +1,4 @@
+import { Address } from "viem";
 export interface IEvmChainService {
    /**
     * Initializes the provider with a map of chain IDs to their corresponding RPC URLs.
@@ -16,7 +17,7 @@ export interface IEvmChainService {
     */
    getBalance(
       chainId: number,
-      address: string,
-      tokenAddress: string
+      address: Address,
+      tokenAddress: Address
    ): Promise<bigint>;
 }

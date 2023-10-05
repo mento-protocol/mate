@@ -7,7 +7,7 @@ import {
    ERR_UNSUPPORTED_CHAIN,
    ERR_INVALID_ADDRESS,
 } from "@mate/sdk";
-import { isLeft, isRight } from "fp-ts/lib/Either";
+import { isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import {
    CCXTStep,
@@ -36,18 +36,12 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
 
       if (isRight(validationResult)) {
          return await this.processValidResult(validationResult.right);
-      }
-
-      if (isLeft(validationResult)) {
+      } else {
          throw new ValidationError(
             ERR_INVALID_STEP_CONFIG,
             PathReporter.report(validationResult)
          );
       }
-
-      // This will never happen, as the above if covers all
-      // possible cases but the compiler doesn't know that.
-      return validationResult as never;
    }
 
    private async processValidResult(validResult: CCXTStep): Promise<CCXTStep> {

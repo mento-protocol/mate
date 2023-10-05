@@ -1,6 +1,6 @@
 import { inject, injectable } from "tsyringe";
 import { ChainData, Squid, TokenData } from "@0xsquid/sdk";
-import { isLeft, isRight } from "fp-ts/lib/Either";
+import { isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
 import {
    ERR_INVALID_ADDRESS,
@@ -23,18 +23,12 @@ export class StepConfigValidator implements IValidator<SquidStep> {
 
       if (isRight(validationResult)) {
          return await this.processValidResult(validationResult.right);
-      }
-
-      if (isLeft(validationResult)) {
+      } else {
          throw new ValidationError(
             ERR_INVALID_STEP_CONFIG,
             PathReporter.report(validationResult)
          );
       }
-
-      // This will never happen, as the above if covers all
-      // possible cases but the compiler doesn't know that.
-      return validationResult as never;
    }
 
    public async processValidResult(validResult: SquidStep): Promise<SquidStep> {
