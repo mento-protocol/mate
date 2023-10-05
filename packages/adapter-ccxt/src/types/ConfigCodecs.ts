@@ -1,5 +1,6 @@
 import * as t from "io-ts";
 import { StepType } from ".";
+import { Side } from "./Side";
 import { TypeOf } from "io-ts";
 
 // Codecs used for the structural validation of data in the config source.
@@ -35,6 +36,8 @@ export const AdapterConfigCodec = t.type({
    config: CCXTAdapterConfigCodec, // Configuration specific to this adapter
 });
 
+// ---- Exchange.Swap ---- //
+
 /**
  * Codec for the Exchange.WithdrawCrypto configuration.
  */
@@ -55,15 +58,18 @@ export const ExchangeWithdrawCrypto = t.type({
    config: ExchangeWithdrawCryptoConfigCodec,
 });
 
+// ---- Exchange.Swap ---- //
+
 /**
  * Codec for the Exchange.Swap configuration.
  */
 export const ExchangeSwapConfigCodec = t.type({
-   exchange: t.string,
-   from: t.string,
-   to: t.string,
-   maxSlippageBPS: t.number,
-   amount: t.number,
+   exchange: t.string, // Identifier for the exchange
+   base: t.string, // Base asset e.g. "BTC"
+   quote: t.string, // Quote asset e.g. "USDT"
+   side: t.union([t.literal(Side.Buy), t.literal(Side.Sell)]), // Side of the order
+   maxSlippageBPS: t.number, // Maximum slippage in basis points
+   amount: t.number, // Amount to swap
 });
 
 /**

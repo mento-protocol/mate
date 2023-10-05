@@ -16,6 +16,15 @@ flows:
      id: usd-to-cust-binance
      description: "Go from USD held on binance to cUSD on Celo"
      steps:
+        - type: Exchange.Swap
+          adapter: ccxt
+          config:
+             exchange: binance
+             base: BTC
+             quote: USDT
+             side: Buy
+             maxSlippageBPS: 20
+             amount: 1000
         - type: Exchange.WithdrawCrypto
           adapter: ccxt
           config:

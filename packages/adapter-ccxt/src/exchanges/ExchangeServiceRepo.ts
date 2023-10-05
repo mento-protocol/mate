@@ -1,9 +1,9 @@
-import { singleton } from "tsyringe";
+import { injectable } from "tsyringe";
 import { ExchangeId } from "../types";
 import { IExchangeApiService } from "./IExchangeApiService";
 import { IExchangeServiceRepo } from "./IExchangeServiceRepo";
 
-@singleton()
+@injectable()
 export class ExchangeServiceRepo implements IExchangeServiceRepo {
    private exchangeServices: Map<ExchangeId, IExchangeApiService>;
 

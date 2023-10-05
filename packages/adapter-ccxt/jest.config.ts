@@ -10,12 +10,15 @@ const config: Config.InitialOptions = {
    testRegex: "test/.*\\.test\\.ts$",
    moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
    collectCoverage: true,
-   collectCoverageFrom: ["src/**/*.ts"],
+   collectCoverageFrom: [
+      "src/**/*.ts",
+      "!src/types/**/*",
+      "!src/constants/**/*",
+      "!src/**/ValidationError.ts",
+      "!src/**/index.ts",
+   ],
    coverageDirectory: "<rootDir>/coverage/",
    coveragePathIgnorePatterns: ["index.ts, src/constants, src/types"],
-   moduleNameMapper: {
-      "^@validation/(.*)$": "<rootDir>/src/validation/$1",
-   },
    testTimeout: 20000,
 };
 

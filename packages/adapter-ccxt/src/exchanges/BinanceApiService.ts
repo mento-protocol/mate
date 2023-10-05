@@ -1,4 +1,3 @@
-import { injectable } from "tsyringe";
 import { Balances, binance } from "ccxt";
 import { IExchangeApiService } from ".";
 import {
@@ -7,7 +6,6 @@ import {
    ERR_BALANCE_NOT_FOUND,
 } from "../constants";
 
-@injectable()
 export class BinanceApiService implements IExchangeApiService {
    constructor(private exchange: binance) {}
 
@@ -40,6 +38,20 @@ export class BinanceApiService implements IExchangeApiService {
          return Number(currencyBalance.total) || 0;
       } catch (error) {
          throw new Error(`${ERR_API_BALANCE_FETCH_FAILURE(currency)}:${error}`);
+      }
+   }
+
+   public async isMarketSupported(symbol: string): Promise<boolean> {
+      try {
+         const markets = await this.exchange.fetchMarkets();
+         const matchingMarket = markets.find(
+            (market) => market.symbol === symbol
+         );
+         return matchingMarket !== undefined;
+      } catch (error) {
+         throw new Error(
+            `${ERR_API_FETCH_MARKETS_FAILURE(this.exchange.id)}:${error}`
+         );
       }
    }
 }
