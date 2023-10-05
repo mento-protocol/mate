@@ -8,8 +8,6 @@ import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
    ERR_INVALID_ADDRESS,
-   ERR_INVALID_STEP_CONFIG,
-   ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_EXCHANGE,
 } from "../../constants";
 import { isAddress } from "viem";
@@ -18,6 +16,7 @@ import { ExchangeServiceRepo, IExchangeServiceRepo } from "../../exchanges";
 import { TypeOf } from "io-ts";
 import { IStepValidationStrategy } from "./IStepValidationStrategy";
 import { inject, injectable } from "tsyringe";
+import { ERR_INVALID_STEP_CONFIG, ERR_UNSUPPORTED_CHAIN } from "@mate/sdk";
 
 @injectable()
 export class WithdrawCryptoValidationStrategy

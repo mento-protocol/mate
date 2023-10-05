@@ -6,13 +6,13 @@ import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_INVALID_ADDRESS,
    ERR_UNSUPPORTED_EXCHANGE,
-   ERR_UNSUPPORTED_CHAIN,
 } from "../../../../src/constants";
 import { CCXTStep, ChainId, ExchangeId, StepType } from "../../../../src/types";
 import {
    IExchangeApiService,
    IExchangeServiceRepo,
 } from "../../../../src/exchanges";
+import { ERR_UNSUPPORTED_CHAIN } from "@mate/sdk";
 
 describe("WithdrawCryptoValidationStrategy", () => {
    let mockExchangeServiceRepo: IExchangeServiceRepo;

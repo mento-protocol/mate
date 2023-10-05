@@ -2,7 +2,6 @@ import { CCXTStep, ExchangeId, ExchangeSwapConfigCodec } from "../../types";
 import {
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
    ERR_EXCHANGE_UNSUPPORTED_MARKET,
-   ERR_INVALID_STEP_CONFIG,
    ERR_UNSUPPORTED_EXCHANGE,
 } from "../../constants";
 import { ValidationError } from "../ValidationError";
@@ -10,6 +9,7 @@ import { ExchangeServiceRepo, IExchangeServiceRepo } from "../../exchanges";
 import { TypeOf } from "io-ts";
 import { IStepValidationStrategy } from "./IStepValidationStrategy";
 import { inject, injectable } from "tsyringe";
+import { ERR_INVALID_STEP_CONFIG } from "@mate/sdk";
 
 @injectable()
 export class ExchangeSwapValidationStrategy implements IStepValidationStrategy {

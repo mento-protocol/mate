@@ -1,5 +1,5 @@
 import { container } from "tsyringe";
-import { IValidator, StepConfigValidator } from "./validation";
+import { StepConfigValidator } from "./validation";
 import { CCXTStep, StepType } from "./types";
 import {
    ExchangeServiceRepo,
@@ -12,6 +12,7 @@ import {
    WithdrawCryptoValidationStrategy,
 } from "./validation/strategies";
 import { VALIDATION_STRATEGIES_TOKEN } from "./constants";
+import { IValidator } from "@mate/sdk";
 
 /**
  * Handles the dependency registration for the adapter.
