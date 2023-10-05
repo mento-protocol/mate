@@ -6,34 +6,33 @@ adapters:
            - id: binance
              apiKey: "TestKey"
              apiSecret: "TestSecret"
+   - id: squid
+     adapter: "@mate/adapter-squid"
+     config:
+        integratorId: mate-sdk
+        baseUrl: https://api.0xsquid.com
 flows:
    - name: USD to cUSD
-     id: USD-to-cUSD
-     description: "Do some stuff, do we even need a desc -___-"
+     id: usd-to-cust-binance
+     description: "Go from USD held on binance to cUSD on Celo"
      steps:
-        - type: Exchange.Swap
-          adapter: ccxt
-          config:
-             exchange: binance
-             from: USD
-             to: BUSD
-             maxSlippageBPS: 20
-             amount: 1000
         - type: Exchange.WithdrawCrypto
           adapter: ccxt
           config:
              exchange: binance
-             asset: BUSD
-             chainId: 4220
-             destinationAddress: ...
+             asset: USDC
+             chainId: 1
+             destinationAddress: 0xMyAddress1
+             amount: 500_000
+
         - type: Bridge.Swap
           adapter: squid
           config:
-             from:
-                chain: BSC
-                asset: BUSD
-             to:
-                chain: CELO
-                asset: cUSD
-             amount: max
-             maxSlippageBPS: 20
+             fromChain: 1
+             fromToken: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+             fromAddress: 0xMyAddress1
+             fromAmount: { stepOutput.ExchangeWithdrawCrypto.0.amount }
+             toChain: 42220
+             toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
+             toAddress: 0xMyAddress1
+             maxSlippage: 0.01

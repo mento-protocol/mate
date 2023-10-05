@@ -1,7 +1,14 @@
 import { autoInjectable } from "tsyringe";
-import { IAdapter, IConfigProvider, Step, ValidationResult } from "@mate/sdk";
+import {
+   ERR_ADAPTER_CONFIG_MISSING,
+   ERR_ADAPTER_INIT_FAILURE,
+   IAdapter,
+   IConfigProvider,
+   IValidator,
+   Step,
+   ValidationResult,
+} from "@mate/sdk";
 import { ExecutionResult } from "./ExecutionResult";
-import { IValidator } from "./validation";
 import {
    ApiCredentials,
    CCXTAdapterConfig,
@@ -9,10 +16,6 @@ import {
    ExchangeId,
 } from "./types";
 import { IExchangeFactory, IExchangeServiceRepo } from "./exchanges";
-import {
-   ERR_ADAPTER_CONFIG_MISSING,
-   ERR_ADAPTER_INIT_FAILURE,
-} from "./constants";
 
 @autoInjectable()
 export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
@@ -75,16 +78,15 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
    }
 
    private async initializeExchanges(): Promise<void> {
-      for (const { id: exchangeId, apiKey, apiSecret } of this.adapterConfig
-         .exchanges) {
-         const exchangeConfig: ApiCredentials = { apiKey, apiSecret };
+      for (const [exchangeId, exchangeConfig] of Object.entries(
+         this.adapterConfig.exchanges
+      ) as Array<[ExchangeId, ApiCredentials]>) {
          const exchangeService = this.exchangeFactory.createExchangeService(
-            exchangeId as ExchangeId,
+            exchangeId,
             exchangeConfig
          );
-
          this.exchangeServiceRepo.setExchangeService(
-            exchangeId as ExchangeId,
+            exchangeId,
             exchangeService
          );
       }

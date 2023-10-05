@@ -1,8 +1,14 @@
 import { injectable } from "tsyringe";
-import { IValidator } from "./IValidator";
-import { isLeft, isRight } from "fp-ts/lib/Either";
+import {
+   IValidator,
+   ValidationError,
+   ERR_INVALID_STEP_CONFIG,
+   ERR_UNSUPPORTED_STEP,
+   ERR_UNSUPPORTED_CHAIN,
+   ERR_INVALID_ADDRESS,
+} from "@mate/sdk";
+import { isRight } from "fp-ts/lib/Either";
 import { PathReporter } from "io-ts/lib/PathReporter";
-import { ValidationError } from "./ValidationError";
 import {
    CCXTStep,
    CCXTStepConfig,
@@ -14,11 +20,7 @@ import { IExchangeServiceRepo } from "../exchanges";
 import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
-   ERR_INVALID_ADDRESS,
-   ERR_INVALID_STEP_CONFIG,
-   ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_EXCHANGE,
-   ERR_UNSUPPORTED_STEP,
 } from "../constants";
 import { isAddress } from "viem";
 
@@ -34,17 +36,12 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
 
       if (isRight(validationResult)) {
          return await this.processValidResult(validationResult.right);
-      }
-
-      if (isLeft(validationResult)) {
-         //TODO: Think about extracting specific error messages from the PathReporter
+      } else {
          throw new ValidationError(
             ERR_INVALID_STEP_CONFIG,
             PathReporter.report(validationResult)
          );
       }
-
-      throw new Error(this.prependGeneralError(ERR_INVALID_STEP_CONFIG));
    }
 
    private async processValidResult(validResult: CCXTStep): Promise<CCXTStep> {

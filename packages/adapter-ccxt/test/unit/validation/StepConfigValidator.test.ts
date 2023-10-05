@@ -5,15 +5,17 @@ import { StepConfigValidator } from "../../../src/validation";
 import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
-   ERR_INVALID_ADDRESS,
-   ERR_UNSUPPORTED_CHAIN,
    ERR_UNSUPPORTED_EXCHANGE,
-   ERR_UNSUPPORTED_STEP,
 } from "../../../src/constants";
 import {
    IExchangeApiService,
    IExchangeServiceRepo,
 } from "../../../src/exchanges";
+import {
+   ERR_INVALID_ADDRESS,
+   ERR_UNSUPPORTED_CHAIN,
+   ERR_UNSUPPORTED_STEP,
+} from "@mate/sdk";
 
 describe("StepConfigValidator", () => {
    let mockExchangeService: IExchangeApiService;
