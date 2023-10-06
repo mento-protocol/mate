@@ -1,3 +1,10 @@
+settings:
+   globalVariables:
+      - name: PRIMARY_PRIVATE_KEY
+        value: 0xPrivateKey
+      - name: PRIMARY_ADDRESS
+        value: 0xPrimaryAddress
+
 adapters:
    - id: ccxt
      adapter: "@mate/adapter-ccxt"
@@ -14,16 +21,16 @@ adapters:
 flows:
    - name: USD to cUSD
      id: usd-to-cust-binance
-     description: "Go from USD held on binance to cUSD on Celo"
+     description: "Buy USDC on Binance -> Withdraw to Ethereum -> Bridge USDC from Ethereum to axlUSDC on Celo using Squid"
      steps:
         - type: Exchange.Swap
           adapter: ccxt
           config:
              exchange: binance
-             base: BTC
-             quote: USDT
+             base: USDC
+             quote: USD
              side: Buy
-             maxSlippageBPS: 20
+             maxSlippage: 20
              amount: 1000
         - type: Exchange.WithdrawCrypto
           adapter: ccxt
@@ -33,7 +40,6 @@ flows:
              chainId: 1
              destinationAddress: 0xMyAddress1
              amount: 500_000
-
         - type: Bridge.Swap
           adapter: squid
           config:
@@ -45,3 +51,35 @@ flows:
              toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
              toAddress: 0xMyAddress1
              maxSlippage: 0.01
+   - name: cUSD to USD
+     id: usd-to-cusd
+     description: "Bridge axlUSDC on Celo to USDC on Ethereum -> Deposit USDC to Binance Exchange -> Swap USDC to USD on Binance"
+     steps:
+        - type: Bridge.Swap
+          adapter: squid
+          config:
+             fromChain: 42220
+             fromToken: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+             fromAddress: 0xMyAddress1
+             fromAmount: { stepOutput.ExchangeWithdrawCrypto.0.amount }
+             toChain: 1
+             toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
+             toAddress: 0xMyAddress1
+             maxSlippage: 0.01
+        - type: Exchange.DepositCrypto
+          adapter: ccxt
+          config:
+             exchange: binance
+             asset: USDC
+             chainId: 1
+             ammount: 1000
+             fromAddress: ${ global.PRIMARY_ADDRESS }
+        - type: Exchange.Swap
+          adapter: ccxt
+          config:
+             exchange: binance
+             base: USDC
+             quote: USD
+             side: Sell
+             maxSlippage: 20
+             amount: 1000
