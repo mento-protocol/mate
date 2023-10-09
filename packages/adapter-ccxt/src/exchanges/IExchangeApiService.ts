@@ -1,3 +1,5 @@
+import { ChainId } from "../types";
+
 export interface IExchangeApiService {
    /**
     * Fetches the balance of a specified currency.
@@ -7,6 +9,14 @@ export interface IExchangeApiService {
     * @throw Will throw an error if the currency is not supported or if there's an issue fetching the balance.
     */
    getCurrencyBalance(currency: string): Promise<number>;
+
+   /**
+    * Fetches the deposit address for a specified currency.
+    * @param currency - The ISO code of the currency (e.g., "BTC", "ETH", "USD").
+    * @param chainId - The chain identifier for the destination chain.
+    * @returns A Promise that resolves to the deposit address for the specified currency.
+    */
+   getDepositAddress(currency: string, chainId: ChainId): Promise<string>;
 
    /**
     * Determines if the specified asset is supported by the exchange.

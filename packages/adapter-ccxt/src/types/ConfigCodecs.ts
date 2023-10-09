@@ -89,9 +89,9 @@ export const ExchangeSwap = t.type({
 export const ExchangeDepositCryptoConfigCodec = t.type({
    exchange: t.string, // Identifier for the exchange
    asset: t.string, // Asset to deposit e.g. "USDC"
-   chainId: t.string, // Chain identifier for destination chain
+   toChain: t.string, // Chain identifier for destination chain
    amount: t.number, // Amount to deposit TODO: This could be a value from the output from prev step
-   fromAddress: t.string, // Address to deposit from
+   toAddress: t.string, // Address to deposit to
 });
 
 /**

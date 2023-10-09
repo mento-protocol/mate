@@ -43,7 +43,7 @@ flows:
           config:
              fromChain: 1
              fromToken: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
-             fromAddress: 0xMyAddress1
+             fromAddress: 0xMyAddress1 -> TODO Remove and use primary address as default
              fromAmount: { stepOutput.ExchangeWithdrawCrypto.0.amount }
              toChain: 42220
              toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
@@ -58,7 +58,7 @@ flows:
           config:
              fromChain: 42220
              fromToken: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
-             fromAddress: 0xMyAddress1
+             fromAddress: 0xMyAddress1 -> TODO Remove and use primary address as default
              fromAmount: { stepOutput.ExchangeWithdrawCrypto.0.amount }
              toChain: 1
              toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
@@ -69,9 +69,9 @@ flows:
           config:
              exchange: binance
              asset: USDC
-             chainId: 1
              ammount: 1000
-             fromAddress: ${ global.PRIMARY_ADDRESS }
+             toChain: 1
+             toAddress:
         - type: Exchange.Swap
           adapter: ccxt
           config:
