@@ -1,6 +1,34 @@
 export const CONFIG_SCHEMA = {
    type: "object",
    properties: {
+      settings: {
+         type: "object",
+         properties: {
+            globalVariables: {
+               type: "object",
+               properties: {
+                  primaryPrivateKey: { type: "string" },
+                  primaryAddress: { type: "string" },
+               },
+               required: ["primaryPrivateKey", "primaryAddress"],
+               errorMessage: {
+                  required: {
+                     primaryPrivateKey:
+                        "The 'primaryPrivateKey' in 'globalVariables' is missing.",
+                     primaryAddress:
+                        "The 'primaryAddress' in 'globalVariables' is missing.",
+                  },
+               },
+            },
+         },
+         required: ["globalVariables"],
+         errorMessage: {
+            required: {
+               globalVariables:
+                  "The 'globalVariables' section under 'settings' is missing.",
+            },
+         },
+      },
       adapters: {
          type: "array",
          minItems: 1,

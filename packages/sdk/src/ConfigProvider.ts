@@ -10,6 +10,12 @@ import { IConfigProvider } from "./interfaces";
 import { CONFIG_SCHEMA } from "./constants";
 
 interface IConfig {
+   settings: {
+      globalVariables: {
+         primaryPrivateKey: string;
+         primaryAddress: string;
+      };
+   };
    adapters: AdapterConfig[];
    flows: any[];
 }
@@ -29,6 +35,26 @@ export class ConfigProvider implements IConfigProvider {
       ajvErrors(this.ajv);
 
       this.loadAndValidateConfig();
+   }
+
+   public getAdapterConfig(adapterId: string): AdapterConfig | null {
+      return (
+         this.configData.adapters.find(
+            (adapter: { id: string }) => adapter.id === adapterId
+         ) || null
+      );
+   }
+
+   public getGlobalVariable(variableName: string): string | null {
+      if (
+         this.configData.settings?.globalVariables &&
+         this.configData.settings.globalVariables.hasOwnProperty(variableName)
+      ) {
+         return this.configData.settings.globalVariables[
+            variableName as keyof typeof this.configData.settings.globalVariables
+         ];
+      }
+      return null;
    }
 
    private loadAndValidateConfig(): void {
@@ -61,13 +87,5 @@ export class ConfigProvider implements IConfigProvider {
       if (!validate(this.configData)) {
          throw new Error(this.ajv.errorsText(validate.errors));
       }
-   }
-
-   public getAdapterConfig(adapterId: string): AdapterConfig | null {
-      return (
-         this.configData.adapters.find(
-            (adapter: { id: string }) => adapter.id === adapterId
-         ) || null
-      );
    }
 }

@@ -13,4 +13,11 @@ export interface IConfigProvider {
     * @returns The configuration details for the specified adapter or `null` if not found.
     */
    getAdapterConfig(adapterId: string): AdapterConfig | null;
+
+   /**
+    * Retrieves the value for the global setting with the specified key.
+    * @param variableName - The name of the global variable to retrieve.
+    * @returns The value of the global variable or null if not found.
+    */
+   getGlobalVariable(variableName: string): any | null;
 }
