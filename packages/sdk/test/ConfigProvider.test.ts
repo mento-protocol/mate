@@ -375,17 +375,17 @@ flows:
       });
 
       it("should retrieve the correct global variable value by name", () => {
-         const maxAmount =
+         const primaryKey =
             configProvider.getGlobalVariable("primaryPrivateKey");
-         expect(maxAmount).toBe("0xKey");
+         expect(primaryKey).toBe("0xKey");
 
-         const minAmount = configProvider.getGlobalVariable("primaryAddress");
-         expect(minAmount).toBe("0xAddress");
+         const primaryAddress = configProvider.getGlobalVariable("primaryAddress");
+         expect(primaryAddress).toBe("0xAddress");
       });
 
       it("should return null for a non-existent global variable", () => {
-         const minAmount = configProvider.getGlobalVariable("nonexistent");
-         expect(minAmount).toBeNull();
+         const someVariable = configProvider.getGlobalVariable("nonexistent");
+         expect(someVariable).toBeNull();
       });
    });
 });
