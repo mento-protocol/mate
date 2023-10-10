@@ -2,6 +2,7 @@ import "reflect-metadata";
 import { container } from "tsyringe";
 import { DependencyRegistrar } from "../../src/DependencyRegistrar";
 import {
+   DepositCryptoValidationStrategy,
    ExchangeSwapValidationStrategy,
    IStepValidationStrategy,
    WithdrawCryptoValidationStrategy,
@@ -30,7 +31,7 @@ describe("DependencyRegistrar", () => {
          Map<StepType, IStepValidationStrategy>
       >(VALIDATION_STRATEGIES_TOKEN);
 
-      expect(strategies.size).toBe(2);
+      expect(strategies.size).toBe(3);
 
       expect(strategies.has(StepType.ExchangeSwap)).toBe(true);
       expect(strategies.has(StepType.ExchangeWithdrawCrypto)).toBe(true);
@@ -40,6 +41,10 @@ describe("DependencyRegistrar", () => {
       );
       expect(strategies.get(StepType.ExchangeWithdrawCrypto)).toBeInstanceOf(
          WithdrawCryptoValidationStrategy
+      );
+
+      expect(strategies.get(StepType.ExchangeDepositCrypto)).toBeInstanceOf(
+         DepositCryptoValidationStrategy
       );
    });
 
