@@ -25,7 +25,9 @@ import {
 } from "../../constants";
 
 @injectable()
-export class ExchangeSwapValidationStrategy implements IStepValidationStrategy {
+export class DepositCryptoValidationStrategy
+   implements IStepValidationStrategy
+{
    private chainIdSet = new Set(Object.values(ChainId));
    private exchangeIdSet = new Set(Object.values(ExchangeId));
 
