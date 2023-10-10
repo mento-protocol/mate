@@ -67,6 +67,7 @@ describe("DependencyRegistrar", () => {
          getCurrencyBalance: () => Promise.resolve(0),
          isAssetSupported: () => Promise.resolve(true),
          isMarketSupported: () => Promise.resolve(true),
+         getDepositAddress: () => Promise.resolve(""),
       };
 
       repoInstance.setExchangeService(ExchangeId.BINANCE, exchangeService);
