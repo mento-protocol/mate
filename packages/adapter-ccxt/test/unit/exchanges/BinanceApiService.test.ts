@@ -1,12 +1,15 @@
 import "reflect-metadata";
 import { Balances, binance } from "ccxt";
-import { mock, instance, when, verify } from "ts-mockito";
+import { mock, instance, when, verify, anything } from "ts-mockito";
 import { BinanceApiService } from "../../../src/exchanges";
 import {
    ERR_API_BALANCE_FETCH_FAILURE,
+   ERR_API_FETCH_DEPOSIT_ADDRESS_FAILURE,
    ERR_API_FETCH_MARKETS_FAILURE,
    ERR_BALANCE_NOT_FOUND,
 } from "../../../src/constants";
+import { ChainId } from "../../../src/types";
+import { ERR_UNSUPPORTED_CHAIN } from "@mate/sdk";
 
 describe("BinanceApiService", () => {
    let mockBinance: binance;
@@ -153,6 +156,52 @@ describe("BinanceApiService", () => {
             `${ERR_API_FETCH_MARKETS_FAILURE(
                "binance"
             )}:Error: Network issue for markets`
+         );
+      });
+   });
+
+   describe("getDepositAddress", () => {
+      it("should return the correct deposit address for a given currency and chainId", async () => {
+         when(
+            mockBinance.fetchDepositAddress(anything(), anything())
+         ).thenResolve({
+            currency: "",
+            address: "0xSomeDepositAddress",
+            tag: "",
+            network: "",
+            info: {
+               coin: "",
+               address: "0xSomeDepositAddress",
+               tag: "",
+               url: "",
+            },
+         });
+
+         const result = await testee.getDepositAddress(
+            "USDC",
+            ChainId.ETHEREUM
+         );
+         expect(result).toBe("0xSomeDepositAddress");
+      });
+
+      it("should throw an error for an unsupported chainId", async () => {
+         expect(() =>
+            testee.getDepositAddress("USDC", "UNSUPPORTED_CHAIN" as any)
+         ).rejects.toThrowError(ERR_UNSUPPORTED_CHAIN("UNSUPPORTED_CHAIN"));
+      });
+
+      it("should throw an error if fetching the deposit address fails", async () => {
+         when(
+            mockBinance.fetchDepositAddress(anything(), anything())
+         ).thenThrow(new Error("API issue on fetch deposit address"));
+
+         await expect(
+            testee.getDepositAddress("USDC", ChainId.ETHEREUM)
+         ).rejects.toThrowError(
+            `${ERR_API_FETCH_DEPOSIT_ADDRESS_FAILURE(
+               "USDC",
+               ChainId.ETHEREUM
+            )}:Error: API issue on fetch deposit address`
          );
       });
    });

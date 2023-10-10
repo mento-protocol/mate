@@ -7,6 +7,7 @@ import {
    ERR_BALANCE_NOT_FOUND,
 } from "../constants";
 import { ChainId } from "../types";
+import { ERR_UNSUPPORTED_CHAIN } from "@mate/sdk";
 
 export class BinanceApiService implements IExchangeApiService {
    constructor(private exchange: binance) {}
@@ -88,7 +89,7 @@ export class BinanceApiService implements IExchangeApiService {
          case ChainId.CELO:
             return "CELO";
          default:
-            throw new Error(`Unsupported chainId: ${chainId}`);
+            throw new Error(ERR_UNSUPPORTED_CHAIN(chainId));
       }
    }
 }
