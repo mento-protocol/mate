@@ -23,3 +23,5 @@ export const ERR_API_FETCH_DEPOSIT_ADDRESS_FAILURE = (
    currency: string,
    chainId: string
 ) => `Failed to deposit address for currency ${currency} on chain ${chainId}`;
+export const ERR_INVALID_DEPOSIT_ADDRESS =
+   "The deposit address provided does not match the address returned by the exchange. Verify the address is correct and try again.";

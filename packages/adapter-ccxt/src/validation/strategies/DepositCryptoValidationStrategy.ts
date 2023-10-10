@@ -4,7 +4,11 @@ import {
    ExchangeDepositCryptoConfigCodec,
    ExchangeId,
 } from "../../types";
-import { ExchangeServiceRepo, IExchangeServiceRepo } from "../../exchanges";
+import {
+   ExchangeServiceRepo,
+   IExchangeApiService,
+   IExchangeServiceRepo,
+} from "../../exchanges";
 import { TypeOf } from "io-ts";
 import { IStepValidationStrategy } from "./IStepValidationStrategy";
 import { inject, injectable } from "tsyringe";
@@ -16,9 +20,9 @@ import {
 import {
    ERR_ASSET_UNSUPPORTED_ON_EXCHANGE,
    ERR_EXCHANGE_SERVICE_NOT_FOUND,
+   ERR_INVALID_DEPOSIT_ADDRESS,
    ERR_UNSUPPORTED_EXCHANGE,
 } from "../../constants";
-import { privateKeyToAccount } from "viem/accounts";
 
 @injectable()
 export class ExchangeSwapValidationStrategy implements IStepValidationStrategy {
@@ -35,6 +39,18 @@ export class ExchangeSwapValidationStrategy implements IStepValidationStrategy {
          typeof ExchangeDepositCryptoConfigCodec
       >;
 
+      const exchangeService = this.exchangeServiceRepo.getExchangeService(
+         config.exchange as ExchangeId
+      );
+
+      if (!exchangeService) {
+         throw new ValidationError(
+            this.prependGeneralError(
+               ERR_EXCHANGE_SERVICE_NOT_FOUND(config.exchange)
+            )
+         );
+      }
+
       // Validate exchange
       this.validateEnumValue(
          config.exchange,
@@ -44,24 +60,45 @@ export class ExchangeSwapValidationStrategy implements IStepValidationStrategy {
 
       // Validate chain
       this.validateEnumValue(
-         config.chainId,
+         config.toChain,
          this.chainIdSet,
          ERR_UNSUPPORTED_CHAIN
       );
 
       await this.validateExchangeAsset(
          config.asset,
-         config.exchange as ExchangeId
+         config.exchange as ExchangeId,
+         exchangeService
       );
 
-      const account = privateKeyToAccount("0xddsd");
-      account.address;
-
-      // Verify from address is in configuration, so private key should be there
+      await this.validateDepositAddress(
+         config.asset,
+         config.toAddress,
+         config.toChain as ChainId,
+         exchangeService
+      );
 
       // Verify balance > amount ?
 
       return validResult;
+   }
+
+   private async validateDepositAddress(
+      currency: string,
+      address: string,
+      chainId: ChainId,
+      exchangeService: IExchangeApiService
+   ): Promise<void> {
+      const depositAddress = await exchangeService.getDepositAddress(
+         currency,
+         chainId
+      );
+
+      if (depositAddress !== address) {
+         throw new ValidationError(
+            this.prependGeneralError(ERR_INVALID_DEPOSIT_ADDRESS)
+         );
+      }
    }
 
    private validateEnumValue(
@@ -76,17 +113,9 @@ export class ExchangeSwapValidationStrategy implements IStepValidationStrategy {
 
    private async validateExchangeAsset(
       asset: string,
-      exchange: ExchangeId
+      exchange: ExchangeId,
+      exchangeService: IExchangeApiService
    ): Promise<void> {
-      const exchangeService =
-         this.exchangeServiceRepo.getExchangeService(exchange);
-
-      if (!exchangeService) {
-         throw new ValidationError(
-            this.prependGeneralError(ERR_EXCHANGE_SERVICE_NOT_FOUND(exchange))
-         );
-      }
-
       const isSupported = await exchangeService.isAssetSupported(asset);
 
       if (!isSupported) {

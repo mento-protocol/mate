@@ -87,5 +87,7 @@ export class ConfigProvider implements IConfigProvider {
       if (!validate(this.configData)) {
          throw new Error(this.ajv.errorsText(validate.errors));
       }
+
+      //TODO: Verify private key matches address using privateKeyToAccount from viem/accounts
    }
 }
