@@ -49,8 +49,8 @@ flows:
              toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
              toAddress: 0xMyAddress1
              maxSlippage: 0.01
-   - name: cUSD to USD
-     id: usd-to-cusd
+   - name: axlUSDC to USD
+     id: axlusd-to-usd
      description: "Bridge axlUSDC on Celo to USDC on Ethereum -> Deposit USDC to Binance Exchange -> Swap USDC to USD on Binance"
      steps:
         - type: Bridge.Swap
