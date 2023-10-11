@@ -8,6 +8,7 @@ import {
    IExchangeFactory,
 } from "./exchanges";
 import {
+   DepositCryptoValidationStrategy,
    ExchangeSwapValidationStrategy,
    WithdrawCryptoValidationStrategy,
 } from "./validation/strategies";
@@ -53,6 +54,10 @@ export class DependencyRegistrar {
             map.set(
                StepType.ExchangeWithdrawCrypto,
                c.resolve(WithdrawCryptoValidationStrategy)
+            );
+            map.set(
+               StepType.ExchangeDepositCrypto,
+               c.resolve(DepositCryptoValidationStrategy)
             );
             return map;
          },

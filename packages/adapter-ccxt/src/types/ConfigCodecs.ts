@@ -36,7 +36,7 @@ export const AdapterConfigCodec = t.type({
    config: CCXTAdapterConfigCodec, // Configuration specific to this adapter
 });
 
-// ---- Exchange.Swap ---- //
+// ---- Exchange.Withdraw ---- //
 
 /**
  * Codec for the Exchange.WithdrawCrypto configuration.
@@ -81,10 +81,35 @@ export const ExchangeSwap = t.type({
    config: ExchangeSwapConfigCodec,
 });
 
-export const CCXTStepConfig = t.union([ExchangeWithdrawCrypto, ExchangeSwap]);
+// ---- Exchange.DepositCrypto ---- //
+
+/**
+ * Codec for the Exchange.ExchangeDepositCrypto configuration.
+ */
+export const ExchangeDepositCryptoConfigCodec = t.type({
+   exchange: t.string, // Identifier for the exchange
+   asset: t.string, // Asset to deposit e.g. "USDC"
+   toChain: t.string, // Chain identifier for destination chain
+   amount: t.number, // Amount to deposit
+   toAddress: t.string, // Address to deposit to
+});
+
+/**
+ * Codec for the Exchange.ExchangeDepositCrypto step.
+ */
+export const ExchangeDepositCrypto = t.type({
+   type: t.literal(StepType.ExchangeDepositCrypto),
+   adapter: t.literal("ccxt"),
+   config: ExchangeDepositCryptoConfigCodec,
+});
+
+export const CCXTStepConfig = t.union([
+   ExchangeWithdrawCrypto,
+   ExchangeSwap,
+   ExchangeDepositCrypto,
+]);
 
 // Types derived from the codecs
 
-//TODO: Consider renaming this.
 export type CCXTStep = TypeOf<typeof CCXTStepConfig>;
 export type CCXTAdapterConfig = TypeOf<typeof CCXTAdapterConfigCodec>;

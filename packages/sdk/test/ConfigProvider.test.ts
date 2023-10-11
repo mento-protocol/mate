@@ -5,7 +5,11 @@ import * as fs from "fs";
 jest.mock("fs");
 
 describe("ConfigProvider", () => {
-   const validConfig = `adapters:
+   const validConfig = `settings:
+   globalVariables:
+      primaryPrivateKey: 0xKey
+      primaryAddress: 0xAddress
+adapters:
    - id: ccxt
      adapter: "@mate/adapter-ccxt"
      config:
@@ -40,8 +44,7 @@ flows:
                 chain: CELO
                 asset: cUSD
              amount: max
-             maxSlippageBPS: 20
-`;
+             maxSlippageBPS: 20`;
 
    describe("init", () => {
       it("should throw an error if the config file is not found", () => {
@@ -352,6 +355,37 @@ flows:
       it("should return null for a non-existent adapter ID", () => {
          const adapterConfig = configProvider.getAdapterConfig("nonexistent");
          expect(adapterConfig).toBeNull();
+      });
+   });
+
+   describe("getGlobalVariable", () => {
+      let configProvider: ConfigProvider;
+
+      beforeAll(() => {
+         jest.spyOn(fs, "existsSync").mockReturnValue(true);
+         jest.spyOn(fs, "readFileSync").mockReturnValue(validConfig);
+      });
+
+      beforeEach(() => {
+         configProvider = new ConfigProvider();
+      });
+
+      afterEach(() => {
+         jest.restoreAllMocks();
+      });
+
+      it("should retrieve the correct global variable value by name", () => {
+         const primaryKey =
+            configProvider.getGlobalVariable("primaryPrivateKey");
+         expect(primaryKey).toBe("0xKey");
+
+         const primaryAddress = configProvider.getGlobalVariable("primaryAddress");
+         expect(primaryAddress).toBe("0xAddress");
+      });
+
+      it("should return null for a non-existent global variable", () => {
+         const someVariable = configProvider.getGlobalVariable("nonexistent");
+         expect(someVariable).toBeNull();
       });
    });
 });
