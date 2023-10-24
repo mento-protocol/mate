@@ -20,6 +20,19 @@ export const CONFIG_SCHEMA = {
                   },
                },
             },
+            rpcUrls: {
+               type: "object",
+               patternProperties: {
+                  "^[0-9]+$": { type: "string", format: "uri" },
+               },
+               additionalProperties: false,
+               errorMessage: {
+                  additionalProperties:
+                     "Only numeric keys are allowed for rpcUrls.",
+                  patternProperties:
+                     "Each value under rpcUrls must be a valid URL string.",
+               },
+            },
          },
          required: ["globalVariables"],
          errorMessage: {

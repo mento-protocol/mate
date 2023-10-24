@@ -4,6 +4,7 @@ import { singleton } from "tsyringe";
 import Ajv from "ajv";
 import ajvErrors from "ajv-errors";
 import addKeywords from "ajv-keywords";
+import addFormats from "ajv-formats";
 
 import { AdapterConfig } from "./types";
 import { IConfigProvider } from "./interfaces";
@@ -14,6 +15,9 @@ interface IConfig {
       globalVariables: {
          primaryPrivateKey: string;
          primaryAddress: string;
+      };
+      rpcUrls: {
+         [chainId: number]: string;
       };
    };
    adapters: AdapterConfig[];
@@ -29,10 +33,14 @@ export class ConfigProvider implements IConfigProvider {
    constructor(configPath: string = "config.yaml") {
       this.CONFIG_PATH =
          configPath || process.env["CONFIG_PATH"] || "config.yaml";
-
-      this.ajv = new Ajv({ allErrors: true });
+      this.ajv = new Ajv({
+         allErrors: true,
+         strictTuples: false,
+         strictTypes: false,
+      });
       addKeywords(this.ajv, ["uniqueItemProperties"]);
       ajvErrors(this.ajv);
+      addFormats(this.ajv);
 
       this.loadAndValidateConfig();
    }
@@ -53,6 +61,21 @@ export class ConfigProvider implements IConfigProvider {
          return this.configData.settings.globalVariables[
             variableName as keyof typeof this.configData.settings.globalVariables
          ];
+      }
+      return null;
+   }
+
+   public getRpcUrl(chainId: number): string | null {
+      if (
+         this.configData.settings?.rpcUrls &&
+         this.configData.settings.rpcUrls.hasOwnProperty(chainId)
+      ) {
+         const rpcUrl =
+            this.configData.settings.rpcUrls[
+               chainId as keyof typeof this.configData.settings.rpcUrls
+            ];
+
+         return rpcUrl ? rpcUrl : null;
       }
       return null;
    }
