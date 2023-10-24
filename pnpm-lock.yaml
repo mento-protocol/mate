@@ -90,6 +90,9 @@ importers:
       '@mate/sdk':
         specifier: 0.0.1
         version: link:../sdk
+      ethers:
+        specifier: v5
+        version: 5.7.2
       fp-ts:
         specifier: ^2.16.1
         version: 2.16.1

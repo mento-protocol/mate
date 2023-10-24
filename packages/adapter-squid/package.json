@@ -25,6 +25,7 @@
    "dependencies": {
       "@0xsquid/sdk": "^1.12.1",
       "@mate/sdk": "0.0.1",
+      "ethers": "v5",
       "fp-ts": "^2.16.1",
       "io-ts": "^2.2.20",
       "reflect-metadata": "^0.1.13",
