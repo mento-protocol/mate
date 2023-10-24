@@ -2,13 +2,13 @@ import { autoInjectable } from "tsyringe";
 import {
    ERR_ADAPTER_CONFIG_MISSING,
    ERR_ADAPTER_INIT_FAILURE,
+   ExecutionResult,
    IAdapter,
    IConfigProvider,
    IValidator,
    Step,
    ValidationResult,
 } from "@mate/sdk";
-import { ExecutionResult } from "./ExecutionResult";
 import {
    ApiCredentials,
    CCXTAdapterConfig,
