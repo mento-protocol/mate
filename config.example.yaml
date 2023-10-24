@@ -19,7 +19,6 @@ adapters:
      config:
         integratorId: mate-sdk
         baseUrl: https://api.0xsquid.com
-        rpcURL:
 flows:
    - name: USD to cUSD
      id: usd-to-cust-binance
