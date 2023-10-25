@@ -8,8 +8,7 @@ import { StepType } from ".";
 export const BridgeSwapConfigCodec = t.type({
    fromChain: t.number,
    fromToken: t.string,
-   fromAddress: t.string,
-   fromAmount: t.number,
+   fromAmount: t.string,
    toChain: t.number,
    toToken: t.string,
    toAddress: t.string,
