@@ -3,6 +3,14 @@ import { TypeOf } from "io-ts";
 import { StepType } from ".";
 
 /**
+ * Codec for the Squid adapter configuration.
+ */
+export const SquidAdapterConfigCodec = t.type({
+   integratorId: t.string,
+   baseUrl: t.string,
+});
+
+/**
  * Codec for the Bridge.Swap step configuration.
  */
 export const BridgeSwapConfigCodec = t.type({
@@ -25,3 +33,4 @@ export const BridgeSwapStepCodec = t.type({
 });
 
 export type SquidStep = TypeOf<typeof BridgeSwapStepCodec>;
+export type SquidAdapterConfig = TypeOf<typeof SquidAdapterConfigCodec>;

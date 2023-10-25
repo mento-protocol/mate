@@ -1,6 +1,8 @@
 import {
    ConfigProvider,
+   ERR_ADAPTER_CONFIG_MISSING,
    ERR_ADAPTER_EXECUTE_FAILURE,
+   ERR_ADAPTER_INIT_FAILURE,
    ERR_GLOBAL_VARIABLE_MISSING,
    ExecutionResult,
    IAdapter,
@@ -9,7 +11,7 @@ import {
    Step,
    ValidationResult,
 } from "@mate/sdk";
-import { BridgeSwapConfigCodec, SquidStep } from "./types";
+import { BridgeSwapConfigCodec, SquidAdapterConfig, SquidStep } from "./types";
 import { inject } from "tsyringe";
 import {
    ISignerService,
@@ -27,6 +29,7 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
    public adapterId: string = "squid";
 
    private squid: Squid;
+   private adapterConfig: SquidAdapterConfig;
 
    constructor(
       @inject(StepConfigValidator)
@@ -37,13 +40,37 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
    ) {}
 
    public async init(): Promise<Boolean> {
-      throw new Error("Method not implemented.");
-      // TODO:
-      // 1. Check if the adapter is already initialized
-      // 2. Get the adapter config from the config provider
-      // 3. Validate the adapter config
-      // 4. Initialize the Squid provider
-      // 4. Do any adapter specific initialization
+      if (this.adapterConfig) {
+         return true;
+      }
+
+      const adapterConfigItem = this.configProvider.getAdapterConfig(
+         this.adapterId
+      );
+
+      if (!adapterConfigItem) {
+         throw new Error(
+            `${ERR_ADAPTER_INIT_FAILURE}: ${ERR_ADAPTER_CONFIG_MISSING}`
+         );
+      }
+
+      // TODO: Validate the adapter config
+      this.adapterConfig = adapterConfigItem.config;
+
+      try {
+         const squidConfig = {
+            baseUrl: this.adapterConfig.baseUrl,
+            integratorId: this.adapterConfig.integratorId,
+         };
+
+         await this.squidProvider.init(squidConfig);
+      } catch (error: any) {
+         throw new Error(
+            `${ERR_ADAPTER_INIT_FAILURE}: ${(error as Error).message}`
+         );
+      }
+
+      return true;
    }
 
    public async isValid(step: Step<SquidStep>): Promise<ValidationResult> {
@@ -79,7 +106,6 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
       const route = await this.getRoute(stepConfig);
       const signer = this.signerService.getSignerForChain(stepConfig.fromChain);
 
-      // Send the transaction to execute the route
       let transaction;
 
       try {
@@ -107,6 +133,11 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
       return result;
    }
 
+   /**
+    * Get the squid route based on the specified step configuration.
+    * @param stepConfig The configuration data to use to get the route.
+    * @returns The route data.
+    */
    private async getRoute(
       stepConfig: TypeOf<typeof BridgeSwapConfigCodec>
    ): Promise<RouteData> {
@@ -123,9 +154,7 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
          );
       }
 
-      const squid = this.squidProvider.getSquid();
-
-      const bridgeParams: GetRoute = {
+      const getRouteParams: GetRoute = {
          fromChain: stepConfig.fromChain,
          fromToken: stepConfig.fromToken,
          fromAmount: stepConfig.fromAmount,
@@ -137,7 +166,7 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
       };
 
       try {
-         routeData = (await squid.getRoute(bridgeParams)).route;
+         routeData = (await this.squid.getRoute(getRouteParams)).route;
       } catch (error) {
          throw new Error(
             `${ERR_ADAPTER_EXECUTE_FAILURE}: ${ERR_GET_ROUTE_FAILURE}`
