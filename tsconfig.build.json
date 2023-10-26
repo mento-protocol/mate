@@ -2,6 +2,7 @@
    "extends": "./tsconfig.base.json",
    "compilerOptions": {
       "incremental": false,
-      "noEmit": false
+      "noEmit": false,
+      "resolveJsonModule": true
    }
 }
