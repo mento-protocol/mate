@@ -54,6 +54,11 @@ export class ConfigProvider implements IConfigProvider {
 
    public getGlobalVariable(variableName: string): string | null {
       // First try to get from environment variables
+      const envVar = process.env[variableName];
+      if (envVar) {
+         return envVar;
+      }
+
       if (
          this.configData.settings?.globalVariables &&
          this.configData.settings.globalVariables.hasOwnProperty(variableName)
