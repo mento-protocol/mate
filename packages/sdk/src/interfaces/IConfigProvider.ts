@@ -27,4 +27,12 @@ export interface IConfigProvider {
     * @returns The RPC url for the specified chain or null if not found.
     */
    getRpcUrl(chainId: number): string | null;
+
+   /**
+    * Retrieves a step with a given index from a flow with a given ID.
+    * @param flowId The ID of the flow from which to retrieve the step.
+    * @param stepIndex The index of the step to retrieve.
+    * @returns The step with the specified index from the flow with the specified ID or null if not found.
+    */
+   getStepFromFlow(flowId: string, stepIndex: number): any | null;
 }

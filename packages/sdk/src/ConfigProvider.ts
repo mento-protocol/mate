@@ -53,6 +53,7 @@ export class ConfigProvider implements IConfigProvider {
    }
 
    public getGlobalVariable(variableName: string): string | null {
+      // First try to get from environment variables
       if (
          this.configData.settings?.globalVariables &&
          this.configData.settings.globalVariables.hasOwnProperty(variableName)
@@ -77,6 +78,25 @@ export class ConfigProvider implements IConfigProvider {
          return rpcUrl ? rpcUrl : null;
       }
       return null;
+   }
+
+   public getStepFromFlow(flowId: string, stepIndex: number): any | null {
+      if (!flowId) {
+         throw new Error("Flow ID must be specified");
+      }
+
+      const flow = this.configData.flows.find((flow) => flow.id === flowId);
+      if (!flow) {
+         throw new Error(`Flow with ID ${flowId} not found`);
+      }
+
+      if (flow.steps.length <= stepIndex) {
+         throw new Error(
+            `Step index ${stepIndex} is out of bounds for flow ${flowId}`
+         );
+      }
+
+      return flow.steps[stepIndex];
    }
 
    private loadAndValidateConfig(): void {
