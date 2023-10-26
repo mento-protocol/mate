@@ -2,7 +2,6 @@ import "reflect-metadata";
 import { ISquidProvider, SquidProvider } from "../../../src/services";
 import { StepConfigValidator } from "../../../src/validation";
 import { ERR_UNSUPPORTED_CHAIN, ERR_UNSUPPORTED_TOKEN } from "@mate/sdk";
-import { StepType } from "../../../src/types";
 
 describe("StepConfigValidator", () => {
    let squidProvider: ISquidProvider;
@@ -33,34 +32,26 @@ describe("StepConfigValidator", () => {
    describe("validate", () => {
       it("should validate successfully for a correct config", async () => {
          const validConfig = {
-            type: StepType.BridgeSwap,
-            adapter: "squid",
-            config: {
-               fromChain: goerliChainId,
-               fromToken: goerliDai,
-               fromAmount: "10000",
-               toChain: alfajoresChainId,
-               toToken: alfajoresAxelarUSDC,
-               toAddress: validTestAddress,
-               maxSlippage: 0.01,
-            },
+            fromChain: goerliChainId,
+            fromToken: goerliDai,
+            fromAmount: "10000",
+            toChain: alfajoresChainId,
+            toToken: alfajoresAxelarUSDC,
+            toAddress: validTestAddress,
+            maxSlippage: 0.01,
          };
          await expect(testee.validate(validConfig)).resolves.not.toThrow();
       });
 
       it("should throw ValidationError for unsupported fromToken", async () => {
          const invalidConfig = {
-            type: StepType.BridgeSwap,
-            adapter: "squid",
-            config: {
-               fromChain: goerliChainId,
-               fromToken: unsupportedTestToken,
-               fromAmount: "10000",
-               toChain: alfajoresChainId,
-               toToken: alfajoresAxelarUSDC,
-               toAddress: validTestAddress,
-               maxSlippage: 0.01,
-            },
+            fromChain: goerliChainId,
+            fromToken: unsupportedTestToken,
+            fromAmount: "10000",
+            toChain: alfajoresChainId,
+            toToken: alfajoresAxelarUSDC,
+            toAddress: validTestAddress,
+            maxSlippage: 0.01,
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_TOKEN(unsupportedTestToken, goerliChainId)}`
@@ -69,17 +60,13 @@ describe("StepConfigValidator", () => {
 
       it("should throw ValidationError for unsupported toToken", async () => {
          const invalidConfig = {
-            type: StepType.BridgeSwap,
-            adapter: "squid",
-            config: {
-               fromChain: goerliChainId,
-               fromToken: goerliDai,
-               fromAmount: "10000",
-               toChain: alfajoresChainId,
-               toToken: unsupportedTestToken,
-               toAddress: validTestAddress,
-               maxSlippage: 0.01,
-            },
+            fromChain: goerliChainId,
+            fromToken: goerliDai,
+            fromAmount: "10000",
+            toChain: alfajoresChainId,
+            toToken: unsupportedTestToken,
+            toAddress: validTestAddress,
+            maxSlippage: 0.01,
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_TOKEN(unsupportedTestToken, alfajoresChainId)}`
@@ -88,17 +75,13 @@ describe("StepConfigValidator", () => {
 
       it("should throw ValidationError for unsupported fromChain", async () => {
          const invalidConfig = {
-            type: StepType.BridgeSwap,
-            adapter: "squid",
-            config: {
-               fromChain: 123456,
-               fromToken: goerliDai,
-               fromAmount: "10000",
-               toChain: alfajoresChainId,
-               toToken: alfajoresAxelarUSDC,
-               toAddress: validTestAddress,
-               maxSlippage: 0.01,
-            },
+            fromChain: 123456,
+            fromToken: goerliDai,
+            fromAmount: "10000",
+            toChain: alfajoresChainId,
+            toToken: alfajoresAxelarUSDC,
+            toAddress: validTestAddress,
+            maxSlippage: 0.01,
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_CHAIN("123456")}`
@@ -107,17 +90,13 @@ describe("StepConfigValidator", () => {
 
       it("should throw ValidationError for unsupported toChain", async () => {
          const invalidConfig = {
-            type: StepType.BridgeSwap,
-            adapter: "squid",
-            config: {
-               fromChain: goerliChainId,
-               fromToken: goerliDai,
-               fromAmount: "10000",
-               toChain: 123456,
-               toToken: alfajoresAxelarUSDC,
-               toAddress: validTestAddress,
-               maxSlippage: 0.01,
-            },
+            fromChain: goerliChainId,
+            fromToken: goerliDai,
+            fromAmount: "10000",
+            toChain: 123456,
+            toToken: alfajoresAxelarUSDC,
+            toAddress: validTestAddress,
+            maxSlippage: 0.01,
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_CHAIN("123456")}`

@@ -4,7 +4,9 @@ settings:
       primaryAddress: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
    rpcUrls:
       42220: "https://celo-mainnet.infura.io/v3/123456"
+      44787: "https://alfajores-forno.celo-testnet.org"
       1: "https://mainnet.infura.io/v3/123456"
+      5: "https://rpc.ankr.com/eth_goerli"
 
 adapters:
    - id: ccxt
@@ -18,7 +20,7 @@ adapters:
      adapter: "@mate/adapter-squid"
      config:
         integratorId: mate-sdk
-        baseUrl: https://api.0xsquid.com
+        baseUrl: https://testnet.api.squidrouter.com
 flows:
    - name: USD to cUSD
      id: usd-to-cust-binance
@@ -53,17 +55,17 @@ flows:
              maxSlippage: 0.01
    - name: axlUSDC to USD
      id: axlusd-to-usd
-     description: "Bridge axlUSDC on Celo to USDC on Ethereum -> Deposit USDC to Binance Exchange -> Swap USDC to USD on Binance"
+     description: "Bridge axlUSDC on Celo to axlUSDC on Ethereum -> Deposit USDC to Binance Exchange -> Swap USDC to USD on Binance"
      steps:
         - type: Bridge.Swap
           adapter: squid
           config:
-             fromChain: 42220
-             fromToken: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
+             fromChain: 44787
+             fromToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
              fromAmount: "10000"
-             toChain: 1
-             toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
-             toAddress: 0xMyAddress1
+             toChain: 5
+             toToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
+             toAddress: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
              maxSlippage: 0.01
         - type: Exchange.DepositCrypto
           adapter: ccxt

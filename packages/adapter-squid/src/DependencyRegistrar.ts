@@ -1,6 +1,6 @@
 import { container } from "tsyringe";
 import { ExecutionResult, IAdapter, IValidator } from "@mate/sdk";
-import { SquidStep } from "./types";
+import { SquidStepConfig } from "./types";
 import { StepConfigValidator } from "./validation";
 import {
    ISignerService,
@@ -16,7 +16,7 @@ export class DependencyRegistrar {
 
    public static configure(): void {
       container.registerSingleton<ISquidProvider>(SquidProvider);
-      container.register<IValidator<SquidStep>>(StepConfigValidator, {
+      container.register<IValidator<SquidStepConfig>>(StepConfigValidator, {
          useClass: StepConfigValidator,
       });
 
@@ -24,7 +24,7 @@ export class DependencyRegistrar {
          useClass: SignerService,
       });
 
-      container.register<IAdapter<ExecutionResult, SquidStep>>(pkg.name, {
+      container.register<IAdapter<ExecutionResult, SquidStepConfig>>(pkg.name, {
          useClass: SquidAdapter,
       });
    }

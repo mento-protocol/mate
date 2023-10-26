@@ -9,9 +9,14 @@ import {
    IConfigProvider,
    IValidator,
    Step,
+   ValidationError,
    ValidationResult,
 } from "@mate/sdk";
-import { BridgeSwapConfigCodec, SquidAdapterConfig, SquidStep } from "./types";
+import {
+   BridgeSwapConfigCodec,
+   SquidAdapterConfig,
+   SquidStepConfig,
+} from "./types";
 import { inject, injectable } from "tsyringe";
 import {
    ISignerService,
@@ -30,14 +35,16 @@ import {
 } from "./constants";
 
 @injectable()
-export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
+export class SquidAdapter
+   implements IAdapter<ExecutionResult, SquidStepConfig>
+{
    public adapterId: string = "squid";
 
    private adapterConfig: SquidAdapterConfig;
 
    constructor(
       @inject(StepConfigValidator)
-      private stepConfigValidator: IValidator<SquidStep>,
+      private stepConfigValidator: IValidator<SquidStepConfig>,
       @inject(SquidProvider) private squidProvider: ISquidProvider,
       @inject(ConfigProvider) private configProvider: IConfigProvider,
       @inject(SignerService) private signerService: ISignerService
@@ -77,26 +84,33 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
       return true;
    }
 
-   public async isValid(step: Step<SquidStep>): Promise<ValidationResult> {
+   public async isValid(
+      step: Step<SquidStepConfig>
+   ): Promise<ValidationResult> {
       let result: ValidationResult = {
          isValid: false,
          errors: [],
       };
 
       try {
-         await this.stepConfigValidator.validate(step);
+         await this.stepConfigValidator.validate(step.config);
          result.isValid = true;
       } catch (err) {
-         result.errors.push((err as Error).message);
+         const validationErr = err as ValidationError;
+
+         if (validationErr.message) {
+            result.errors.push(validationErr.message);
+         }
+         if (validationErr.context) {
+            result.errors.push(validationErr.context);
+         }
       }
 
       return result;
    }
-
-   // TODO: The generic type sdk.Step<T> only needs to expose the config property
    // TODO: Get some logging set up.
 
-   public async execute(step: Step<SquidStep>): Promise<ExecutionResult> {
+   public async execute(step: Step<SquidStepConfig>): Promise<ExecutionResult> {
       // We're assuming the step is Bridge.Swap as this is the only step type currently supported
       // Should this change, this function should be refactored to handle the different step types.
       // e.g. IExecutor.executeStep(step: Step<SquidStep>)
@@ -106,14 +120,15 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
          data: {},
       };
 
-      const stepConfig = step.config.config; // ??
       const squid = this.squidProvider.getSquid();
-      const signer = this.signerService.getSignerForChain(stepConfig.fromChain);
+      const signer = this.signerService.getSignerForChain(
+         step.config.fromChain
+      );
 
       let transaction;
 
       try {
-         const route = await this.getRoute(stepConfig, squid);
+         const route = await this.getRoute(step.config, squid);
          transaction = await squid.executeRoute({ signer, route });
       } catch (error) {
          result.success = false;

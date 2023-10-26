@@ -13,7 +13,7 @@ import {
    SignerService,
    SquidProvider,
 } from "../../src/services";
-import { SquidStep } from "../../src/types";
+import { SquidStepConfig } from "../../src/types";
 import { StepConfigValidator } from "../../src/validation";
 import { SquidAdapter } from "../../src/SquidAdapter";
 
@@ -58,7 +58,7 @@ describe("DependencyRegistrar", () => {
 
    it("should correctly register IValidator<SquidStep>", () => {
       const instance =
-         container.resolve<IValidator<SquidStep>>(StepConfigValidator);
+         container.resolve<IValidator<SquidStepConfig>>(StepConfigValidator);
       expect(instance).toBeInstanceOf(StepConfigValidator);
    });
 

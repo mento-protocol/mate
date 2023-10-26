@@ -32,5 +32,7 @@ export const BridgeSwapStepCodec = t.type({
    config: BridgeSwapConfigCodec,
 });
 
-export type SquidStep = TypeOf<typeof BridgeSwapStepCodec>;
+// This assumes we will only ever have one step type for the Squid adapter.
+// When we add more, this type should be updated to be a union of all the step type configs.
+export type SquidStepConfig = TypeOf<typeof BridgeSwapConfigCodec>;
 export type SquidAdapterConfig = TypeOf<typeof SquidAdapterConfigCodec>;

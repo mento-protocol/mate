@@ -10,7 +10,7 @@ import {
    IConfigProvider,
    IValidator,
 } from "@mate/sdk";
-import { SquidStep, StepType } from "../../src/types";
+import { SquidStepConfig, StepType } from "../../src/types";
 import {
    ISignerService,
    ISquidProvider,
@@ -27,7 +27,7 @@ import { BigNumber, Wallet, providers } from "ethers";
 
 describe("SquidAdapter", () => {
    let adapter: SquidAdapter;
-   let mockStepConfigValidator: IValidator<SquidStep>;
+   let mockStepConfigValidator: IValidator<SquidStepConfig>;
    let mockSquidProvider: ISquidProvider;
    let mockConfigProvider: IConfigProvider;
    let mockSignerService: ISignerService;
@@ -153,7 +153,7 @@ describe("SquidAdapter", () => {
          when(mockStepConfigValidator.validate(anything())).thenResolve();
 
          const validationResult = await adapter.isValid(mockStep);
-         verify(mockStepConfigValidator.validate(mockStep)).once();
+         verify(mockStepConfigValidator.validate(mockStep.config)).once();
          expect(validationResult.isValid).toBe(true);
          expect(validationResult.errors.length).toBe(0);
       });
@@ -164,7 +164,7 @@ describe("SquidAdapter", () => {
          );
 
          const validationResult = await adapter.isValid(mockStep);
-         verify(mockStepConfigValidator.validate(mockStep)).once();
+         verify(mockStepConfigValidator.validate(mockStep.config)).once();
          expect(validationResult.isValid).toBe(false);
          expect(validationResult.errors.length).toBe(1);
          expect(validationResult.errors[0]).toBe("Test Error");
