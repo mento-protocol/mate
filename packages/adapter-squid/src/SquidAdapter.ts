@@ -12,7 +12,7 @@ import {
    ValidationResult,
 } from "@mate/sdk";
 import { BridgeSwapConfigCodec, SquidAdapterConfig, SquidStep } from "./types";
-import { inject } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 import {
    ISignerService,
    ISquidProvider,
@@ -29,6 +29,7 @@ import {
    ERR_GET_ROUTE_UNDEFINED,
 } from "./constants";
 
+@injectable()
 export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
    public adapterId: string = "squid";
 

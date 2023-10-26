@@ -1,20 +1,33 @@
 import "reflect-metadata";
+import * as path from "path";
 import { container } from "tsyringe";
-import { IValidator } from "@mate/sdk";
-import { DependencyRegistrar } from "../../src/DependencyRegistrar";
-import { ISquidProvider, SquidProvider } from "../../src/services";
+import {
+   IValidator,
+   DependencyRegistrar as SdkDependencyRegistrar,
+} from "@mate/sdk";
+import { DependencyRegistrar as SquidDependencyRegistrar } from "../../src/DependencyRegistrar";
+import {
+   ISignerService,
+   ISquidProvider,
+   SignerService,
+   SquidProvider,
+} from "../../src/services";
 import { SquidStep } from "../../src/types";
 import { StepConfigValidator } from "../../src/validation";
 
 describe("DependencyRegistrar", () => {
-   let registrar: DependencyRegistrar;
-
    const baseUrl = "https://testnet.api.squidrouter.com";
    const integratorId = "mate-sdk";
 
    beforeAll(() => {
-      registrar = DependencyRegistrar.getInstance();
-      registrar.configure();
+      // Override the config file path to point to the exapmle config
+      process.env["CONFIG_PATH"] = path.resolve(
+         __dirname,
+         "../../../../config.example.yaml"
+      );
+
+      SdkDependencyRegistrar.configure();
+      SquidDependencyRegistrar.configure();
    });
 
    it("should correctly register ISquidProvider as singleton", async () => {
@@ -45,5 +58,10 @@ describe("DependencyRegistrar", () => {
       const instance =
          container.resolve<IValidator<SquidStep>>(StepConfigValidator);
       expect(instance).toBeInstanceOf(StepConfigValidator);
+   });
+
+   it("should correctly register SignerService", () => {
+      const instance = container.resolve<ISignerService>(SignerService);
+      expect(instance).toBeInstanceOf(SignerService);
    });
 });

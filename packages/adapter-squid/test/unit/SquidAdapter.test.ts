@@ -228,6 +228,4 @@ describe("SquidAdapter", () => {
          );
       });
    });
-
-   describe("getRoute", () => {});
 });
