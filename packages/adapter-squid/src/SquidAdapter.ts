@@ -23,12 +23,15 @@ import { StepConfigValidator } from "./validation";
 import { GetRoute, RouteData, Squid } from "@0xsquid/sdk";
 import { ethers } from "ethers";
 import { TypeOf } from "io-ts";
-import { ERR_GET_ROUTE_FAILURE, ERR_TX_RECEIPT_MISSING } from "./constants";
+import {
+   ERR_GET_ROUTE_FAILURE,
+   ERR_TX_RECEIPT_MISSING,
+   ERR_GET_ROUTE_UNDEFINED,
+} from "./constants";
 
 export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
    public adapterId: string = "squid";
 
-   private squid: Squid;
    private adapterConfig: SquidAdapterConfig;
 
    constructor(
@@ -103,13 +106,14 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
       };
 
       const stepConfig = step.config.config; // ??
-      const route = await this.getRoute(stepConfig);
+      const squid = this.squidProvider.getSquid();
       const signer = this.signerService.getSignerForChain(stepConfig.fromChain);
 
       let transaction;
 
       try {
-         transaction = await this.squid.executeRoute({ signer, route });
+         const route = await this.getRoute(stepConfig, squid);
+         transaction = await squid.executeRoute({ signer, route });
       } catch (error) {
          result.success = false;
          result.data.errorMessage = `${ERR_ADAPTER_EXECUTE_FAILURE}:${
@@ -139,7 +143,8 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
     * @returns The route data.
     */
    private async getRoute(
-      stepConfig: TypeOf<typeof BridgeSwapConfigCodec>
+      stepConfig: TypeOf<typeof BridgeSwapConfigCodec>,
+      squid: Squid
    ): Promise<RouteData> {
       let routeData = undefined;
 
@@ -147,11 +152,7 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
          this.configProvider.getGlobalVariable("primaryAddress");
 
       if (!primaryAddress) {
-         throw new Error(
-            `${ERR_ADAPTER_EXECUTE_FAILURE}: ${ERR_GLOBAL_VARIABLE_MISSING(
-               "primaryAddress"
-            )}`
-         );
+         throw new Error(`${ERR_GLOBAL_VARIABLE_MISSING("primaryAddress")}`);
       }
 
       const getRouteParams: GetRoute = {
@@ -166,10 +167,14 @@ export class SquidAdapter implements IAdapter<ExecutionResult, SquidStep> {
       };
 
       try {
-         routeData = (await this.squid.getRoute(getRouteParams)).route;
+         routeData = (await squid.getRoute(getRouteParams)).route;
+
+         if (!routeData) {
+            throw new Error(ERR_GET_ROUTE_UNDEFINED);
+         }
       } catch (error) {
          throw new Error(
-            `${ERR_ADAPTER_EXECUTE_FAILURE}: ${ERR_GET_ROUTE_FAILURE}`
+            `${ERR_GET_ROUTE_FAILURE}:${(error as Error).message}`
          );
       }
 
