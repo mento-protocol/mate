@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import * as path from "path";
+import pkg from "../../package.json";
 import { container } from "tsyringe";
 import {
    IValidator,
@@ -14,6 +15,7 @@ import {
 } from "../../src/services";
 import { SquidStep } from "../../src/types";
 import { StepConfigValidator } from "../../src/validation";
+import { SquidAdapter } from "../../src/SquidAdapter";
 
 describe("DependencyRegistrar", () => {
    const baseUrl = "https://testnet.api.squidrouter.com";
@@ -63,5 +65,11 @@ describe("DependencyRegistrar", () => {
    it("should correctly register SignerService", () => {
       const instance = container.resolve<ISignerService>(SignerService);
       expect(instance).toBeInstanceOf(SignerService);
+   });
+
+   it("should correctly register SquidAdapter", () => {
+      const instance: SquidAdapter = container.resolve(pkg.name);
+      expect(instance).toBeInstanceOf(SquidAdapter);
+      expect(instance.adapterId).toBe("squid");
    });
 });
