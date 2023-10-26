@@ -30,9 +30,8 @@ export class ConfigProvider implements IConfigProvider {
    private readonly CONFIG_PATH: string;
    private readonly ajv: Ajv;
 
-   constructor(configPath: string = "config.yaml") {
-      this.CONFIG_PATH =
-         configPath || process.env["CONFIG_PATH"] || "config.yaml";
+   constructor() {
+      this.CONFIG_PATH = process.env["CONFIG_PATH"] || "config.yaml";
       this.ajv = new Ajv({
          allErrors: true,
          strictTuples: false,
