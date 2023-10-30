@@ -10,14 +10,17 @@ import {
    IConfigProvider,
    IValidator,
 } from "@mate/sdk";
-import { SquidStepConfig, StepType } from "../../src/types";
+import { SquidAdapterConfig, SquidStepConfig, StepType } from "../../src/types";
 import {
    ISignerService,
    ISquidProvider,
    SignerService,
    SquidProvider,
 } from "../../src/services";
-import { StepConfigValidator } from "../../src/validation";
+import {
+   AdapterConfigValidator,
+   StepConfigValidator,
+} from "../../src/validation";
 import { RouteData, Squid } from "@0xsquid/sdk";
 import {
    ERR_GET_ROUTE_FAILURE,
@@ -32,6 +35,7 @@ describe("SquidAdapter", () => {
    let mockConfigProvider: IConfigProvider;
    let mockSignerService: ISignerService;
    let mockSquid: Squid;
+   let mockAdapterConfigValidator: IValidator<SquidAdapterConfig>;
 
    const mockConfig = {
       adapter: "squid",
@@ -98,6 +102,7 @@ describe("SquidAdapter", () => {
       mockStepConfigValidator = mock<StepConfigValidator>();
       mockConfigProvider = mock<ConfigProvider>();
       mockSignerService = mock<SignerService>();
+      mockAdapterConfigValidator = mock<AdapterConfigValidator>();
 
       when(mockConfigProvider.getGlobalVariable(anything())).thenReturn(
          "fakeVariable"
@@ -110,6 +115,7 @@ describe("SquidAdapter", () => {
       setupSquidMock();
 
       adapter = new SquidAdapter(
+         instance(mockAdapterConfigValidator),
          instance(mockStepConfigValidator),
          instance(mockSquidProvider),
          instance(mockConfigProvider),
@@ -122,10 +128,17 @@ describe("SquidAdapter", () => {
          when(mockConfigProvider.getAdapterConfig(anything())).thenReturn(
             mockConfig
          );
+         when(mockAdapterConfigValidator.validate(anything())).thenReturn(
+            mockConfig.config as any
+         );
          when(mockSquidProvider.init(anything())).thenResolve();
 
          const result = await adapter.init();
          expect(result).toBe(true);
+
+         verify(mockConfigProvider.getAdapterConfig(anything())).once();
+         verify(mockSquidProvider.init(anything())).once();
+         verify(mockAdapterConfigValidator.validate(anything())).once();
       });
 
       it("should throw error on missing adapter config", async () => {
@@ -133,6 +146,19 @@ describe("SquidAdapter", () => {
 
          await expect(adapter.init()).rejects.toThrow(
             ERR_ADAPTER_CONFIG_MISSING
+         );
+      });
+
+      it("should throw error on when adapter config validation fails", async () => {
+         when(mockConfigProvider.getAdapterConfig(anything())).thenReturn(
+            mockConfig
+         );
+         when(mockAdapterConfigValidator.validate(anything())).thenReject(
+            new Error(`💣 Validation failed 😲`)
+         );
+
+         await expect(adapter.init()).rejects.toThrow(
+            "💣 Validation failed 😲"
          );
       });
 

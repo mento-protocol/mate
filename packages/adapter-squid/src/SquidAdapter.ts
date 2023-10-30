@@ -24,7 +24,7 @@ import {
    SignerService,
    SquidProvider,
 } from "./services";
-import { StepConfigValidator } from "./validation";
+import { AdapterConfigValidator, StepConfigValidator } from "./validation";
 import { GetRoute, RouteData, Squid } from "@0xsquid/sdk";
 import { ethers } from "ethers";
 import { TypeOf } from "io-ts";
@@ -45,6 +45,8 @@ export class SquidAdapter
    private adapterConfig: SquidAdapterConfig;
 
    constructor(
+      @inject(AdapterConfigValidator)
+      private adapterConfigValidator: IValidator<SquidAdapterConfig>,
       @inject(StepConfigValidator)
       private stepConfigValidator: IValidator<SquidStepConfig>,
       @inject(SquidProvider) private squidProvider: ISquidProvider,
@@ -67,10 +69,11 @@ export class SquidAdapter
          );
       }
 
-      // TODO: Validate the adapter config
-      this.adapterConfig = adapterConfigItem.config;
-
       try {
+         this.adapterConfig = await this.adapterConfigValidator.validate(
+            adapterConfigItem.config
+         );
+
          const squidConfig = {
             baseUrl: this.adapterConfig.baseUrl,
             integratorId: this.adapterConfig.integratorId,
