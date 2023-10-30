@@ -90,6 +90,9 @@ importers:
       '@mate/sdk':
         specifier: 0.0.1
         version: link:../sdk
+      dotenv:
+        specifier: ^16.3.1
+        version: 16.3.1
       ethers:
         specifier: v5
         version: 5.7.2
@@ -121,9 +124,6 @@ importers:
       '@types/node':
         specifier: ^20.5.9
         version: 20.5.9
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
       jest:
         specifier: ^29.6.4
         version: 29.6.4(@types/node@20.5.9)(ts-node@10.9.1)
@@ -1940,7 +1940,6 @@ packages:
   /dotenv@16.3.1:
     resolution: {integrity: sha512-IPzF4w4/Rd94bA9imS68tZBaYyBWSCE47V1RGuMrB94iyTOIEwRmVL2x/4An+6mETpLrKJ5hQkB8W4kFAadeIQ==}
     engines: {node: '>=12'}
-    dev: true
 
   /electron-to-chromium@1.4.508:
     resolution: {integrity: sha512-FFa8QKjQK/A5QuFr2167myhMesGrhlOBD+3cYNxO9/S4XzHEXesyTD/1/xF644gC8buFPz3ca6G1LOQD0tZrrg==}

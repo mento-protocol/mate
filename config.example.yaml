@@ -22,50 +22,19 @@ adapters:
         integratorId: mate-sdk
         baseUrl: https://testnet.api.squidrouter.com
 flows:
-   - name: USD to cUSD
-     id: usd-to-cust-binance
-     description: "Buy USDC on Binance -> Withdraw to Ethereum -> Bridge USDC from Ethereum to axlUSDC on Celo using Squid"
-     steps:
-        - type: Exchange.Swap
-          adapter: ccxt
-          config:
-             exchange: binance
-             base: USDC
-             quote: USD
-             side: Buy
-             maxSlippage: 20
-             amount: 1000
-        - type: Exchange.WithdrawCrypto
-          adapter: ccxt
-          config:
-             exchange: binance
-             asset: USDC
-             chainId: 1
-             destinationAddress: 0xMyAddress1
-             amount: 500_000
-        - type: Bridge.Swap
-          adapter: squid
-          config:
-             fromChain: 1
-             fromToken: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
-             fromAmount: "10000"
-             toChain: 42220
-             toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
-             toAddress: 0xMyAddress1
-             maxSlippage: 0.01
-   - name: axlUSDC to USD
-     id: axlusd-to-usd
-     description: "Bridge axlUSDC on Celo to axlUSDC on Ethereum -> Deposit USDC to Binance Exchange -> Swap USDC to USD on Binance"
+   - name: CELO to WETH
+     id: celo-to-weth
+     description: "Swap CELO on Celo to WETH on Goerli"
      steps:
         - type: Bridge.Swap
           adapter: squid
           config:
              fromChain: 44787
-             fromToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
-             fromAmount: "10000"
+             fromToken: "0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9"
+             fromAmount: "10"
              toChain: 5
-             toToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
-             toAddress: "0x70997970C51812dc3A010C7d01b50e0d17dc79C8"
+             toToken: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"
+             toAddress: "0x278160ddcFc0A55026487540AEfD8525ED50fC38"
              maxSlippage: 0.01
         - type: Exchange.DepositCrypto
           adapter: ccxt
@@ -75,12 +44,3 @@ flows:
              ammount: 1000
              toChain: 1
              toAddress:
-        - type: Exchange.Swap
-          adapter: ccxt
-          config:
-             exchange: binance
-             base: USDC
-             quote: USD
-             side: Sell
-             maxSlippage: 20
-             amount: 1000
