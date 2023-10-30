@@ -22,18 +22,18 @@ adapters:
         integratorId: mate-sdk
         baseUrl: https://testnet.api.squidrouter.com
 flows:
-   - name: CELO to WETH
-     id: celo-to-weth
-     description: "Swap CELO on Celo to WETH on Goerli"
+   - name: aUSDC to aUSDC
+     id: auscd-to-ausdc
+     description: "Bridge aUSDC on Goerli to aUSDC on Celo"
      steps:
         - type: Bridge.Swap
           adapter: squid
           config:
-             fromChain: 44787
-             fromToken: "0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9"
-             fromAmount: "10"
-             toChain: 5
-             toToken: "0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6"
+             fromChain: 5
+             fromToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
+             fromAmount: "1"
+             toChain: 44787
+             toToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
              toAddress: "0x278160ddcFc0A55026487540AEfD8525ED50fC38"
              maxSlippage: 0.01
         - type: Exchange.DepositCrypto
