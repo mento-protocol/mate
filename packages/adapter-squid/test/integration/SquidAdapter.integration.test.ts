@@ -46,7 +46,7 @@ describe("SquidAdapter Integration", () => {
 
       it("should return true for a valid step", async () => {
          // Get a valid step from the config
-         const step = configProvider.getStepFromFlow("celo-to-weth", 0);
+         const step = configProvider.getStepFromFlow("auscd-to-ausdc", 0);
 
          // Validate the step
          const result = await adapter.isValid(step);
@@ -57,7 +57,7 @@ describe("SquidAdapter Integration", () => {
 
       it("should return false for an invalid step", async () => {
          // Get an invalid step from the config
-         const step = configProvider.getStepFromFlow("celo-to-weth", 1);
+         const step = configProvider.getStepFromFlow("auscd-to-ausdc", 1);
 
          // Validate the step
          const result = await adapter.isValid(step);
@@ -74,15 +74,16 @@ describe("SquidAdapter Integration", () => {
 
       it("should execute a valid step", async () => {
          // Get a valid step from the config
-         const step = configProvider.getStepFromFlow("celo-to-weth", 0);
+         const step = configProvider.getStepFromFlow("auscd-to-ausdc", 0);
 
          // Execute the step
          const result = await adapter.execute(step);
-         console.log(result);
 
          // Check the result
          expect(result).toBeDefined();
          expect(result.success).toBe(true);
+         expect(result.data.txHash).not.toBeNull();
+         console.log("txHash: " + result.data.txHash);
       });
    });
 });
