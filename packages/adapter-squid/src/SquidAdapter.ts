@@ -32,7 +32,9 @@ import {
    ERR_GET_ROUTE_FAILURE,
    ERR_TX_RECEIPT_MISSING,
    ERR_GET_ROUTE_UNDEFINED,
+   UNKNOWN_SQUID_ERROR,
 } from "./constants";
+import axios from "axios";
 
 @injectable()
 export class SquidAdapter
@@ -153,25 +155,29 @@ export class SquidAdapter
       return result;
    }
 
-   /**
-    * Get the squid route based on the specified step configuration.
-    * @param stepConfig The configuration data to use to get the route.
-    * @returns The route data.
-    */
    private async getRoute(
       stepConfig: TypeOf<typeof BridgeSwapConfigCodec>,
       squid: Squid
    ): Promise<RouteData> {
-      let routeData = undefined;
-
       const primaryAddress =
          this.configProvider.getGlobalVariable("primaryAddress");
-
       if (!primaryAddress) {
-         throw new Error(`${ERR_GLOBAL_VARIABLE_MISSING("primaryAddress")}`);
+         throw new Error(ERR_GLOBAL_VARIABLE_MISSING("primaryAddress"));
       }
 
-      const getRouteParams: GetRoute = {
+      const getRouteParams = this.constructRouteParams(
+         stepConfig,
+         primaryAddress
+      );
+
+      return this.fetchRouteData(squid, getRouteParams);
+   }
+
+   private constructRouteParams(
+      stepConfig: TypeOf<typeof BridgeSwapConfigCodec>,
+      primaryAddress: string
+   ): GetRoute {
+      return {
          fromChain: stepConfig.fromChain,
          fromToken: stepConfig.fromToken,
          fromAmount: stepConfig.fromAmount,
@@ -181,19 +187,37 @@ export class SquidAdapter
          toAddress: stepConfig.toAddress,
          slippage: stepConfig.maxSlippage,
       };
+   }
 
+   private async fetchRouteData(
+      squid: Squid,
+      getRouteParams: GetRoute
+   ): Promise<RouteData> {
       try {
-         routeData = (await squid.getRoute(getRouteParams)).route;
-
+         const routeData = (await squid.getRoute(getRouteParams)).route;
          if (!routeData) {
             throw new Error(ERR_GET_ROUTE_UNDEFINED);
          }
+         return routeData;
       } catch (error) {
-         throw new Error(
-            `${ERR_GET_ROUTE_FAILURE}:${(error as Error).message}`
-         );
+         throw this.handleRouteError(error);
       }
+   }
 
-      return routeData;
+   private handleRouteError(error: any): Error {
+      if (axios.isAxiosError(error)) {
+         const errorMessage = this.extractErrorMessages(error?.response?.data);
+         return new Error(`${ERR_GET_ROUTE_FAILURE}:${errorMessage}`);
+      }
+      return new Error(`${ERR_GET_ROUTE_FAILURE}:${error.message}`);
+   }
+
+   private extractErrorMessages(data: {
+      errors?: { message: string }[];
+   }): string {
+      if (!data?.errors || !Array.isArray(data.errors)) {
+         return UNKNOWN_SQUID_ERROR;
+      }
+      return data.errors.map((error) => error.message).join(", ");
    }
 }
