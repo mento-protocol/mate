@@ -19,11 +19,8 @@ import {
 import { VALIDATION_STRATEGIES_TOKEN } from "../../src/constants";
 
 describe("DependencyRegistrar", () => {
-   let testee: DependencyRegistrar;
-
    beforeAll(() => {
-      testee = DependencyRegistrar.getInstance();
-      testee.configure();
+      DependencyRegistrar.configure();
    });
 
    it("should correctly register the named validation strategies map", async () => {
@@ -32,7 +29,7 @@ describe("DependencyRegistrar", () => {
       >(VALIDATION_STRATEGIES_TOKEN);
 
       expect(strategies.size).toBe(3);
-expect(strategies.has(StepType.ExchangeDepositCrypto)).toBe(true);
+      expect(strategies.has(StepType.ExchangeDepositCrypto)).toBe(true);
       expect(strategies.has(StepType.ExchangeSwap)).toBe(true);
       expect(strategies.has(StepType.ExchangeWithdrawCrypto)).toBe(true);
 

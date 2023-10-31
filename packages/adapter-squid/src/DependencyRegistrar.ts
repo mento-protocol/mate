@@ -12,8 +12,6 @@ import pkg from "../package.json";
 import { SquidAdapter } from "./SquidAdapter";
 
 export class DependencyRegistrar {
-   private constructor() {}
-
    public static configure(): void {
       container.registerSingleton<ISquidProvider>(SquidProvider);
       container.register<IValidator<SquidStepConfig>>(StepConfigValidator, {
