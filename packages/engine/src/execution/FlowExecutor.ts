@@ -1,6 +1,8 @@
 import { ExecutionResult, Flow, IAdapter } from "@mate/sdk";
 import { IFlowExecutor } from "./IFlowExecutor";
+import { injectable } from "tsyringe";
 
+@injectable()
 export class FlowExecutor implements IFlowExecutor {
    public async execute(
       flow: Flow,

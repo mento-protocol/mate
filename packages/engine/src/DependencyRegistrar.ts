@@ -1,11 +1,10 @@
-import { IFlowValidator } from "./../dist/validation/IFlowValidator.d";
 import { container } from "tsyringe";
 import { DependencyRegistrar as SdkRegistrar } from "@mate/sdk";
 import { DependencyRegistrar as CCXTRegistrar } from "@mate/adapter-ccxt";
 import { DependencyRegistrar as SquidRegistrar } from "@mate/adapter-squid";
 import { IAdapterFactory } from "./interfaces";
 import { AdapterFactory } from "./AdapterFactory";
-import { FlowValidator } from "./validation";
+import { FlowValidator, IFlowValidator } from "./validation";
 import { FlowExecutor, IFlowExecutor } from "./execution";
 
 export class DependencyRegistrar {
