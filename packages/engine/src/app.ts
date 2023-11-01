@@ -3,7 +3,7 @@ import { container } from "tsyringe";
 import { DependencyRegistrar } from "./DependencyRegistrar";
 import { Engine } from "./Engine";
 
-export async function bootstrap() {
+export async function bootstrap(): Promise<Engine> {
    // Configure the container
    DependencyRegistrar.configure();
 
