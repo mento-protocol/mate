@@ -1,3 +1,4 @@
+import { Flow } from "../types";
 import { AdapterConfig } from "../types/AdapterConfig";
 
 /**
@@ -35,4 +36,17 @@ export interface IConfigProvider {
     * @returns The step with the specified index from the flow with the specified ID or null if not found.
     */
    getStepFromFlow(flowId: string, stepIndex: number): any | null;
+
+   /**
+    * Retrieves the config for all adapters defined.
+    * @returns An array of adapter configurations.
+    */
+   getAdapters(): AdapterConfig[];
+
+   /**
+    * Retrieves the flow with the specified ID.
+    * @param flowId - The ID of the flow to retrieve.
+    * @returns The flow with the specified ID or null if not found.
+    */
+   getFlowById(flowId: string): Flow | null;
 }
