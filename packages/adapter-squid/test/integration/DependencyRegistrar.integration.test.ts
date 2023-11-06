@@ -27,8 +27,8 @@ describe("DependencyRegistrar", () => {
    beforeAll(() => {
       // Override the config file path to point to the exapmle config
       process.env["CONFIG_PATH"] = path.resolve(
-         __dirname,
-         "../../../../config.example.yaml"
+         process.cwd(),
+         "../../config.example.yaml"
       );
 
       SdkDependencyRegistrar.configure();
