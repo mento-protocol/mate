@@ -181,14 +181,8 @@ export class SquidAdapter
       primaryAddress: string
    ): GetRoute {
       return {
-         fromChain: stepConfig.fromChain,
-         fromToken: stepConfig.fromToken,
-         fromAmount: stepConfig.fromAmount,
-         toChain: stepConfig.toChain,
-         toToken: stepConfig.toToken,
+         ...stepConfig,
          fromAddress: primaryAddress,
-         toAddress: stepConfig.toAddress,
-         slippage: stepConfig.maxSlippage,
       };
    }
 

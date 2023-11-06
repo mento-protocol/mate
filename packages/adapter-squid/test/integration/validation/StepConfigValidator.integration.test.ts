@@ -38,7 +38,7 @@ describe("StepConfigValidator", () => {
             toChain: alfajoresChainId,
             toToken: alfajoresAxelarUSDC,
             toAddress: validTestAddress,
-            maxSlippage: 0.01,
+            slippage: 0.01,
          };
          await expect(testee.validate(validConfig)).resolves.not.toThrow();
       });
@@ -51,7 +51,7 @@ describe("StepConfigValidator", () => {
             toChain: alfajoresChainId,
             toToken: alfajoresAxelarUSDC,
             toAddress: validTestAddress,
-            maxSlippage: 0.01,
+            slippage: 0.01,
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_TOKEN(unsupportedTestToken, goerliChainId)}`
@@ -66,7 +66,7 @@ describe("StepConfigValidator", () => {
             toChain: alfajoresChainId,
             toToken: unsupportedTestToken,
             toAddress: validTestAddress,
-            maxSlippage: 0.01,
+            slippage: 0.01,
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_TOKEN(unsupportedTestToken, alfajoresChainId)}`
@@ -81,7 +81,7 @@ describe("StepConfigValidator", () => {
             toChain: alfajoresChainId,
             toToken: alfajoresAxelarUSDC,
             toAddress: validTestAddress,
-            maxSlippage: 0.01,
+            slippage: 0.01,
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_CHAIN("123456")}`
@@ -96,7 +96,7 @@ describe("StepConfigValidator", () => {
             toChain: 123456,
             toToken: alfajoresAxelarUSDC,
             toAddress: validTestAddress,
-            maxSlippage: 0.01,
+            slippage: 0.01,
          };
          await expect(testee.validate(invalidConfig)).rejects.toThrow(
             `${ERR_UNSUPPORTED_CHAIN("123456")}`

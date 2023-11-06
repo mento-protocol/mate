@@ -20,7 +20,7 @@ export const BridgeSwapConfigCodec = t.type({
    toChain: t.number,
    toToken: t.string,
    toAddress: t.string,
-   maxSlippage: t.number,
+   slippage: t.number,
 });
 
 /**

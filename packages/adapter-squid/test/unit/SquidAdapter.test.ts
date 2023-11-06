@@ -58,7 +58,7 @@ describe("SquidAdapter", () => {
             toChain: 123456,
             toToken: "0xUSDC",
             toAddress: 234567,
-            maxSlippage: 0.01,
+            slippage: 0.01,
          },
       },
    };
