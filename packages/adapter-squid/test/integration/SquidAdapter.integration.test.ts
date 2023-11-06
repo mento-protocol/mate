@@ -9,7 +9,6 @@ import {
 } from "@mate/sdk";
 import { SquidAdapter } from "../../src/SquidAdapter";
 import { container } from "tsyringe";
-import "dotenv/config";
 
 describe("SquidAdapter Integration", () => {
    let adapter: SquidAdapter;
@@ -18,8 +17,8 @@ describe("SquidAdapter Integration", () => {
    beforeAll(() => {
       // Override the config file path to use the example config
       process.env["CONFIG_PATH"] = path.resolve(
-         __dirname,
-         "../../../../config.example.yaml"
+         process.cwd(),
+         "../../config.example.yaml"
       );
 
       // Configure the global container
@@ -81,6 +80,12 @@ describe("SquidAdapter Integration", () => {
 
          // Check the result
          expect(result).toBeDefined();
+
+         // To help with debugging the integration test in workflow runs
+         if (result.data?.errorMessage) {
+            console.log("errorMessage: " + result.data.errorMessage);
+         }
+
          expect(result.success).toBe(true);
          expect(result.data.txHash).not.toBeNull();
          console.log("txHash: " + result.data.txHash);
