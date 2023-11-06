@@ -8,7 +8,7 @@
    "types": "dist/index.d.ts",
    "scripts": {
       "build": "tsc -p tsconfig.build.json",
-      "test": "jest --verbose"
+      "test": "node --env-file=.env && jest --verbose"
    },
    "devDependencies": {
       "@jest/types": "^29.6.3",
