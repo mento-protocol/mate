@@ -20,5 +20,5 @@ export interface IValidator<T> {
     * @returns The validated object of type T.
     * @throws Will throw a validation error if the validation fails.
     */
-   validate(data: any): Promise<T>;
+   validate(data: unknown): Promise<T>;
 }

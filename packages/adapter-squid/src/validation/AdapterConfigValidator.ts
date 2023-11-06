@@ -10,7 +10,7 @@ import { PathReporter } from "io-ts/lib/PathReporter";
 
 @injectable()
 export class AdapterConfigValidator implements IValidator<SquidAdapterConfig> {
-   public async validate(data: any): Promise<SquidAdapterConfig> {
+   public async validate(data: unknown): Promise<SquidAdapterConfig> {
       const validationResult = SquidAdapterConfigCodec.decode(data);
 
       if (isRight(validationResult)) {

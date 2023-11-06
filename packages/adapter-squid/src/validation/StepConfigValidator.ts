@@ -18,7 +18,7 @@ import { isAddress } from "viem";
 export class StepConfigValidator implements IValidator<SquidStepConfig> {
    constructor(@inject(SquidProvider) private squidProvider: ISquidProvider) {}
 
-   public async validate(data: any): Promise<SquidStepConfig> {
+   public async validate(data: unknown): Promise<SquidStepConfig> {
       // Assumes step config is a BridgeSwap step. This should be updated when we add more step types.
       const validationResult = BridgeSwapConfigCodec.decode(data);
 

@@ -5,7 +5,7 @@ import {
    ValidationError,
 } from "@mate/sdk";
 import { isLeft, isRight } from "fp-ts/lib/Either";
-import { PathReporter } from "io-ts/lib/PathReporter"; 
+import { PathReporter } from "io-ts/lib/PathReporter";
 import { AdapterConfigCodec, CCXTAdapterConfig, ExchangeId } from "../types";
 import {
    ERR_DUPLICATE_EXCHANGE_ID,
@@ -14,7 +14,7 @@ import {
 
 @injectable()
 export class AdapterConfigValidator implements IValidator<CCXTAdapterConfig> {
-   public async validate(data: any): Promise<CCXTAdapterConfig> {
+   public async validate(data: unknown): Promise<CCXTAdapterConfig> {
       const validationResult = AdapterConfigCodec.decode(data);
 
       if (isRight(validationResult)) {

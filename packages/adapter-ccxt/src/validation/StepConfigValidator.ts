@@ -15,7 +15,7 @@ export class StepConfigValidator implements IValidator<CCXTStep> {
       private strategies: Map<StepType, IStepValidationStrategy>
    ) {}
 
-   public async validate(data: any): Promise<CCXTStep> {
+   public async validate(data: unknown): Promise<CCXTStep> {
       const validationResult = CCXTStepConfig.decode(data);
 
       if (isRight(validationResult)) {
