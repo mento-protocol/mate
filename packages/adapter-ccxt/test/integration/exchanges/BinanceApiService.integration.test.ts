@@ -8,6 +8,9 @@ describe("BinanceApiService Integration", () => {
    let exchange: binance;
 
    beforeAll(() => {
+      checkEnvVariable("BINANCE_API_KEY");
+      checkEnvVariable("BINANCE_API_SECRET");
+
       exchange = new binance({
          apiKey: process.env.BINANCE_API_KEY,
          secret: process.env.BINANCE_API_SECRET,
@@ -17,6 +20,16 @@ describe("BinanceApiService Integration", () => {
 
       testee = new BinanceApiService(exchange);
    });
+
+   function checkEnvVariable(variableName: string) {
+      if (!process.env[variableName]) {
+         throw new Error(`${variableName} env variable not set`);
+      }
+
+      if (typeof process.env[variableName] !== "string") {
+         throw new Error(`${variableName} env variable was not a string`);
+      }
+   }
 
    describe("isAssetSupported", () => {
       it("should return true if the asset is supported", async () => {
