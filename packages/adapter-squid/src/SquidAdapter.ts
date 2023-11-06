@@ -12,11 +12,7 @@ import {
    ValidationError,
    ValidationResult,
 } from "@mate/sdk";
-import {
-   BridgeSwapConfigCodec,
-   SquidAdapterConfig,
-   SquidStepConfig,
-} from "./types";
+import { BridgeSwapConfig, SquidAdapterConfig, SquidStepConfig } from "./types";
 import { inject, injectable } from "tsyringe";
 import {
    ISignerService,
@@ -27,7 +23,6 @@ import {
 import { AdapterConfigValidator, StepConfigValidator } from "./validation";
 import { GetRoute, RouteData, Squid } from "@0xsquid/sdk";
 import { ethers } from "ethers";
-import { TypeOf } from "io-ts";
 import {
    ERR_GET_ROUTE_FAILURE,
    ERR_TX_RECEIPT_MISSING,
@@ -159,7 +154,7 @@ export class SquidAdapter
    }
 
    private async getRoute(
-      stepConfig: TypeOf<typeof BridgeSwapConfigCodec>,
+      stepConfig: BridgeSwapConfig,
       squid: Squid
    ): Promise<RouteData> {
       const primaryAddress =
@@ -177,7 +172,7 @@ export class SquidAdapter
    }
 
    private constructRouteParams(
-      stepConfig: TypeOf<typeof BridgeSwapConfigCodec>,
+      stepConfig: BridgeSwapConfig,
       primaryAddress: string
    ): GetRoute {
       return {
