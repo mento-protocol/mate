@@ -49,8 +49,12 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
             config
          );
          await this.initializeExchanges();
-      } catch (err: any) {
-         throw new Error(`${ERR_ADAPTER_INIT_FAILURE}: ${err.message}`);
+      } catch (err) {
+         if (err instanceof Error) {
+            throw new Error(`${ERR_ADAPTER_INIT_FAILURE}: ${err.message}`);
+         } else {
+            throw new Error(`${ERR_ADAPTER_INIT_FAILURE}: ${err}`);
+         }
       }
 
       return true;

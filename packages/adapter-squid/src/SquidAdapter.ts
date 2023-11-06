@@ -75,10 +75,12 @@ export class SquidAdapter
          };
 
          await this.squidProvider.init(squidConfig);
-      } catch (error: any) {
-         throw new Error(
-            `${ERR_ADAPTER_INIT_FAILURE}: ${(error as Error).message}`
-         );
+      } catch (error) {
+         if (error instanceof Error) {
+            throw new Error(`${ERR_ADAPTER_INIT_FAILURE}: ${error.message}`);
+         } else {
+            throw new Error(`${ERR_ADAPTER_INIT_FAILURE}: ${error}`);
+         }
       }
 
       return true;
@@ -87,7 +89,7 @@ export class SquidAdapter
    public async isValid(
       step: Step<SquidStepConfig>
    ): Promise<ValidationResult> {
-      let result: ValidationResult = {
+      const result: ValidationResult = {
          isValid: false,
          errors: [],
       };
@@ -196,12 +198,15 @@ export class SquidAdapter
       }
    }
 
-   private handleRouteError(error: any): Error {
+   private handleRouteError(error: unknown): Error {
       if (axios.isAxiosError(error)) {
          const errorMessage = this.extractErrorMessages(error?.response?.data);
          return new Error(`${ERR_GET_ROUTE_FAILURE}:${errorMessage}`);
+      } else if (error instanceof Error) {
+         return new Error(`${ERR_GET_ROUTE_FAILURE}:${error.message}`);
+      } else {
+         return new Error(`${ERR_GET_ROUTE_FAILURE}:${UNKNOWN_SQUID_ERROR}`);
       }
-      return new Error(`${ERR_GET_ROUTE_FAILURE}:${error.message}`);
    }
 
    private extractErrorMessages(data: {
