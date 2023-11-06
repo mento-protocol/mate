@@ -1,7 +1,12 @@
 settings:
    globalVariables:
-      primaryPrivateKey: 0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80
-      primaryAddress: 0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266
+      primaryPrivateKey: "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80"
+      primaryAddress: "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266"
+   rpcUrls:
+      42220: "https://celo-mainnet.infura.io/v3/123456"
+      44787: "https://alfajores-forno.celo-testnet.org"
+      1: "https://mainnet.infura.io/v3/123456"
+      5: "https://rpc.ankr.com/eth_goerli"
 
 adapters:
    - id: ccxt
@@ -15,55 +20,22 @@ adapters:
      adapter: "@mate/adapter-squid"
      config:
         integratorId: mate-sdk
-        baseUrl: https://api.0xsquid.com
+        baseUrl: https://testnet.api.squidrouter.com
 flows:
-   - name: USD to cUSD
-     id: usd-to-cust-binance
-     description: "Buy USDC on Binance -> Withdraw to Ethereum -> Bridge USDC from Ethereum to axlUSDC on Celo using Squid"
-     steps:
-        - type: Exchange.Swap
-          adapter: ccxt
-          config:
-             exchange: binance
-             base: USDC
-             quote: USD
-             side: Buy
-             maxSlippage: 20
-             amount: 1000
-        - type: Exchange.WithdrawCrypto
-          adapter: ccxt
-          config:
-             exchange: binance
-             asset: USDC
-             chainId: 1
-             destinationAddress: 0xMyAddress1
-             amount: 500_000
-        - type: Bridge.Swap
-          adapter: squid
-          config:
-             fromChain: 1
-             fromToken: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
-             fromAddress: 0xMyAddress1 -> TODO Remove and use primary address as default
-             fromAmount: { stepOutput.ExchangeWithdrawCrypto.0.amount }
-             toChain: 42220
-             toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
-             toAddress: 0xMyAddress1
-             maxSlippage: 0.01
-   - name: axlUSDC to USD
-     id: axlusd-to-usd
-     description: "Bridge axlUSDC on Celo to USDC on Ethereum -> Deposit USDC to Binance Exchange -> Swap USDC to USD on Binance"
+   - name: aUSDC to aUSDC
+     id: ausdc-to-ausdc
+     description: "Bridge aUSDC on Goerli to aUSDC on Celo"
      steps:
         - type: Bridge.Swap
           adapter: squid
           config:
-             fromChain: 42220
-             fromToken: 0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48
-             fromAddress: 0xMyAddress1 -> TODO Remove and use primary address as default
-             fromAmount: { stepOutput.ExchangeWithdrawCrypto.0.amount }
-             toChain: 1
-             toToken: 0x765DE816845861e75A25fCA122bb6898B8B1282a
-             toAddress: 0xMyAddress1
-             maxSlippage: 0.01
+             fromChain: 5
+             fromToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
+             fromAmount: "1"
+             toChain: 44787
+             toToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
+             toAddress: "0x278160ddcFc0A55026487540AEfD8525ED50fC38"
+             slippage: 0.01
         - type: Exchange.DepositCrypto
           adapter: ccxt
           config:
@@ -72,12 +44,3 @@ flows:
              ammount: 1000
              toChain: 1
              toAddress:
-        - type: Exchange.Swap
-          adapter: ccxt
-          config:
-             exchange: binance
-             base: USDC
-             quote: USD
-             side: Sell
-             maxSlippage: 20
-             amount: 1000

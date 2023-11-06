@@ -10,9 +10,15 @@ const config: Config.InitialOptions = {
    testRegex: "test/.*\\.test\\.ts$",
    moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
    collectCoverage: true,
-   collectCoverageFrom: ["src/**/*.ts"],
+   collectCoverageFrom: [
+      "src/**/*.ts",
+      "!src/types/**/*",
+      "!src/constants/**/*",
+      "!src/**/index.ts",
+   ],
    coverageDirectory: "<rootDir>/coverage/",
    coveragePathIgnorePatterns: ["index.ts, src/constants, src/types"],
+   testTimeout: 200000,
 };
 
 export default config;

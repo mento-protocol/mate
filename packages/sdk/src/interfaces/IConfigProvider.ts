@@ -20,4 +20,19 @@ export interface IConfigProvider {
     * @returns The value of the global variable or null if not found.
     */
    getGlobalVariable(variableName: string): any | null;
+
+   /**
+    * Retrieves the RPC url to use for the chain with the specified chain ID.
+    * @param chainId - The chain ID for which to retrieve the RPC url.
+    * @returns The RPC url for the specified chain or null if not found.
+    */
+   getRpcUrl(chainId: number): string | null;
+
+   /**
+    * Retrieves a step with a given index from a flow with a given ID.
+    * @param flowId The ID of the flow from which to retrieve the step.
+    * @param stepIndex The index of the step to retrieve.
+    * @returns The step with the specified index from the flow with the specified ID or null if not found.
+    */
+   getStepFromFlow(flowId: string, stepIndex: number): any | null;
 }

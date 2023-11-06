@@ -10,34 +10,34 @@ import {
    IValidator,
    ValidationError,
 } from "@mate/sdk";
-import { BridgeSwapStepCodec, SquidStep } from "../types";
+import { BridgeSwapConfigCodec, SquidStepConfig } from "../types";
 import { ISquidProvider, SquidProvider } from "../services";
 import { isAddress } from "viem";
 
 @injectable()
-export class StepConfigValidator implements IValidator<SquidStep> {
+export class StepConfigValidator implements IValidator<SquidStepConfig> {
    constructor(@inject(SquidProvider) private squidProvider: ISquidProvider) {}
 
-   public async validate(data: any): Promise<SquidStep> {
-      const validationResult = BridgeSwapStepCodec.decode(data);
+   public async validate(data: unknown): Promise<SquidStepConfig> {
+      // Assumes step config is a BridgeSwap step. This should be updated when we add more step types.
+      const validationResult = BridgeSwapConfigCodec.decode(data);
 
       if (isRight(validationResult)) {
          return await this.processValidResult(validationResult.right);
       } else {
-         throw new ValidationError(
-            ERR_INVALID_STEP_CONFIG,
-            PathReporter.report(validationResult)
-         );
+         const error = PathReporter.report(validationResult);
+         throw new ValidationError(ERR_INVALID_STEP_CONFIG, error);
       }
    }
 
-   public async processValidResult(validResult: SquidStep): Promise<SquidStep> {
+   public async processValidResult(
+      validResult: SquidStepConfig
+   ): Promise<SquidStepConfig> {
       const squid = this.squidProvider.getSquid();
 
-      this.validateAddress(validResult.config.fromAddress, "fromAddress");
-      this.validateAddress(validResult.config.fromToken, "fromToken");
-      this.validateAddress(validResult.config.toAddress, "toAddress");
-      this.validateAddress(validResult.config.toToken, "toToken");
+      this.validateAddress(validResult.fromToken, "fromToken");
+      this.validateAddress(validResult.toAddress, "toAddress");
+      this.validateAddress(validResult.toToken, "toToken");
 
       this.validateChains(validResult, squid);
 
@@ -54,23 +54,20 @@ export class StepConfigValidator implements IValidator<SquidStep> {
       }
    }
 
-   private validateTokens(stepConfig: SquidStep, squid: Squid): void {
+   private validateTokens(stepConfig: SquidStepConfig, squid: Squid): void {
       const tokens = squid.tokens as TokenData[];
 
       // Verify fromToken is supported on fromChain
       if (
          !tokens.find(
             (token) =>
-               token.address === stepConfig.config.fromToken &&
-               token.chainId === stepConfig.config.fromChain
+               token.address === stepConfig.fromToken &&
+               token.chainId === stepConfig.fromChain
          )
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_TOKEN(
-                  stepConfig.config.fromToken,
-                  stepConfig.config.fromChain
-               )
+               ERR_UNSUPPORTED_TOKEN(stepConfig.fromToken, stepConfig.fromChain)
             )
          );
       }
@@ -79,42 +76,35 @@ export class StepConfigValidator implements IValidator<SquidStep> {
       if (
          !tokens.find(
             (token) =>
-               token.address === stepConfig.config.toToken &&
-               token.chainId === stepConfig.config.toChain
+               token.address === stepConfig.toToken &&
+               token.chainId === stepConfig.toChain
          )
       ) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_TOKEN(
-                  stepConfig.config.toToken,
-                  stepConfig.config.toChain
-               )
+               ERR_UNSUPPORTED_TOKEN(stepConfig.toToken, stepConfig.toChain)
             )
          );
       }
    }
 
-   private validateChains(stepConfig: SquidStep, squid: Squid): void {
+   private validateChains(stepConfig: SquidStepConfig, squid: Squid): void {
       const chains = squid.chains as ChainData[];
 
       // Validate from chain
-      if (
-         !chains.find((chain) => chain.chainId === stepConfig.config.fromChain)
-      ) {
+      if (!chains.find((chain) => chain.chainId === stepConfig.fromChain)) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_CHAIN(stepConfig.config.fromChain.toString())
+               ERR_UNSUPPORTED_CHAIN(stepConfig.fromChain.toString())
             )
          );
       }
 
       // Validate to chain
-      if (
-         !chains.find((chain) => chain.chainId === stepConfig.config.toChain)
-      ) {
+      if (!chains.find((chain) => chain.chainId === stepConfig.toChain)) {
          throw new ValidationError(
             this.prependGeneralError(
-               ERR_UNSUPPORTED_CHAIN(stepConfig.config.toChain.toString())
+               ERR_UNSUPPORTED_CHAIN(stepConfig.toChain.toString())
             )
          );
       }

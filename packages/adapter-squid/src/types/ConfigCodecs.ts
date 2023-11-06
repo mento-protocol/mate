@@ -3,17 +3,24 @@ import { TypeOf } from "io-ts";
 import { StepType } from ".";
 
 /**
+ * Codec for the Squid adapter configuration.
+ */
+export const SquidAdapterConfigCodec = t.type({
+   integratorId: t.string,
+   baseUrl: t.string,
+});
+
+/**
  * Codec for the Bridge.Swap step configuration.
  */
 export const BridgeSwapConfigCodec = t.type({
    fromChain: t.number,
    fromToken: t.string,
-   fromAddress: t.string,
-   fromAmount: t.number,
+   fromAmount: t.string,
    toChain: t.number,
    toToken: t.string,
    toAddress: t.string,
-   maxSlippage: t.number,
+   slippage: t.number,
 });
 
 /**
@@ -25,4 +32,8 @@ export const BridgeSwapStepCodec = t.type({
    config: BridgeSwapConfigCodec,
 });
 
-export type SquidStep = TypeOf<typeof BridgeSwapStepCodec>;
+// This assumes we will only ever have one step type for the Squid adapter.
+// When we add more, this type should be updated to be a union of all the step type configs.
+export type SquidStepConfig = TypeOf<typeof BridgeSwapConfigCodec>;
+export type SquidAdapterConfig = TypeOf<typeof SquidAdapterConfigCodec>;
+export type BridgeSwapConfig = TypeOf<typeof BridgeSwapConfigCodec>;

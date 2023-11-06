@@ -24,10 +24,14 @@ export class SquidProvider implements ISquidProvider {
          this.squid.setConfig(config);
          await this.squid.init();
          this.initialised = true;
-      } catch (error: any) {
-         throw new Error(
-            `SquidProvider initialization error: ${error.message}`
-         );
+      } catch (error) {
+         if (error instanceof Error) {
+            throw new Error(
+               `SquidProvider initialization error: ${error.message}`
+            );
+         } else {
+            throw new Error(`SquidProvider initialization error: ${error}`);
+         }
       }
    }
 

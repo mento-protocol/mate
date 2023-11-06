@@ -4,6 +4,7 @@ import { singleton } from "tsyringe";
 import Ajv from "ajv";
 import ajvErrors from "ajv-errors";
 import addKeywords from "ajv-keywords";
+import addFormats from "ajv-formats";
 
 import { AdapterConfig } from "./types";
 import { IConfigProvider } from "./interfaces";
@@ -14,6 +15,9 @@ interface IConfig {
       globalVariables: {
          primaryPrivateKey: string;
          primaryAddress: string;
+      };
+      rpcUrls: {
+         [chainId: number]: string;
       };
    };
    adapters: AdapterConfig[];
@@ -26,13 +30,16 @@ export class ConfigProvider implements IConfigProvider {
    private readonly CONFIG_PATH: string;
    private readonly ajv: Ajv;
 
-   constructor(configPath: string = "config.yaml") {
-      this.CONFIG_PATH =
-         configPath || process.env["CONFIG_PATH"] || "config.yaml";
-
-      this.ajv = new Ajv({ allErrors: true });
+   constructor() {
+      this.CONFIG_PATH = process.env["CONFIG_PATH"] || "config.yaml";
+      this.ajv = new Ajv({
+         allErrors: true,
+         strictTuples: false,
+         strictTypes: false,
+      });
       addKeywords(this.ajv, ["uniqueItemProperties"]);
       ajvErrors(this.ajv);
+      addFormats(this.ajv);
 
       this.loadAndValidateConfig();
    }
@@ -46,6 +53,12 @@ export class ConfigProvider implements IConfigProvider {
    }
 
    public getGlobalVariable(variableName: string): string | null {
+      // First try to get from environment variables
+      const envVar = process.env[variableName];
+      if (envVar) {
+         return envVar;
+      }
+
       if (
          this.configData.settings?.globalVariables &&
          this.configData.settings.globalVariables.hasOwnProperty(variableName)
@@ -55,6 +68,40 @@ export class ConfigProvider implements IConfigProvider {
          ];
       }
       return null;
+   }
+
+   public getRpcUrl(chainId: number): string | null {
+      if (
+         this.configData.settings?.rpcUrls &&
+         this.configData.settings.rpcUrls.hasOwnProperty(chainId)
+      ) {
+         const rpcUrl =
+            this.configData.settings.rpcUrls[
+               chainId as keyof typeof this.configData.settings.rpcUrls
+            ];
+
+         return rpcUrl ? rpcUrl : null;
+      }
+      return null;
+   }
+
+   public getStepFromFlow(flowId: string, stepIndex: number): any | null {
+      if (!flowId) {
+         throw new Error("Flow ID must be specified");
+      }
+
+      const flow = this.configData.flows.find((flow) => flow.id === flowId);
+      if (!flow) {
+         throw new Error(`Flow with ID ${flowId} not found`);
+      }
+
+      if (flow.steps.length <= stepIndex) {
+         throw new Error(
+            `Step index ${stepIndex} is out of bounds for flow ${flowId}`
+         );
+      }
+
+      return flow.steps[stepIndex];
    }
 
    private loadAndValidateConfig(): void {

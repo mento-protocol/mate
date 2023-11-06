@@ -1,5 +1,9 @@
 lockfileVersion: '6.0'
 
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
+
 importers:
 
   .:
@@ -86,6 +90,12 @@ importers:
       '@mate/sdk':
         specifier: 0.0.1
         version: link:../sdk
+      axios:
+        specifier: ^1.6.0
+        version: 1.6.0
+      ethers:
+        specifier: v5
+        version: 5.7.2
       fp-ts:
         specifier: ^2.16.1
         version: 2.16.1
@@ -114,9 +124,6 @@ importers:
       '@types/node':
         specifier: ^20.5.9
         version: 20.5.9
-      dotenv:
-        specifier: ^16.3.1
-        version: 16.3.1
       jest:
         specifier: ^29.6.4
         version: 29.6.4(@types/node@20.5.9)(ts-node@10.9.1)
@@ -141,6 +148,9 @@ importers:
       ajv-errors:
         specifier: ^3.0.0
         version: 3.0.0(ajv@8.12.0)
+      ajv-formats:
+        specifier: ^2.1.1
+        version: 2.1.1(ajv@8.12.0)
       ajv-keywords:
         specifier: ^5.1.0
         version: 5.1.0(ajv@8.12.0)
@@ -1483,6 +1493,17 @@ packages:
       ajv: 8.12.0
     dev: false
 
+  /ajv-formats@2.1.1(ajv@8.12.0):
+    resolution: {integrity: sha512-Wx0Kx52hxE7C18hkMEggYlEifqWZtYaRgouJor+WMdPnQyEK13vgEWyVNup7SoeeoLMsr4kf5h6dOW11I15MUA==}
+    peerDependencies:
+      ajv: ^8.0.0
+    peerDependenciesMeta:
+      ajv:
+        optional: true
+    dependencies:
+      ajv: 8.12.0
+    dev: false
+
   /ajv-keywords@5.1.0(ajv@8.12.0):
     resolution: {integrity: sha512-YCS/JNFAUyr5vAuhk1DWm1CBxRHW9LbJ2ozWeemrIqpbsqKjHVxYPyi5GC0rjZIT5JxJ3virVTS8wk4i/Z+krw==}
     peerDependencies:
@@ -1571,6 +1592,16 @@ packages:
     dependencies:
       follow-redirects: 1.15.3
       form-data: 4.0.0
+    transitivePeerDependencies:
+      - debug
+    dev: false
+
+  /axios@1.6.0:
+    resolution: {integrity: sha512-EZ1DYihju9pwVB+jg67ogm+Tmqc6JmhamRN6I4Zt8DfZu5lbcQGw3ozH9lFejSJgs/ibaef3A9PMXPLeefFGJg==}
+    dependencies:
+      follow-redirects: 1.15.3
+      form-data: 4.0.0
+      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
     dev: false
@@ -3096,6 +3127,10 @@ packages:
       '@types/long': 4.0.2
       '@types/node': 20.5.9
       long: 4.0.0
+    dev: false
+
+  /proxy-from-env@1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
     dev: false
 
   /punycode@2.3.0:
