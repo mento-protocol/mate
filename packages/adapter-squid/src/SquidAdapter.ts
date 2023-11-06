@@ -54,7 +54,7 @@ export class SquidAdapter
       @inject(SignerService) private signerService: ISignerService
    ) {}
 
-   public async init(): Promise<Boolean> {
+   public async init(): Promise<boolean> {
       if (this.adapterConfig) {
          return true;
       }

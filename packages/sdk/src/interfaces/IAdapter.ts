@@ -17,7 +17,7 @@ export interface IAdapter<TResult, TStepConfig> {
     *
     * @returns A promise that resolves to a boolean indicating success of initialization.
     */
-   init(): Promise<Boolean>;
+   init(): Promise<boolean>;
 
    /**
     * Checks if the provided step is valid and can be executed by the adapter.
