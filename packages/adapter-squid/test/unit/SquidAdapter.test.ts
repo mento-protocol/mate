@@ -46,20 +46,17 @@ describe("SquidAdapter", () => {
       },
    };
 
-   //TODO: Config codec | Setp type is off
    const mockStep: any = {
       type: StepType.BridgeSwap,
       adapter: "squid",
       config: {
-         config: {
-            fromChain: 123456,
-            fromToken: "0xDai",
-            fromAmount: "10000",
-            toChain: 123456,
-            toToken: "0xUSDC",
-            toAddress: 234567,
-            slippage: 0.01,
-         },
+         fromChain: 123456,
+         fromToken: "0xDai",
+         fromAmount: "10000",
+         toChain: 123456,
+         toToken: "0xUSDC",
+         toAddress: 234567,
+         slippage: 0.01,
       },
    };
 
