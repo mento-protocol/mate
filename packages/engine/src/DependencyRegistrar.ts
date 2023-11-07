@@ -13,7 +13,6 @@ export class DependencyRegistrar {
       SdkRegistrar.configure();
       CCXTRegistrar.configure();
       SquidRegistrar.configure();
-
       // Registrations from this package
       container.register<IFlowValidator>(FlowValidator, {
          useClass: FlowValidator,

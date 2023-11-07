@@ -1,9 +1,6 @@
 {
    "$schema": "https://turbo.build/schema.json",
    "pipeline": {
-      "engine#build": {
-         "dependsOn": ["sdk#build", "adapter-squid#build", "adapter-ccxt#build"]
-      },
       "build": {
          "dependsOn": ["^build"],
          "outputs": ["dist/**", "tsconfig.tsbuildinfo"]

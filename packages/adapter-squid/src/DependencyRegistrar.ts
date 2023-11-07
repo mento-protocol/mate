@@ -17,18 +17,15 @@ export class DependencyRegistrar {
       container.register<IValidator<SquidStepConfig>>(StepConfigValidator, {
          useClass: StepConfigValidator,
       });
-
       container.register<IValidator<SquidAdapterConfig>>(
          AdapterConfigValidator,
          {
             useClass: AdapterConfigValidator,
          }
       );
-
       container.register<ISignerService>(SignerService, {
          useClass: SignerService,
       });
-
       container.register<IAdapter<ExecutionResult, SquidStepConfig>>(pkg.name, {
          useClass: SquidAdapter,
       });

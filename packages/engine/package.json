@@ -23,9 +23,9 @@
       "typescript": "^5.2.2"
    },
    "dependencies": {
-      "@mate/sdk": "0.0.1",
       "@mate/adapter-ccxt": "0.0.1",
       "@mate/adapter-squid": "0.0.1",
+      "@mate/sdk": "0.0.1",
       "fp-ts": "^2.16.1",
       "io-ts": "^2.2.20",
       "reflect-metadata": "^0.1.13",
