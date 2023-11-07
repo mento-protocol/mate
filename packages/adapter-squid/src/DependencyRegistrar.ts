@@ -8,31 +8,28 @@ import {
    SignerService,
    SquidProvider,
 } from "./services";
-import pkg from "../package.json";
 import { SquidAdapter } from "./SquidAdapter";
 
 export class DependencyRegistrar {
-   private constructor() {}
-
    public static configure(): void {
       container.registerSingleton<ISquidProvider>(SquidProvider);
       container.register<IValidator<SquidStepConfig>>(StepConfigValidator, {
          useClass: StepConfigValidator,
       });
-
       container.register<IValidator<SquidAdapterConfig>>(
          AdapterConfigValidator,
          {
             useClass: AdapterConfigValidator,
          }
       );
-
       container.register<ISignerService>(SignerService, {
          useClass: SignerService,
       });
-
-      container.register<IAdapter<ExecutionResult, SquidStepConfig>>(pkg.name, {
-         useClass: SquidAdapter,
-      });
+      container.register<IAdapter<ExecutionResult, SquidStepConfig>>(
+         "@mate/adapter-squid",
+         {
+            useClass: SquidAdapter,
+         }
+      );
    }
 }

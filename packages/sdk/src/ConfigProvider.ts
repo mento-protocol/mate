@@ -6,7 +6,7 @@ import ajvErrors from "ajv-errors";
 import addKeywords from "ajv-keywords";
 import addFormats from "ajv-formats";
 
-import { AdapterConfig } from "./types";
+import { AdapterConfig, Flow } from "./types";
 import { IConfigProvider } from "./interfaces";
 import { CONFIG_SCHEMA } from "./constants";
 
@@ -102,6 +102,14 @@ export class ConfigProvider implements IConfigProvider {
       }
 
       return flow.steps[stepIndex];
+   }
+
+   public getAdapters(): AdapterConfig[] {
+      return this.configData.adapters;
+   }
+
+   public getFlowById(flowId: string): Flow | null {
+      return this.configData.flows.find((flow) => flow.id === flowId) || null;
    }
 
    private loadAndValidateConfig(): void {

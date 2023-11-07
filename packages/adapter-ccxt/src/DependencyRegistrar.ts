@@ -20,18 +20,7 @@ import { IValidator } from "@mate/sdk";
  * This class ensures all dependencies are correctly set up and registered.
  */
 export class DependencyRegistrar {
-   private static instance: DependencyRegistrar | null = null;
-
-   private constructor() {}
-
-   public static getInstance(): DependencyRegistrar {
-      if (!this.instance) {
-         this.instance = new DependencyRegistrar();
-      }
-      return this.instance;
-   }
-
-   public configure(): void {
+   public static configure(): void {
       this.registerExchangeServiceDependencies();
       this.registerValidationDependencies();
    }
@@ -39,7 +28,7 @@ export class DependencyRegistrar {
    /**
     * Registers validation-related dependencies.
     */
-   private registerValidationDependencies(): void {
+   private static registerValidationDependencies(): void {
       container.register<IValidator<CCXTStep>>(StepConfigValidator, {
          useClass: StepConfigValidator,
       });
@@ -67,7 +56,7 @@ export class DependencyRegistrar {
    /**
     * Registers exchange service-related dependencies.
     */
-   private registerExchangeServiceDependencies(): void {
+   private static registerExchangeServiceDependencies(): void {
       container.registerSingleton<IExchangeServiceRepo>(ExchangeServiceRepo);
 
       container.register<IExchangeFactory>(ExchangeFactory, {
