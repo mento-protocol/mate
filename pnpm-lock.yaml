@@ -146,7 +146,7 @@ importers:
         specifier: 0.0.1
         version: link:../adapter-ccxt
       '@mate/adapter-squid':
-        specifier: workspace:*
+        specifier: 0.0.1
         version: link:../adapter-squid
       '@mate/sdk':
         specifier: 0.0.1
