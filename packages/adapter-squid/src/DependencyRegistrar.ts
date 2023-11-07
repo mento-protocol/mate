@@ -8,7 +8,6 @@ import {
    SignerService,
    SquidProvider,
 } from "./services";
-import pkg from "../package.json";
 import { SquidAdapter } from "./SquidAdapter";
 
 export class DependencyRegistrar {
@@ -26,8 +25,11 @@ export class DependencyRegistrar {
       container.register<ISignerService>(SignerService, {
          useClass: SignerService,
       });
-      container.register<IAdapter<ExecutionResult, SquidStepConfig>>(pkg.name, {
-         useClass: SquidAdapter,
-      });
+      container.register<IAdapter<ExecutionResult, SquidStepConfig>>(
+         "pkg.name",
+         {
+            useClass: SquidAdapter,
+         }
+      );
    }
 }
