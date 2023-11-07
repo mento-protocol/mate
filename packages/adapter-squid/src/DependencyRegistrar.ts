@@ -26,7 +26,7 @@ export class DependencyRegistrar {
          useClass: SignerService,
       });
       container.register<IAdapter<ExecutionResult, SquidStepConfig>>(
-         "pkg.name",
+         "@mate/adapter-squid",
          {
             useClass: SquidAdapter,
          }
