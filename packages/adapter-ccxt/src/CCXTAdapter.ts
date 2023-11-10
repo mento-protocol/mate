@@ -1,5 +1,6 @@
-import { autoInjectable } from "tsyringe";
+import { inject, injectable } from "tsyringe";
 import {
+   ConfigProvider,
    ERR_ADAPTER_CONFIG_MISSING,
    ERR_ADAPTER_INIT_FAILURE,
    ExecutionResult,
@@ -15,19 +16,28 @@ import {
    CCXTStep,
    ExchangeId,
 } from "./types";
-import { IExchangeFactory, IExchangeServiceRepo } from "./exchanges";
+import {
+   ExchangeFactory,
+   ExchangeServiceRepo,
+   IExchangeFactory,
+   IExchangeServiceRepo,
+} from "./exchanges";
+import { AdapterConfigValidator, StepConfigValidator } from "./validation";
 
-@autoInjectable()
+@injectable()
 export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
    private adapterConfig: CCXTAdapterConfig;
 
    public adapterId: string = "ccxt";
 
    constructor(
+      @inject(AdapterConfigValidator)
       private adapterConfigValidator: IValidator<CCXTAdapterConfig>,
+      @inject(StepConfigValidator)
       private stepConfigValidator: IValidator<CCXTStep>,
-      private configProvider: IConfigProvider,
-      private exchangeFactory: IExchangeFactory,
+      @inject(ConfigProvider) private configProvider: IConfigProvider,
+      @inject(ExchangeFactory) private exchangeFactory: IExchangeFactory,
+      @inject(ExchangeServiceRepo)
       private exchangeServiceRepo: IExchangeServiceRepo
    ) {}
 
@@ -82,17 +92,28 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
    }
 
    private async initializeExchanges(): Promise<void> {
-      for (const [exchangeId, exchangeConfig] of Object.entries(
-         this.adapterConfig.exchanges
-      ) as Array<[ExchangeId, ApiCredentials]>) {
-         const exchangeService = this.exchangeFactory.createExchangeService(
-            exchangeId,
-            exchangeConfig
-         );
-         this.exchangeServiceRepo.setExchangeService(
-            exchangeId,
-            exchangeService
-         );
-      }
+      const initializationPromises = this.adapterConfig.exchanges.map(
+         async (exchangeConfig) => {
+            if (!exchangeConfig) {
+               return;
+            }
+
+            const { id, apiKey, apiSecret } = exchangeConfig;
+            const exchangeCreds: ApiCredentials = { apiKey, apiSecret };
+
+            const exchangeService =
+               await this.exchangeFactory.createExchangeService(
+                  id as ExchangeId,
+                  exchangeCreds
+               );
+
+            this.exchangeServiceRepo.setExchangeService(
+               id as ExchangeId,
+               exchangeService
+            );
+         }
+      );
+
+      await Promise.all(initializationPromises);
    }
 }
