@@ -26,6 +26,7 @@
       "@mate/adapter-ccxt": "0.0.1",
       "@mate/adapter-squid": "0.0.1",
       "@mate/sdk": "0.0.1",
+      "fastify": "^4.24.3",
       "fp-ts": "^2.16.1",
       "io-ts": "^2.2.20",
       "reflect-metadata": "^0.1.13",
