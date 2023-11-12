@@ -6,7 +6,6 @@ import {
    ConfigProvider,
    ERR_ADAPTER_CONFIG_MISSING,
    ERR_ADAPTER_EXECUTE_FAILURE,
-   ERR_ADAPTER_INIT_FAILURE,
    IConfigProvider,
    IValidator,
 } from "@mate/sdk";
@@ -163,11 +162,14 @@ describe("SquidAdapter", () => {
          when(mockConfigProvider.getAdapterConfig(anything())).thenReturn(
             mockConfig
          );
+         when(mockAdapterConfigValidator.validate(anything())).thenReturn(
+            mockConfig.config as any
+         );
          when(mockSquidProvider.init(anything())).thenThrow(
             new Error("Initialization error")
          );
 
-         await expect(adapter.init()).rejects.toThrow(ERR_ADAPTER_INIT_FAILURE);
+         await expect(adapter.init()).rejects.toThrow("Initialization error");
       });
    });
 

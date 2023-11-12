@@ -75,8 +75,16 @@ export class Engine implements IEngine {
          try {
             await adapter.init();
          } catch (error) {
+            let errorMessage;
+
+            if (error instanceof Error) {
+               errorMessage = error.message;
+            } else {
+               errorMessage = "Unknown error";
+            }
+
             throw new Error(
-               `${adapterConfig.id} failed to initialize: ${error}`
+               `Could not initialize adapter '${adapterConfig.id}': ${errorMessage}`
             );
          }
 

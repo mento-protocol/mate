@@ -2,7 +2,6 @@ import {
    ConfigProvider,
    ERR_ADAPTER_CONFIG_MISSING,
    ERR_ADAPTER_EXECUTE_FAILURE,
-   ERR_ADAPTER_INIT_FAILURE,
    ERR_GLOBAL_VARIABLE_MISSING,
    ExecutionResult,
    IAdapter,
@@ -59,9 +58,7 @@ export class SquidAdapter
       );
 
       if (!adapterConfigItem) {
-         throw new Error(
-            `${ERR_ADAPTER_INIT_FAILURE}: ${ERR_ADAPTER_CONFIG_MISSING}`
-         );
+         throw new Error(`${ERR_ADAPTER_CONFIG_MISSING}`);
       }
 
       try {
@@ -77,9 +74,9 @@ export class SquidAdapter
          await this.squidProvider.init(squidConfig);
       } catch (error) {
          if (error instanceof Error) {
-            throw new Error(`${ERR_ADAPTER_INIT_FAILURE}: ${error.message}`);
+            throw new Error(`${error.message}`);
          } else {
-            throw new Error(`${ERR_ADAPTER_INIT_FAILURE}: ${error}`);
+            throw new Error(`${error}`);
          }
       }
 

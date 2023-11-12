@@ -13,8 +13,16 @@ async function startServer() {
       // Initialize the M.A.T.E engine
       try {
          engine = await bootstrap();
-      } catch (bootstrapError) {
-         console.error("Failed to initialize M.A.T.E engine:", bootstrapError);
+      } catch (error) {
+         let errorMessage;
+
+         if (error instanceof Error) {
+            errorMessage = error.message;
+         } else {
+            errorMessage = "Unknown error";
+         }
+
+         console.error("Failed to initialize M.A.T.E engine:", errorMessage);
          process.exit(1);
       }
 
