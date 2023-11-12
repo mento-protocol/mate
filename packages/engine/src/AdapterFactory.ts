@@ -6,7 +6,9 @@ import { IAdapter } from "@mate/sdk";
 export class AdapterFactory implements IAdapterFactory {
    constructor() {}
 
-   public createAdapter<T extends IAdapter<any, any>>(adapterId: string): T {
+   public createAdapter<T extends IAdapter<unknown, unknown>>(
+      adapterId: string
+   ): T {
       try {
          return container.resolve<T>(adapterId);
       } catch (error) {
