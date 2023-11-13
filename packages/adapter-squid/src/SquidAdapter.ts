@@ -131,9 +131,10 @@ export class SquidAdapter
          transaction = await squid.executeRoute({ signer, route });
       } catch (error) {
          result.success = false;
-         result.data.errorMessage = `${ERR_ADAPTER_EXECUTE_FAILURE}:${
-            (error as Error).message
-         }`;
+         result.data.errorMessage = `${ERR_ADAPTER_EXECUTE_FAILURE(
+            this.adapterId,
+            step.type
+         )}:${(error as Error).message}`;
          return result;
       }
 

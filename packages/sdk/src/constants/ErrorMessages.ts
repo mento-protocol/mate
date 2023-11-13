@@ -13,6 +13,10 @@ export const ERR_INVALID_ADDRESS = (address: string, prop: string) =>
    `Invalid address was provided for property '${prop}': ${address}`;
 export const ERR_GLOBAL_VARIABLE_MISSING = (name: string) =>
    `Global variable ${name} was not found. Please check configuration file and try again`;
-export const ERR_ADAPTER_EXECUTE_FAILURE = "Adapter execution failed.";
+export const ERR_ADAPTER_EXECUTE_FAILURE = (
+   adapterId: string,
+   stepType: string
+) =>
+   `Error in execution: Adapter '${adapterId}', Step '${stepType}'. The execution failed `;
 export const ERR_RPC_URL_MISSING = (chainId: number) =>
    `RPC URL not found for chain with id ${chainId}. Please check configuration file and try again`;
