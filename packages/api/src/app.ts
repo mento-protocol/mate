@@ -26,11 +26,6 @@ async function validate(username: string, password: string) {
    const user = process.env.API_USER;
    const pass = process.env.API_PASS;
 
-   console.log("Auth request received");
-
-   console.log(`User: ${user}`);
-   console.log(`Pass: ${pass}`);
-
    if (username === user && password === pass) {
       return;
    } else {
