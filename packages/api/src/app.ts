@@ -1,14 +1,60 @@
 import fastify from "fastify";
+import auth from "@fastify/auth";
 import { bootstrap, Engine } from "@mate/engine";
+import basicAuth from "@fastify/basic-auth";
+import "dotenv/config";
 
 const port = Number(process.env.API_PORT) || 8080;
+const environment =
+   (process.env.NODE_ENV as "development" | "production") || "development";
 
-// TODO: Basic auth.
+const envToLogger = {
+   development: {
+      transport: {
+         target: "pino-pretty",
+         options: {
+            translateTime: "HH:MM:ss Z",
+            ignore: "pid,hostname",
+         },
+      },
+   },
+   production: true,
+};
+
+// Basic Auth validation function
+async function validate(username: string, password: string) {
+   const user = process.env.API_USER;
+   const pass = process.env.API_PASS;
+
+   console.log("Auth request received");
+
+   console.log(`User: ${user}`);
+   console.log(`Pass: ${pass}`);
+
+   if (username === user && password === pass) {
+      return;
+   } else {
+      throw new Error("Unauthorized");
+   }
+}
 
 async function startServer() {
    try {
-      const server = fastify({ logger: true });
+      const server = fastify({
+         logger: envToLogger[environment] ?? true,
+      });
       let engine: Engine;
+
+      server.register(auth);
+
+      server.register(basicAuth, {
+         validate,
+         authenticate: { realm: "MATE" },
+      });
+
+      server.after(() => {
+         server.addHook("preHandler", server.auth([server.basicAuth]));
+      });
 
       // Initialize the M.A.T.E engine
       try {
