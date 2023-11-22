@@ -3,9 +3,7 @@ import { ExecutionResult, IAdapter, IValidator } from "@mate/sdk";
 import { SquidAdapterConfig, SquidStepConfig } from "./types";
 import { AdapterConfigValidator, StepConfigValidator } from "./validation";
 import {
-   ISignerService,
    ISquidProvider,
-   SignerService,
    SquidProvider,
 } from "./services";
 import { SquidAdapter } from "./SquidAdapter";
@@ -22,9 +20,6 @@ export class DependencyRegistrar {
             useClass: AdapterConfigValidator,
          }
       );
-      container.register<ISignerService>(SignerService, {
-         useClass: SignerService,
-      });
       container.register<IAdapter<ExecutionResult, SquidStepConfig>>(
          "@mate/adapter-squid",
          {

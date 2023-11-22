@@ -21,6 +21,9 @@ adapters:
      config:
         integratorId: mate-sdk
         baseUrl: https://testnet.api.squidrouter.com
+   - id: mento
+     adapter: "@mate/adapter-mento"
+     config:
 flows:
    - name: aUSDC to aUSDC
      id: ausdc-to-ausdc
@@ -44,3 +47,15 @@ flows:
              ammount: 1000
              toChain: 1
              toAddress:
+   - name: cUSD to axlUSDC
+     id: cusd-to-axlusdc
+     description: "Swap cUSD to axlUSDC on Celo via Mento"
+     steps:
+        - type: Dex.Swap
+          adapter: mento
+          config:
+             fromToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
+             fromAmount: "1"
+             toToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
+             slippage: 0.01
+             chainId:  42220

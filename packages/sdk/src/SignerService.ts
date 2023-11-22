@@ -1,11 +1,11 @@
 import { Wallet, ethers } from "ethers";
-import { ISignerService } from "./ISignerService";
+import { ISignerService } from "./interfaces/ISignerService";
 import { inject, injectable } from "tsyringe";
 import {
    ConfigProvider,
    ERR_GLOBAL_VARIABLE_MISSING,
    IConfigProvider,
-} from "@mate/sdk";
+} from "./index";
 
 @injectable()
 export class SignerService implements ISignerService {

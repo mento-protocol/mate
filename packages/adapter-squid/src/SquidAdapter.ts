@@ -7,7 +7,9 @@ import {
    ExecutionResult,
    IAdapter,
    IConfigProvider,
+   ISignerService,
    IValidator,
+   SignerService,
    Step,
    ValidationError,
    ValidationResult,
@@ -15,9 +17,7 @@ import {
 import { BridgeSwapConfig, SquidAdapterConfig, SquidStepConfig } from "./types";
 import { inject, injectable } from "tsyringe";
 import {
-   ISignerService,
    ISquidProvider,
-   SignerService,
    SquidProvider,
 } from "./services";
 import { AdapterConfigValidator, StepConfigValidator } from "./validation";
