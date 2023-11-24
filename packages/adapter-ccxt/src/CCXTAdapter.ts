@@ -58,7 +58,7 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
          this.adapterConfig = await this.adapterConfigValidator.validate(
             config
          );
-         await this.initializeExchanges();
+         this.initializeExchanges();
       } catch (err) {
          if (err instanceof Error) {
             throw new Error(`${ERR_ADAPTER_INIT_FAILURE}: ${err.message}`);
@@ -91,29 +91,24 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
       throw new Error("Method not implemented.");
    }
 
-   private async initializeExchanges(): Promise<void> {
-      const initializationPromises = this.adapterConfig.exchanges.map(
-         async (exchangeConfig) => {
-            if (!exchangeConfig) {
-               return;
-            }
-
-            const { id, apiKey, apiSecret } = exchangeConfig;
-            const exchangeCreds: ApiCredentials = { apiKey, apiSecret };
-
-            const exchangeService =
-               await this.exchangeFactory.createExchangeService(
-                  id as ExchangeId,
-                  exchangeCreds
-               );
-
-            this.exchangeServiceRepo.setExchangeService(
-               id as ExchangeId,
-               exchangeService
-            );
+   private initializeExchanges(): void {
+      this.adapterConfig.exchanges.forEach((exchangeConfig) => {
+         if (!exchangeConfig) {
+            return;
          }
-      );
 
-      await Promise.all(initializationPromises);
+         const { id, apiKey, apiSecret } = exchangeConfig;
+         const exchangeCreds: ApiCredentials = { apiKey, apiSecret };
+
+         const exchangeService = this.exchangeFactory.createExchangeService(
+            id as ExchangeId,
+            exchangeCreds
+         );
+
+         this.exchangeServiceRepo.setExchangeService(
+            id as ExchangeId,
+            exchangeService
+         );
+      });
    }
 }
