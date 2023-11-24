@@ -93,10 +93,6 @@ export class CCXTAdapter implements IAdapter<ExecutionResult, CCXTStep> {
 
    private initializeExchanges(): void {
       this.adapterConfig.exchanges.forEach((exchangeConfig) => {
-         if (!exchangeConfig) {
-            return;
-         }
-
          const { id, apiKey, apiSecret } = exchangeConfig;
          const exchangeCreds: ApiCredentials = { apiKey, apiSecret };
 
