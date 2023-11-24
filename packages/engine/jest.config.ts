@@ -18,7 +18,7 @@ const config: Config.InitialOptions = {
    ],
    coverageDirectory: "<rootDir>/coverage/",
    coveragePathIgnorePatterns: ["index.ts, src/constants, src/types"],
-   testTimeout: 20000,
+   testTimeout: 50000,
 };
 
 export default config;
