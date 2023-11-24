@@ -23,7 +23,7 @@ adapters:
         baseUrl: https://testnet.api.squidrouter.com
 flows:
    - name: aUSDC to aUSDC
-     id: ausdc-to-ausdc
+     id: bridge-and-deposit
      description: "Bridge aUSDC on Goerli to aUSDC on Celo"
      steps:
         - type: Bridge.Swap
@@ -45,7 +45,7 @@ flows:
              toChain: 1
              toAddress:
    - name: aUSDC to aUSDC
-     id: test-valid-bridge
+     id: bridge-swap-goerli-to-celo
      description: "Bridge aUSDC on Goerli to aUSDC on Celo"
      steps:
         - type: Bridge.Swap

@@ -18,7 +18,9 @@ describe("App", () => {
    });
 
    it("should execute sample flow", async () => {
-      const result: ExecutionResult = await engine.execute("test-valid-bridge");
+      const result: ExecutionResult = await engine.execute(
+         "bridge-swap-goerli-to-celo"
+      );
 
       if (!result.success) {
          console.log(result);
