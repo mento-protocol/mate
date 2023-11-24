@@ -67,7 +67,7 @@ export class Engine implements IEngine {
 
       for (const adapterConfig of configuredAdapters) {
          // Create the adapter using the adapter factory
-         const adapter = await this.adapterFactory.createAdapter(
+         const adapter = this.adapterFactory.createAdapter(
             adapterConfig.adapter
          );
 

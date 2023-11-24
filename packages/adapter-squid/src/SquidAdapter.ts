@@ -58,7 +58,7 @@ export class SquidAdapter
       );
 
       if (!adapterConfigItem) {
-         throw new Error(`${ERR_ADAPTER_CONFIG_MISSING}`);
+         throw new Error(ERR_ADAPTER_CONFIG_MISSING);
       }
 
       try {
@@ -74,7 +74,7 @@ export class SquidAdapter
          await this.squidProvider.init(squidConfig);
       } catch (error) {
          if (error instanceof Error) {
-            throw new Error(`${error.message}`);
+            throw new Error(error.message);
          } else {
             throw new Error(`${error}`);
          }
