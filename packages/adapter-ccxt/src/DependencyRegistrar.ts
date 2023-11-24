@@ -13,7 +13,8 @@ import {
    WithdrawCryptoValidationStrategy,
 } from "./validation/strategies";
 import { VALIDATION_STRATEGIES_TOKEN } from "./constants";
-import { IValidator } from "@mate/sdk";
+import { ExecutionResult, IAdapter, IValidator } from "@mate/sdk";
+import { CCXTAdapter } from "./CCXTAdapter";
 
 /**
  * Handles the dependency registration for the adapter.
@@ -23,6 +24,14 @@ export class DependencyRegistrar {
    public static configure(): void {
       this.registerExchangeServiceDependencies();
       this.registerValidationDependencies();
+
+      // Register the adapter
+      container.register<IAdapter<ExecutionResult, CCXTStep>>(
+         "@mate/adapter-ccxt",
+         {
+            useClass: CCXTAdapter,
+         }
+      );
    }
 
    /**

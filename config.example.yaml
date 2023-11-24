@@ -23,18 +23,18 @@ adapters:
         baseUrl: https://testnet.api.squidrouter.com
 flows:
    - name: aUSDC to aUSDC
-     id: ausdc-to-ausdc
+     id: bridge-and-deposit
      description: "Bridge aUSDC on Goerli to aUSDC on Celo"
      steps:
         - type: Bridge.Swap
           adapter: squid
           config:
              fromChain: 5
-             fromToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
+             fromToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A" # https://goerli.etherscan.io/token/0x254d06f33bDc5b8ee05b2ea472107E300226659A
              fromAmount: "1"
              toChain: 44787
              toToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
-             toAddress: "0x278160ddcFc0A55026487540AEfD8525ED50fC38"
+             toAddress: "0x278160ddcFc0A55026487540AEfD8525ED50fC38" # https://alfajores.celoscan.io/address/0x254d06f33bDc5b8ee05b2ea472107E300226659A
              slippage: 0.01
         - type: Exchange.DepositCrypto
           adapter: ccxt
@@ -44,3 +44,17 @@ flows:
              ammount: 1000
              toChain: 1
              toAddress:
+   - name: aUSDC to aUSDC
+     id: bridge-swap-goerli-to-celo
+     description: "Bridge aUSDC on Goerli to aUSDC on Celo"
+     steps:
+        - type: Bridge.Swap
+          adapter: squid
+          config:
+             fromChain: 5
+             fromToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A" # https://goerli.etherscan.io/token/0x254d06f33bDc5b8ee05b2ea472107E300226659A
+             fromAmount: "1"
+             toChain: 44787
+             toToken: "0x254d06f33bDc5b8ee05b2ea472107E300226659A"
+             toAddress: "0x278160ddcFc0A55026487540AEfD8525ED50fC38" # https://alfajores.celoscan.io/address/0x254d06f33bDc5b8ee05b2ea472107E300226659A
+             slippage: 0.01

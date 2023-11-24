@@ -6,7 +6,6 @@ import {
    ConfigProvider,
    ERR_ADAPTER_CONFIG_MISSING,
    ERR_ADAPTER_EXECUTE_FAILURE,
-   ERR_ADAPTER_INIT_FAILURE,
    IConfigProvider,
    IValidator,
 } from "@mate/sdk";
@@ -163,11 +162,14 @@ describe("SquidAdapter", () => {
          when(mockConfigProvider.getAdapterConfig(anything())).thenReturn(
             mockConfig
          );
+         when(mockAdapterConfigValidator.validate(anything())).thenReturn(
+            mockConfig.config as any
+         );
          when(mockSquidProvider.init(anything())).thenThrow(
             new Error("Initialization error")
          );
 
-         await expect(adapter.init()).rejects.toThrow(ERR_ADAPTER_INIT_FAILURE);
+         await expect(adapter.init()).rejects.toThrow("Initialization error");
       });
    });
 
@@ -214,7 +216,10 @@ describe("SquidAdapter", () => {
 
          expect(result.success).toBe(false);
          expect(result.data.errorMessage).toBe(
-            `${ERR_ADAPTER_EXECUTE_FAILURE}:Execution error`
+            `${ERR_ADAPTER_EXECUTE_FAILURE(
+               adapter.adapterId,
+               mockStep.type
+            )}:Execution error`
          );
       });
 
@@ -247,7 +252,10 @@ describe("SquidAdapter", () => {
 
          expect(result.success).toBe(false);
          expect(result.data.errorMessage).toBe(
-            `${ERR_ADAPTER_EXECUTE_FAILURE}:${ERR_GET_ROUTE_FAILURE}:${error.message}`
+            `${ERR_ADAPTER_EXECUTE_FAILURE(
+               adapter.adapterId,
+               mockStep.type
+            )}:${ERR_GET_ROUTE_FAILURE}:${error.message}`
          );
       });
    });

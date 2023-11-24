@@ -51,7 +51,7 @@ flows:
          jest.spyOn(fs, "existsSync").mockReturnValue(false);
 
          expect(() => new ConfigProvider()).toThrowError(
-            `Config file not found.`
+            `Config file was not found at config.yaml.`
          );
       });
 

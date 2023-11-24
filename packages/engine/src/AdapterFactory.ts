@@ -6,7 +6,15 @@ import { IAdapter } from "@mate/sdk";
 export class AdapterFactory implements IAdapterFactory {
    constructor() {}
 
-   public createAdapter<T extends IAdapter<any, any>>(adapterId: string): T {
-      return container.resolve<T>(adapterId);
+   public createAdapter<T extends IAdapter<unknown, unknown>>(
+      adapterId: string
+   ): T {
+      try {
+         return container.resolve<T>(adapterId);
+      } catch (error) {
+         throw new Error(
+            `Adapter with id '${adapterId}' could not be created. Verify it has been registered with the container then try again. Error: ${error}`
+         );
+      }
    }
 }

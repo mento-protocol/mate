@@ -120,7 +120,7 @@ export class ConfigProvider implements IConfigProvider {
 
    private loadConfigFile(): string {
       if (!fs.existsSync(this.CONFIG_PATH)) {
-         throw new Error(`Config file not found.`);
+         throw new Error(`Config file was not found at ${this.CONFIG_PATH}.`);
       }
       return fs.readFileSync(this.CONFIG_PATH, "utf8");
    }

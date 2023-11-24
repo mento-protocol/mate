@@ -45,7 +45,7 @@ describe("SquidAdapter Integration", () => {
 
       it("should return true for a valid step", async () => {
          // Get a valid step from the config
-         const step = configProvider.getStepFromFlow("ausdc-to-ausdc", 0);
+         const step = configProvider.getStepFromFlow("bridge-and-deposit", 0);
 
          // Validate the step
          const result = await adapter.isValid(step);
@@ -56,7 +56,7 @@ describe("SquidAdapter Integration", () => {
 
       it("should return false for an invalid step", async () => {
          // Get an invalid step from the config
-         const step = configProvider.getStepFromFlow("ausdc-to-ausdc", 1);
+         const step = configProvider.getStepFromFlow("bridge-and-deposit", 1);
 
          // Validate the step
          const result = await adapter.isValid(step);
@@ -73,7 +73,7 @@ describe("SquidAdapter Integration", () => {
 
       it("should execute a valid step", async () => {
          // Get a valid step from the config
-         const step = configProvider.getStepFromFlow("ausdc-to-ausdc", 0);
+         const step = configProvider.getStepFromFlow("bridge-and-deposit", 0);
 
          // Execute the step
          const result = await adapter.execute(step);

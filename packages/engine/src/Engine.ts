@@ -41,7 +41,7 @@ export class Engine implements IEngine {
 
       if (!flow) {
          throw new Error(
-            `Flow ${flowId} was not found. Please check the config.`
+            `Flow with id ${flowId} was not found. Please check the config.`
          );
       }
 
@@ -67,16 +67,24 @@ export class Engine implements IEngine {
 
       for (const adapterConfig of configuredAdapters) {
          // Create the adapter using the adapter factory
-         const adapter = await this.adapterFactory.createAdapter(
-            adapterConfig.id
+         const adapter = this.adapterFactory.createAdapter(
+            adapterConfig.adapter
          );
 
          // Try to initialize the adapter
          try {
             await adapter.init();
          } catch (error) {
+            let errorMessage;
+
+            if (error instanceof Error) {
+               errorMessage = error.message;
+            } else {
+               errorMessage = "Unknown error";
+            }
+
             throw new Error(
-               `${adapterConfig.id} failed to initialize: ${error}`
+               `Could not initialize adapter '${adapterConfig.id}': ${errorMessage}`
             );
          }
 
